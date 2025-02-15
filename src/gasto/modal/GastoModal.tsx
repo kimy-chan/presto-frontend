@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormGastoI } from "../interface/formGasto";
 import { crearGasto } from "../service/gastoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
+import { listarCategoriaGasto } from "../../categoriaGasto/service/categoriaGastoService";
+import { CategoriaGastoI } from "../../categoriaGasto/interface/categoriaGasto";
 
 
 export const GastoModal = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { register, handleSubmit } = useForm<FormGastoI>()
+    const [categoriaGastos, setCategoriaGastos] = useState<CategoriaGastoI[]>([])
+
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
@@ -20,6 +24,20 @@ export const GastoModal = () => {
             if (response.status == HttpStatus.CREATED) {
 
             }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    useEffect((
+
+    ) => { categoriaGasto() }, [])
+
+    const categoriaGasto = async () => {
+        try {
+            const response = await listarCategoriaGasto()
+            setCategoriaGastos(response)
         } catch (error) {
             console.log(error);
 
@@ -77,6 +95,13 @@ export const GastoModal = () => {
                                 <div>
                                     <label className="block text-gray-700 font-medium">Factor validez</label>
                                     <input {...register("factorValides")} type="text" className="w-full mt-1 p-2 border rounded-lg focus:ring focus:ring-blue-300" />
+                                </div>
+                                <div>
+                                    <label htmlFor="categoriaGasto" className="block text-gray-700 font-medium">Categoría de gasto</label>
+                                    <select id="categoriaGasto" {...register("categoriaGasto")} className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="">Seleccione la categoría de gasto</option>
+                                        {categoriaGastos.map((item) => <option key={item._id} value={item._id}>{item.nombre}</option>)}
+                                    </select>
                                 </div>
                                 <button className="mt-2 w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">Guardar</button>
                             </form>

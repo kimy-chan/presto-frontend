@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormClienteI } from "../interface/formCliente";
 import { crearCliente } from "../services/clienteService";
+import { HttpStatus } from "../../core/enums/httpStatus";
+import { ClienteI } from "../interface/cliente";
 
-export const RegistarClienteModal = () => {
+export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: ClienteI) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const openModal = () => setIsOpen(true);
@@ -12,7 +14,12 @@ export const RegistarClienteModal = () => {
     const onSubmit = async (data: FormClienteI) => {
         try {
             const response = await crearCliente(data)
-            console.log(response);
+
+            if (response.status == HttpStatus.CREATED) {
+                setCliente(response.cliente)
+                setIsOpen(false)
+            }
+
 
         } catch (error) {
             console.log(error);
@@ -91,7 +98,7 @@ export const RegistarClienteModal = () => {
                                     <div>
                                         <label className="block text-gray-600 text-sm font-medium mb-1">Apellido Materno</label>
                                         <input
-                                            {...register("apellidoPaterno")}
+                                            {...register("apellidoMaterno")}
                                             type="text"
                                             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                             placeholder="Apellido Materno"

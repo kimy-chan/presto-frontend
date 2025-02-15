@@ -72,7 +72,7 @@ export const Menu = ({ children }: { children: ReactNode }) => {
             </li>
             <li>
               <Link
-                to='/medidor'
+                to='/lectura/registrar'
                 className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700"
               >
                 <FcReadingEbook size={24} />
@@ -101,6 +101,15 @@ export const Menu = ({ children }: { children: ReactNode }) => {
               </Link>
             </li>
 
+            <li>
+              <Link
+                to='/categorias/gasto'
+                className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700"
+              >
+                <GrMoney size={24} />
+                {isOpen && <span>Gasto categoria</span>}
+              </Link>
+            </li>
 
             <li>
               <Link

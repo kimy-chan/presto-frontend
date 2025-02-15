@@ -1,6 +1,4 @@
 export interface FormClienteI{
-
-
 ci:string
 nombre:string
 apellidoMaterno:string

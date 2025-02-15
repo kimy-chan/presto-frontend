@@ -1,6 +1,6 @@
 
 export interface RouterI {
     path:string
-    element: React.ElementType
+    element: React.ElementType<any>
 
 }

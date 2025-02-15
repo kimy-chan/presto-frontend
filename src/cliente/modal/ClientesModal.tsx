@@ -4,7 +4,7 @@ import { listarClientes } from "../services/clienteService";
 import { IoIosAddCircle } from "react-icons/io";
 import { FaEdit } from "react-icons/fa";
 
-export const ClientesModal = () => {
+export const ClientesModal = ({ setCliente }: { setCliente: (cliete: ClienteI) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const openModal = () => setIsOpen(true);
@@ -77,7 +77,22 @@ export const ClientesModal = () => {
                                                 <td className="py-2 px-4">{item.apellidoMaterno}</td>
                                                 <td className="py-2 px-4">{item.direccion}</td>
                                                 <td className="py-2 px-4">
-                                                    <button className="text-blue-500 hover:text-blue-700 text-2xl"><IoIosAddCircle /></button>
+                                                    <button
+                                                        onClick={() => {
+                                                            const cliente: ClienteI = {
+                                                                _id: item._id,
+                                                                apellidoMaterno: item.apellidoMaterno,
+                                                                apellidoPaterno: item.apellidoMaterno,
+                                                                celular: item.celular,
+                                                                ci: item.ci,
+                                                                codigo: item.codigo,
+                                                                direccion: item.direccion,
+                                                                nombre: item.nombre
+                                                            }
+                                                            setCliente(cliente)
+                                                            setIsOpen(false)
+                                                        }}
+                                                        className="text-blue-500 hover:text-blue-700 text-2xl"><IoIosAddCircle /></button>
                                                     <button className="text-blue-500 hover:text-blue-700 text-2xl"> <FaEdit /></button>
 
                                                 </td>

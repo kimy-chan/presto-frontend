@@ -4,4 +4,5 @@ export interface FormGastoI {
     cantidad:number
     factorValides:number
     costoUnitario:number
+    categoriaGasto:string
 }

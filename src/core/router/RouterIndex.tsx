@@ -5,6 +5,8 @@ import { clienteRouter } from "../../cliente/routes/clienteRouter";
 import { Menu } from "../components/Menu";
 import { medidorRouter } from "../../medidor/router/medidorRouter";
 import { gastoRouter } from "../../gasto/router/gastoRouter";
+import { categoriaGastoRouter } from "../../categoriaGasto/router/CategoriaGastoRouter";
+import { lecturaRouter } from "../../lectura/router/lecturaRouter";
 
 
 
@@ -30,6 +32,8 @@ export const RouterIndex = () => {
         <RouterApp router={clienteRouter} />
         <RouterApp router={medidorRouter} />
         <RouterApp router={gastoRouter} />
+        <RouterApp router={categoriaGastoRouter} />
+        <RouterApp router={lecturaRouter} />
       </Menu>
     </Router>
 
