@@ -4,13 +4,18 @@ import { FormClienteI } from "../interface/formCliente";
 import { crearCliente } from "../services/clienteService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { ClienteI } from "../interface/cliente";
+import { AxiosError } from "axios";
+import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 
 export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: ClienteI) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
-    const { register, handleSubmit } = useForm<FormClienteI>()
+    const { register, handleSubmit, formState: { errors } } = useForm<FormClienteI>()
+    const [mensaje, setMensaje] = useState<string>()
+
+
     const onSubmit = async (data: FormClienteI) => {
         try {
             const response = await crearCliente(data)
@@ -22,7 +27,14 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
 
 
         } catch (error) {
-            console.log(error);
+            const e = error as AxiosError
+            if (e.status == HttpStatus.CONFLICT) {
+                const conflicto = e.response?.data as ErrorConflictoI
+                console.log(conflicto);
+
+                setMensaje(conflicto.message)
+            }
+
 
         }
 
@@ -65,22 +77,39 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
                                 <div>
                                     <label className="block text-gray-600 text-sm font-medium mb-1">CI</label>
                                     <input
-                                        {...register("ci")}
+                                        {...register("ci", {
+                                            validate: (value: string) => {
+                                                if (!value) {
+                                                    return "Ingrese el N° de carnet"
+                                                }
+                                                return true
+                                            }
+                                        })}
                                         type="text"
                                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         placeholder="Ingrese su CI"
                                     />
+                                    {errors.ci && <p className='text-xs text-red-500'>{errors.ci.message}</p>}
+                                    {mensaje && <p className='text-xs text-red-500'>{mensaje}</p>}
                                 </div>
 
                                 {/* Nombre */}
                                 <div>
                                     <label className="block text-gray-600 text-sm font-medium mb-1">Nombre</label>
                                     <input
-                                        {...register("nombre")}
+                                        {...register("nombre", {
+                                            validate: (value: string) => {
+                                                if (!value) {
+                                                    return "Ingrese el nombre"
+                                                }
+                                                return true
+                                            }
+                                        })}
                                         type="text"
                                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         placeholder="Ingrese su nombre"
                                     />
+                                    {errors.nombre && <p className='text-xs text-red-500'>{errors.nombre.message}</p>}
                                 </div>
 
                                 {/* Apellido Paterno y Apellido Materno */}
@@ -88,11 +117,21 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
                                     <div>
                                         <label className="block text-gray-600 text-sm font-medium mb-1">Apellido Paterno</label>
                                         <input
-                                            {...register("apellidoPaterno")}
+                                            {...register("apellidoPaterno",
+                                                {
+                                                    validate: (value: string) => {
+                                                        if (!value) {
+                                                            return "Ingrese el apellido paterno"
+                                                        }
+                                                        return true
+                                                    }
+                                                }
+                                            )}
                                             type="text"
                                             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                             placeholder="Apellido Paterno"
                                         />
+                                        {errors.apellidoPaterno && <p className='text-xs text-red-500'>{errors.apellidoPaterno.message}</p>}
                                     </div>
 
                                     <div>
@@ -106,16 +145,7 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
                                     </div>
                                 </div>
 
-                                {/* Dirección */}
-                                <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Dirección</label>
-                                    <input
-                                        {...register("direccion")}
-                                        type="text"
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                        placeholder="Ingrese su dirección"
-                                    />
-                                </div>
+
 
                                 <div>
                                     <label className="block text-gray-600 text-sm font-medium mb-1">Celular</label>
@@ -123,7 +153,7 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
                                         {...register("celular")}
                                         type="text"
                                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                        placeholder="Ingrese su dirección"
+                                        placeholder="Ingrese el N° celular"
                                     />
                                 </div>
 

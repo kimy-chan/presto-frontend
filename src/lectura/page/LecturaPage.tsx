@@ -1,8 +1,8 @@
-import { FormLectura } from "../components/FormLectura"
+import { CrearLectura } from "../components/CrearLectura"
 
 export const LecturaPage = () => {
     return (
-        <div><FormLectura /></div>
+        <div><CrearLectura /></div>
     )
 }
 

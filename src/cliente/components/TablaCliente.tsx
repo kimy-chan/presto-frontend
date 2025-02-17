@@ -28,7 +28,7 @@ export const TablaCliente = () => {
             <th className="py-2 px-4">Nombre</th>
             <th className="py-2 px-4">Apellido Paterno</th>
             <th className="py-2 px-4">Apellido Materno</th>
-            <th className="py-2 px-4">Direccion</th>
+
             <th className="py-2 px-4">Accion</th>
           </tr>
         </thead>
@@ -40,7 +40,6 @@ export const TablaCliente = () => {
               <td className="py-2 px-4">{item.nombre}</td>
               <td className="py-2 px-4">{item.apellidoPaterno}</td>
               <td className="py-2 px-4">{item.apellidoMaterno}</td>
-              <td className="py-2 px-4">{item.direccion}</td>
               <td className="py-2 px-4">
                 <button className="text-blue-500 hover:text-blue-700">Ver</button>
               </td>

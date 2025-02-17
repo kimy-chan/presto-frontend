@@ -1,13 +1,12 @@
 import { instance } from "../../config/instance"
-import { DataClienteI } from "../interface/dataCliente"
+import { response } from "../../core/interface/response"
+import { FormLecturaI } from "../interface/formLectura"
 
-
-export const buscarMedidor=async(codigo:string):Promise<DataClienteI>=>{
+export const crearLectura = async(data:FormLecturaI):Promise<response>=>{
     try {
-        const response = await instance.get(`medidor/buscar/${codigo}`)
-        return response.data
+        const response =  await instance.post('lectura', data)
+        return await response.data
     } catch (error) {
-        throw error
+         throw error
     }
-
 }

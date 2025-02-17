@@ -1,6 +1,6 @@
 export interface FormLecturaI {
     lecturaActual:number,
-       codigoMedidor:string,
+       numeroMedidor:string,
     lecturaAnterior:number,
     medidor:string
 

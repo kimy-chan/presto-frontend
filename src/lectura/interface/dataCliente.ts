@@ -6,8 +6,9 @@ export interface DataClienteI {
               apellidoPaterno:string,
               ci:string,
               apellidoMaterno:string,
-              numeroSerie:string,
+              numeroMedidor:string,
               direccion:string
               codigo:string
+              lecturaAnterior:string
 
 }

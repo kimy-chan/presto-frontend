@@ -1,6 +1,6 @@
 export interface FormMedidorI {
     cliente?:string
-    numeroSerie:string,
+    numeroMedidor:string,
     tarifa:string
       descripcion:string
             fechaInstalacion:string

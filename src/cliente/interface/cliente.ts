@@ -5,6 +5,6 @@ ci:string
 nombre:string
 apellidoMaterno:string
 apellidoPaterno:string
-direccion:string
+//direccion:string
 celular:string
 }

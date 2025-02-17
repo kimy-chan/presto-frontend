@@ -6,5 +6,5 @@ export interface DataI {
 export interface DataTarifaI {
     rango1:number,
     rango2:number,
-    precio:number
+    costo:number
 }

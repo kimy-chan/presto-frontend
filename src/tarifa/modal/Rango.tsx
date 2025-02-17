@@ -33,7 +33,7 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
                                     <tr className='text-sm'>
                                         <th className="py-3 px-4 border-b text-left">Rango 1</th>
                                         <th className="py-3 px-4 border-b text-left">Rango 2</th>
-                                        <th className="py-3 px-4 border-b text-left">Precio</th>
+                                        <th className="py-3 px-4 border-b text-left">costo</th>
 
                                     </tr>
                                 </thead>
@@ -43,7 +43,7 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
 
                                             <td className="py-3 px-4">{item.rango1}</td>
                                             <td className="py-3 px-4">{item.rango2}</td>
-                                            <td className="py-3 px-4">{item.precio}</td>
+                                            <td className="py-3 px-4">{item.costo}</td>
 
                                         </tr>
                                     ))}

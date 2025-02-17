@@ -1,7 +1,8 @@
+import { ListarMedidor } from "../components/ListarMedidor"
 
 export const MedidorPage = () => {
     return (
-        <div>MedidorPage</div>
+        <div><ListarMedidor /></div>
     )
 }
 

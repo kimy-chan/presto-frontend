@@ -1,23 +1,36 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { FormLecturaI } from "../interface/formLectura"
-import { buscarMedidor } from "../service/lecturaService"
 import { DataClienteI } from "../interface/dataCliente"
+import { buscarMedidor } from "../../medidor/service/MedidorService"
+import { crearLectura } from "../service/lecturaService"
 
-export const FormLectura = () => {
-    const [cliente, setCliente] = useState<DataClienteI>()
-    const { register, handleSubmit, watch } = useForm<FormLecturaI>()
-    const codigoMedidor = watch("codigoMedidor")
-    console.log(codigoMedidor);
+
+export const CrearLectura = () => {
+    const [cliente, setCliente] = useState<DataClienteI | null>()
+    const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormLecturaI>()
+    const numeroMedidor = watch("numeroMedidor")
+
 
     useEffect(() => {
+        setCliente(null)
+        setValue("lecturaActual", 0)
         buscarMedidorCliente()
-    }, [codigoMedidor])
 
+    }, [numeroMedidor])
+
+    useEffect(() => {
+
+        if (cliente) {
+            setValue("lecturaAnterior", Number(cliente.lecturaAnterior));
+        } else {
+            setValue("lecturaAnterior", 0)
+        }
+    }, [cliente, setValue]);
     const buscarMedidorCliente = async () => {
         try {
-            if (codigoMedidor) {
-                const response = await buscarMedidor(codigoMedidor)
+            if (numeroMedidor) {
+                const response = await buscarMedidor(numeroMedidor)
                 setCliente(response)
 
             }
@@ -29,11 +42,16 @@ export const FormLectura = () => {
     const onSubmit = async (data: FormLecturaI) => {
         try {
             if (cliente) {
-
+                data.medidor = cliente._id
+                data.lecturaActual = Number(data.lecturaActual)
+                data.lecturaAnterior = Number(data.lecturaAnterior)
+                const response = await crearLectura(data)
+                console.log(response);
 
             }
 
         } catch (error) {
+            console.log(error);
 
         }
 
@@ -49,14 +67,24 @@ export const FormLectura = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                             <div className="mb-6 col-span-2">
-                                <label htmlFor="codigoMedidor" className="block text-gray-700 font-medium">Código Medidor</label>
+                                <label htmlFor="numeroMedidor" className="block text-gray-700 font-medium">Numero de Medidor</label>
                                 <input
-                                    {...register("codigoMedidor")}
+                                    {...register("numeroMedidor",
+                                        {
+                                            validate: (value: string) => {
+                                                if (!value) {
+                                                    return "Ingrese el N° de medidor"
+                                                }
+                                                return true
+                                            }
+                                        }
+                                    )}
                                     type="text"
-                                    id="codigoMedidor"
+                                    id="numeroMedidor"
                                     placeholder="Ingrese el código del medidor"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                                 />
+                                {errors.numeroMedidor && <p className='text-xs text-red-500'>{errors.numeroMedidor.message}</p>}
                             </div>
 
 
@@ -73,7 +101,7 @@ export const FormLectura = () => {
                                         <div className="p-4 bg-white rounded-lg shadow-md">
                                             <p className="font-semibold text-lg text-blue-600 mb-2">Datos del Medidor</p>
                                             <p><strong className="text-gray-800">Estado:</strong> <span className="text-gray-600">{cliente.estado}</span></p>
-                                            <p><strong className="text-gray-800">Número de Serie:</strong> <span className="text-gray-600">{cliente.numeroSerie}</span></p>
+                                            <p><strong className="text-gray-800">Número de Medidor:</strong> <span className="text-gray-600">{cliente.numeroMedidor}</span></p>
                                             <p><strong className="text-gray-800">Código Medidor:</strong> <span className="text-gray-600">{cliente.codigo}</span></p>
                                         </div>
                                     </div>
@@ -82,24 +110,46 @@ export const FormLectura = () => {
 
 
                             <div className="mb-6">
-                                <label htmlFor="lecturaAnterior" className="block text-gray-700 font-medium">Lectura Anterior</label>
+                                <label htmlFor="lecturaAnterior" className="block text-gray-700 font-medium"> Lectura Anterior m³</label>
                                 <input
-                                    {...register("lecturaAnterior")}
+                                    {...register("lecturaAnterior",
+                                        {
+                                            valueAsNumber: true,
+                                            validate: (value: number) => {
+                                                if (!value || value <= 0) {
+                                                    return "Ingrese la lectura anterior"
+                                                }
+                                                return true
+                                            }
+                                        }
+                                    )}
                                     type="number"
                                     id="lecturaAnterior"
                                     placeholder="Ingrese la lectura anterior"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                                 />
+                                {errors.lecturaAnterior && <p className='text-xs text-red-500'>{errors.lecturaAnterior.message}</p>}
                             </div>
                             <div className="mb-6">
-                                <label htmlFor="lecturaActual" className="block text-gray-700 font-medium">Lectura Actual</label>
+                                <label htmlFor="lecturaActual" className="block text-gray-700 font-medium">Lectura Actual  m³</label>
                                 <input
-                                    {...register("lecturaActual")}
+                                    {...register("lecturaActual",
+                                        {
+                                            valueAsNumber: true,
+                                            validate: (value: number) => {
+                                                if (!value || value <= 0) {
+                                                    return "Ingrese la lectura anterior"
+                                                }
+                                                return true
+                                            }
+                                        }
+                                    )}
                                     type="number"
                                     id="lecturaActual"
                                     placeholder="Ingrese la lectura actual"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                                 />
+                                {errors.lecturaActual && <p className='text-xs text-red-500'>{errors.lecturaActual.message}</p>}
                             </div>
                         </div>
                         <div className="text-center mt-6">
