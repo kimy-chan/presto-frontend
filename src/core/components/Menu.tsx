@@ -1,6 +1,6 @@
 import { useState, ReactNode } from "react";
 import { Link } from "react-router";
-import { FaBars, FaHome, FaCog, FaUsers, FaUserTie } from "react-icons/fa";
+import { FaBars, FaHome, FaUsers, FaUserTie } from "react-icons/fa";
 import { LiaTachometerAltSolid } from "react-icons/lia";
 import { MdOutlinePayments } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
@@ -112,7 +112,7 @@ export const Menu = ({ children }: { children: ReactNode }) => {
 
                   <li>
                     <Link
-                      to="/tarifas"
+                      to="/realizar/pago"
                       className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700"
                     >
                       <GrMoney size={24} />

@@ -7,6 +7,7 @@ import { medidorRouter } from "../../medidor/router/medidorRouter";
 import { gastoRouter } from "../../gasto/router/gastoRouter";
 import { categoriaGastoRouter } from "../../categoriaGasto/router/CategoriaGastoRouter";
 import { lecturaRouter } from "../../lectura/router/lecturaRouter";
+import { pagoRouter } from "../../pago/router/pagoRouter";
 
 
 
@@ -34,6 +35,7 @@ export const RouterIndex = () => {
         <RouterApp router={gastoRouter} />
         <RouterApp router={categoriaGastoRouter} />
         <RouterApp router={lecturaRouter} />
+        <RouterApp router={pagoRouter} />
       </Menu>
     </Router>
 

@@ -4,9 +4,21 @@ import { FormLecturaI } from "../interface/formLectura"
 import { DataClienteI } from "../interface/dataCliente"
 import { buscarMedidor } from "../../medidor/service/MedidorService"
 import { crearLectura } from "../service/lecturaService"
+import { HttpStatus } from "../../core/enums/httpStatus"
+import { useNavigate } from "react-router"
 
 
 export const CrearLectura = () => {
+    const navigate = useNavigate()
+    const date = new Date()
+    const meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+
+
+
     const [cliente, setCliente] = useState<DataClienteI | null>()
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormLecturaI>()
     const numeroMedidor = watch("numeroMedidor")
@@ -46,7 +58,10 @@ export const CrearLectura = () => {
                 data.lecturaActual = Number(data.lecturaActual)
                 data.lecturaAnterior = Number(data.lecturaAnterior)
                 const response = await crearLectura(data)
-                console.log(response);
+                if (response.status == HttpStatus.CREATED) {
+                    navigate(`/lectura/recibo/${response.lectura}`)
+
+                }
 
             }
 
@@ -108,6 +123,21 @@ export const CrearLectura = () => {
                                 )}
                             </div>
 
+                            <div className="mb-6 col-span-2">
+                                <label htmlFor="mes" className="block text-gray-700 font-medium mb-2">Mes</label>
+                                <select
+                                    {...register("mes", { required: 'Seleccione un mes' })}
+                                    defaultValue={meses[date.getMonth()]}
+                                    name="mes"
+                                    id="mes"
+                                    className="block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    {meses.map((item, index) => (
+                                        <option key={index} value={item} className="text-gray-700">{item}</option>
+                                    ))}
+                                </select>
+                                {errors.mes && <p className='text-xs text-red-500'>{errors.mes.message}</p>}
+                            </div>
 
                             <div className="mb-6">
                                 <label htmlFor="lecturaAnterior" className="block text-gray-700 font-medium"> Lectura Anterior m³</label>

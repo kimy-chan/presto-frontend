@@ -3,5 +3,6 @@ export interface FormLecturaI {
        numeroMedidor:string,
     lecturaAnterior:number,
     medidor:string
+    mes:string
 
 }
