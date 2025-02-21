@@ -6,9 +6,11 @@ import { ClienteMedidorLecturaI } from "../interface/clienteMedidorLectura";
 import { useForm } from "react-hook-form";
 import { RealizaPago } from "../interface/realizarPago";
 import { realizarPagos } from "../service/pagoService";
+import { HttpStatus } from "../../core/enums/httpStatus";
+import { useNavigate } from "react-router";
 
 export const RealizarPago = () => {
-
+    const navigate = useNavigate()
     const [data, setData] = useState<ClienteMedidorLecturaI>();
     const { register, handleSubmit, formState: { errors } } = useForm<RealizaPago>()
 
@@ -19,7 +21,10 @@ export const RealizarPago = () => {
                 dataRegistrada.lectura = data.idLectura
 
                 const response = await realizarPagos(dataRegistrada)
-                console.log(response);
+                if (response.status == HttpStatus.CREATED) {
+                    navigate(`/pago/imprimir/cliente/${response.medidor}`)
+                }
+
 
             }
 
