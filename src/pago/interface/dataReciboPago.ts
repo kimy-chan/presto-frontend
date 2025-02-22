@@ -14,8 +14,10 @@ export interface dataReciboPago {
     {
       costoPagado: number;
       lecturaActual: number;
-      lecturaAnteriror: number;
-      mesa: string;
+      lecturaAnterior: number;
+      consumoTotal: number;
+      mes: string;
+      gestion: string;
       observaciones: string;
       _id: string;
     }

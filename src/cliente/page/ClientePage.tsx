@@ -1,7 +1,7 @@
-import { TablaCliente } from '../components/TablaCliente'
+import { ListarClientes } from '../components/ListarClientes'
 
 export const ClientePage = () => {
     return (
-        <><TablaCliente /></>
+        <><ListarClientes /></>
     )
 }

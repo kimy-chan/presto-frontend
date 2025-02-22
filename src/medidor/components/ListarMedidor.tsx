@@ -47,7 +47,7 @@ export const ListarMedidor = () => {
                     </thead>
                     <tbody>
                         {data.map((item, i) => (
-                            <tr key={i} className="odd:bg-gray-100 even:bg-white border-b">
+                            <tr key={i} className="odd:bg-gray-100 even:bg-white">
                                 <td className="py-2 px-4">{item.codigoCliente}</td>
                                 <td className="py-2 px-4">{item.ci}</td>
                                 <td className="py-2 px-4">{item.nombre}</td>
