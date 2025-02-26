@@ -7,17 +7,19 @@ import { crearLectura } from "../service/lecturaService"
 import { HttpStatus } from "../../core/enums/httpStatus"
 import { useNavigate } from "react-router"
 
+import { AxiosError } from "axios"
+import { ErrorConflictoI } from "../../core/interface/errorConflicto"
+import { alertaConfirmacionLectura } from "../util/alertaConfrmacionLectura"
 
-export const CrearLectura = () => {
+
+export const RealizarLectura = () => {
     const navigate = useNavigate()
     const date = new Date()
+    const [conflicto, setConflicto] = useState<string>()
     const meses = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
-
-
-
 
     const [cliente, setCliente] = useState<DataClienteI | null>()
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormLecturaI>()
@@ -53,47 +55,55 @@ export const CrearLectura = () => {
     }
     const onSubmit = async (data: FormLecturaI) => {
         try {
-            if (cliente) {
-                data.medidor = cliente._id
-                data.lecturaActual = Number(data.lecturaActual)
-                data.lecturaAnterior = Number(data.lecturaAnterior)
-                const response = await crearLectura(data)
-                if (response.status == HttpStatus.CREATED) {
-                    navigate(`/lectura/recibo/${response.lectura}`)
 
+            if (cliente) {
+                const alerta = await alertaConfirmacionLectura()
+                if (alerta) {
+                    data.medidor = cliente._id
+                    data.lecturaActual = Number(data.lecturaActual)
+                    data.lecturaAnterior = Number(data.lecturaAnterior)
+                    const response = await crearLectura(data)
+                    if (response.status == HttpStatus.CREATED) {
+                        navigate(`/lectura/recibo/${response.lectura}`)
+
+                    }
                 }
+
+
 
             }
 
         } catch (error) {
-            console.log(error);
+            const e = error as AxiosError
+            if (e.status == HttpStatus.CONFLICT) {
+                const conflictoError = e.response?.data as ErrorConflictoI
+                setConflicto(conflictoError.message)
+            }
+
 
         }
 
     }
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-            <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
+        <div className="flex justify-center items-center min-h-screen p-4">
+            <div className="w-full sm:max-w-full md:max-w-4xl bg-white rounded-lg p-4 sm:p-2">
                 <div className="bg-blue-500 text-white text-center py-4 rounded-t-lg">
-                    <h5 className="text-xl font-semibold">Registro de Lectura del Medidor de Agua</h5>
+                    <h5 className="text-lg sm:text-xl font-semibold">Registro de Lectura del Medidor de Agua</h5>
                 </div>
-                <div className="p-6">
+                <div className="p-4 sm:p-2">
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="mb-6 col-span-2">
                                 <label htmlFor="numeroMedidor" className="block text-gray-700 font-medium">Numero de Medidor</label>
                                 <input
-                                    {...register("numeroMedidor",
-                                        {
-                                            validate: (value: string) => {
-                                                if (!value) {
-                                                    return "Ingrese el N° de medidor"
-                                                }
-                                                return true
+                                    {...register("numeroMedidor", {
+                                        validate: (value: string) => {
+                                            if (!value) {
+                                                return "Ingrese el N° de medidor"
                                             }
+                                            return true
                                         }
-                                    )}
+                                    })}
                                     type="text"
                                     id="numeroMedidor"
                                     placeholder="Ingrese el código del medidor"
@@ -102,10 +112,9 @@ export const CrearLectura = () => {
                                 {errors.numeroMedidor && <p className='text-xs text-red-500'>{errors.numeroMedidor.message}</p>}
                             </div>
 
-
                             <div className="mb-6 col-span-2">
                                 {cliente && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600 text-justify">
+                                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600 text-justify">
                                         <div className="p-4 bg-white rounded-lg shadow-md">
                                             <p className="font-semibold text-lg text-blue-600 mb-2">Datos del Cliente</p>
                                             <p><strong className="text-gray-800">Código Cliente:</strong> <span className="text-gray-600">{cliente.codigoCliente}</span></p>
@@ -139,48 +148,50 @@ export const CrearLectura = () => {
                                 {errors.mes && <p className='text-xs text-red-500'>{errors.mes.message}</p>}
                             </div>
 
-                            <div className="mb-6">
-                                <label htmlFor="lecturaAnterior" className="block text-gray-700 font-medium"> Lectura Anterior m³</label>
-                                <input
-                                    {...register("lecturaAnterior",
-                                        {
-                                            valueAsNumber: true,
-                                            validate: (value: number) => {
-                                                if (!value || value <= 0) {
-                                                    return "Ingrese la lectura anterior"
+                            <div className="mb-6 col-span-2">
+                                <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label htmlFor="lecturaAnterior" className="block text-gray-700 font-medium"> Lectura Anterior m³</label>
+                                        <input
+                                            {...register("lecturaAnterior", {
+                                                valueAsNumber: true,
+                                                validate: (value: number) => {
+                                                    if (!value || value <= 0) {
+                                                        return "Ingrese la lectura anterior"
+                                                    }
+                                                    return true
                                                 }
-                                                return true
-                                            }
-                                        }
-                                    )}
-                                    type="number"
-                                    id="lecturaAnterior"
-                                    placeholder="Ingrese la lectura anterior"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                />
-                                {errors.lecturaAnterior && <p className='text-xs text-red-500'>{errors.lecturaAnterior.message}</p>}
-                            </div>
-                            <div className="mb-6">
-                                <label htmlFor="lecturaActual" className="block text-gray-700 font-medium">Lectura Actual  m³</label>
-                                <input
-                                    {...register("lecturaActual",
-                                        {
-                                            valueAsNumber: true,
-                                            validate: (value: number) => {
-                                                if (!value || value <= 0) {
-                                                    return "Ingrese la lectura anterior"
+                                            })}
+                                            type="number"
+                                            id="lecturaAnterior"
+                                            placeholder="Ingrese la lectura anterior"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                        />
+                                        {errors.lecturaAnterior && <p className='text-xs text-red-500'>{errors.lecturaAnterior.message}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="lecturaActual" className="block text-gray-700 font-medium">Lectura Actual m³</label>
+                                        <input
+                                            {...register("lecturaActual", {
+                                                valueAsNumber: true,
+                                                validate: (value: number) => {
+                                                    if (!value || value <= 0) {
+                                                        return "Ingrese la lectura actual"
+                                                    }
+                                                    return true
                                                 }
-                                                return true
-                                            }
-                                        }
-                                    )}
-                                    type="number"
-                                    id="lecturaActual"
-                                    placeholder="Ingrese la lectura actual"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                />
-                                {errors.lecturaActual && <p className='text-xs text-red-500'>{errors.lecturaActual.message}</p>}
+                                            })}
+                                            type="number"
+                                            id="lecturaActual"
+                                            placeholder="Ingrese la lectura actual"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                        />
+                                        {errors.lecturaActual && <p className='text-xs text-red-500'>{errors.lecturaActual.message}</p>}
+                                    </div>
+                                </div>
+                                {conflicto && <p className='text-xs text-red-500'>{conflicto}</p>}
                             </div>
+
                         </div>
                         <div className="text-center mt-6">
                             <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition">
@@ -191,6 +202,7 @@ export const CrearLectura = () => {
                 </div>
             </div>
         </div>
+
 
     )
 }

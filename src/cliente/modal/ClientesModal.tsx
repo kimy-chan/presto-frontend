@@ -23,8 +23,10 @@ export const ClientesModal = ({ setCliente }: { setCliente: (cliete: ClienteI) =
     const [apellidoPaterno, setApellidoPaterno] = useState<string>('')
     const [apellidoMaterno, setApellidoMaterno] = useState<string>('')
     useEffect(() => {
-        listar()
-    }, [limite, pagina, nombre, apellidoMaterno, ci, codigo, apellidoPaterno])
+        if (isOpen == true) {
+            listar()
+        }
+    }, [limite, pagina, nombre, apellidoMaterno, ci, codigo, apellidoPaterno, isOpen])
 
     const listar = async () => {
         try {

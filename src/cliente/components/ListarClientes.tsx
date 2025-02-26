@@ -50,7 +50,7 @@ export const ListarClientes = () => {
       <div className="relative overflow-x-aut">
         <ItemsPagina limite={setLimite} />
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-
+       
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr className="bg-gray-200 text-left">
               <th className="py-2 px-4">Cod</th>

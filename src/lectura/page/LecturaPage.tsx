@@ -1,9 +1,9 @@
-import { CrearLectura } from "../components/CrearLectura"
+import { RealizarLectura } from "../components/RealizarLectura"
 
 export const LecturaPage = () => {
 
     return (
-        <div><CrearLectura /></div>
+        <div><RealizarLectura /></div>
     )
 }
 

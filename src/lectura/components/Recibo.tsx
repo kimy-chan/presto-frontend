@@ -35,10 +35,8 @@ export const Recibo = ({ id }: { id: string }) => {
     return (
         <>{dataRecibo && <div className="max-w-md mx-auto p-6">
             <div id="recibo" className="bg-white shadow-xl rounded-xl p-6 border border-gray-300">
-                <h2 className="text-xl font-bold text-center text-blue-700">E.L.A.P.A.S</h2>
-                <p className="text-xs text-center text-gray-600">Empresa Local de Agua Potable y Alcantarillado Sucre</p>
-                <p className="text-xs text-center italic text-gray-500">No válido para crédito fiscal</p>
-
+                <h2 className="text-xl font-bold text-center text-blue-700">A.A.S.P.S.A.S</h2>
+                <p className="text-xs text-center text-gray-600">Empresa Local de Agua Potable Presto</p>
                 <div className="mt-4 border-t border-gray-400 pt-2">
                     <p className="text-sm text-gray-700"><span className="font-semibold">Código Cliente:</span> {dataRecibo.codigoCliente}</p>
                     <p className="text-sm text-gray-700"><span className="font-semibold">Nro Medidor:</span> {dataRecibo.numeroMedidor}</p>

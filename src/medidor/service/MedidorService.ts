@@ -1,6 +1,9 @@
 import { instance } from "../../config/instance";
+import { ParamsI } from "../../core/interface/params";
 import { response } from "../../core/interface/response";
+import { ResponseDataI } from "../../core/interface/responseData";
 import { DataClienteI } from "../../lectura/interface/dataCliente";
+import { BuscadorMedidorClientI } from "../interface/buscadorMedidorCliente";
 import { DataMedidorClienteI } from "../interface/dataMedidorCliente";
 import { FormMedidorI } from "../interface/formMedidor";
 import { MedidorCliente } from "../interface/medidorCliente";
@@ -25,9 +28,32 @@ export const buscarMedidor = async (
   }
 };
 
-export const listarMedidor = async (): Promise<MedidorCliente[]> => {
+export const listarMedidor = async (
+  buscador: BuscadorMedidorClientI,
+  limite: number,
+  pagina: number
+): Promise<ResponseDataI<MedidorCliente>> => {
   try {
-    const response = await instance.get("medidor");
+    const params: ParamsI & BuscadorMedidorClientI = {
+      limite: limite,
+      pagina: pagina,
+    };
+    buscador.ci ? (params.ci = buscador.ci) : params;
+    buscador.nombre ? (params.nombre = buscador.nombre) : params;
+    buscador.apellidoPaterno
+      ? (params.apellidoPaterno = buscador.apellidoPaterno)
+      : params;
+    buscador.apellidoMaterno
+      ? (params.apellidoMaterno = buscador.apellidoMaterno)
+      : params;
+    buscador.numeroMedidor
+      ? (params.numeroMedidor = buscador.numeroMedidor)
+      : params;
+    console.log(params);
+
+    const response = await instance.get("medidor", {
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;

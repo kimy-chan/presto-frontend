@@ -1,6 +1,7 @@
 import { RouterI } from "../../core/interface/router";
 import { ReciboPagoClientePage } from "../page/ReciboPagoClientePage";
 import { RealizarPagoPage } from "../page/RealizarPagoPage";
+import { ListarPagoPage } from "../page/ListarPagoPage";
 
 export const pagoRouter: RouterI[] = [
   {
@@ -13,5 +14,11 @@ export const pagoRouter: RouterI[] = [
     path: "/pago/imprimir/cliente/:medidor",
 
     element: ReciboPagoClientePage,
+  },
+
+  {
+    path: "/listar/Pagos",
+
+    element: ListarPagoPage,
   },
 ];
