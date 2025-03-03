@@ -1,10 +1,10 @@
 import { ReactNode, useState } from 'react';
-import { FaBars, FaHome, FaTimes, FaUsers, FaUserTie } from 'react-icons/fa'; // Importamos los íconos
+import { FaBars, FaHome, FaKey, FaTimes, FaUserAlt, FaUsers, FaUserTie } from 'react-icons/fa'; // Importamos los íconos
 import { FaMoneyBills } from 'react-icons/fa6';
 import { FcReadingEbook } from 'react-icons/fc';
 import { GrMoney } from 'react-icons/gr';
 import { IoReaderOutline } from 'react-icons/io5';
-import { LiaTachometerAltSolid } from 'react-icons/lia';
+import { LiaTachometerAltSolid, LiaUsersCogSolid } from 'react-icons/lia';
 import { MdOutlinePayments } from 'react-icons/md';
 import { Link } from 'react-router';
 
@@ -16,6 +16,7 @@ export const Menu = ({ children }: { children: ReactNode }) => {
     pagos: false,
     gastos: false,
     lecturas: false,
+    usuarios: false
   });
 
   const toggleSection = (section: string) => {
@@ -153,12 +154,31 @@ export const Menu = ({ children }: { children: ReactNode }) => {
                 )}
               </li>
 
-              {/* Usuarios */}
-              <li className="mt-4">
-                <Link to="/usuarios" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
-                  <FaUserTie size={24} />
-                  {isOpen && <span>Usuarios</span>}
-                </Link>
+
+
+
+              <li>
+                <button onClick={() => toggleSection("usuarios")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
+                  <LiaUsersCogSolid size={24} />
+                  {isOpen && <span>Administracion</span>}
+                </button>
+                {openSections.usuarios && (
+                  <ul className="ml-6">
+                    <li>
+                      <Link to="/listar/usuarios" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
+                        <FaUserAlt size={24} />
+                        {isOpen && <span>Listar usuarios</span>}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/listar/rol" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
+                        <FaKey size={24} />
+                        {isOpen && <span>Listar roles</span>}
+                      </Link>
+                    </li>
+
+                  </ul>
+                )}
               </li>
             </ul>
           </div>

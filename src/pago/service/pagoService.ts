@@ -1,5 +1,6 @@
 import { instance } from "../../config/instance";
 import { ParamsI } from "../../core/interface/params";
+import { ResponseDataI } from "../../core/interface/responseData";
 import { BuscadorPagosI } from "../interface/buscadorPagos";
 import { dataReciboPago } from "../interface/dataReciboPago";
 import { ListarPagosI } from "../interface/listarPagos";
@@ -32,7 +33,7 @@ export const listarTodosLosPagos = async (
   buscador: BuscadorPagosI,
   limite: number,
   pagina: number
-): Promise<ListarPagosI[]> => {
+): Promise<ResponseDataI<ListarPagosI>> => {
   const params: ParamsI & BuscadorPagosI = {
     limite: limite,
     pagina: pagina,
@@ -52,6 +53,8 @@ export const listarTodosLosPagos = async (
 
   buscador.fechaInicio ? (params.fechaInicio = buscador.fechaInicio) : params;
   buscador.fechaFin ? (params.fechaFin = buscador.fechaFin) : params;
+  console.log(params);
+
   try {
     const response = await instance.get("pago/listar", {
       params,

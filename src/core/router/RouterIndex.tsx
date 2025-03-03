@@ -8,6 +8,8 @@ import { gastoRouter } from "../../gasto/router/gastoRouter";
 import { categoriaGastoRouter } from "../../categoriaGasto/router/CategoriaGastoRouter";
 import { lecturaRouter } from "../../lectura/router/lecturaRouter";
 import { pagoRouter } from "../../pago/router/pagoRouter";
+import { usuarioRouter } from "../../usuario/router/usuarioRouter";
+import { rolRouter } from "../../rol/router/rolRouter";
 
 
 
@@ -36,6 +38,8 @@ export const RouterIndex = () => {
         <RouterApp router={categoriaGastoRouter} />
         <RouterApp router={lecturaRouter} />
         <RouterApp router={pagoRouter} />
+        <RouterApp router={usuarioRouter} />
+        <RouterApp router={rolRouter} />
       </Menu>
     </Router>
 

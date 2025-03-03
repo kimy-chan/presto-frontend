@@ -16,4 +16,6 @@ export interface ListarPagosI {
   fecha: string;
   numeroPago: string;
   estado: string;
+  tarifa: string;
+  medidor:string
 }

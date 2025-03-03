@@ -5,8 +5,11 @@ import { ListarPagosI } from "../interface/listarPagos";
 import { BuscadorPagosI } from "../interface/buscadorPagos";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { Paginador } from "../../core/components/Paginador";
+import { HttpStatus } from "../../core/enums/httpStatus";
+import { useNavigate } from "react-router";
 
 export const ListarPagos = () => {
+    const navigate = useNavigate()
     const [data, setData] = useState<ListarPagosI[]>([]);
     const [buscador, setBuscador] = useState<BuscadorPagosI>({
         ci: null,
@@ -17,6 +20,8 @@ export const ListarPagos = () => {
         fechaFin: null,
         fechaInicio: null
     });
+    console.log(buscador);
+
     const [pagina, setPagina] = useState<number>(1)
     const [limite, setLimite] = useState<number>(20)
     const [paginas, setPaginas] = useState<number>(1)
@@ -27,7 +32,12 @@ export const ListarPagos = () => {
     const listarPagos = async () => {
         try {
             const response = await listarTodosLosPagos(buscador, limite, pagina)
-            setData(response)
+            console.log(response);
+
+            if (response.status == HttpStatus.OK) {
+                setData(response.data)
+                setPaginas(response.paginas)
+            }
         } catch (error) {
             console.log(error);
 
@@ -64,8 +74,10 @@ export const ListarPagos = () => {
 
                                         <th className="py-2 px-4 hidden md:table-cell">Mes</th>
                                         <th className="py-2 px-4">Estado</th>
+                                        <th className="py-2 px-4">tarifa</th>
                                         <th className="py-2 px-4 hidden md:table-cell">Recibo</th>
                                         <th className="py-2 px-4 hidden md:table-cell">Fecha</th>
+                                        <th className="py-2 px-4 hidden md:table-cell">Accion</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,9 +100,17 @@ export const ListarPagos = () => {
                                             <th className="py-2 px-4 hidden md:table-cell">{item.costoPagado}</th>
                                             <th className="py-2 px-4 hidden md:table-cell">{item.mes}</th>
                                             <th className="py-2 px-4">{item.estado}</th>
+                                            <th className="py-2 px-4">{item.tarifa}</th>
 
                                             <th className="py-2 px-4 hidden md:table-cell">{item.numeroPago}</th>
                                             <th className="py-2 px-4 hidden md:table-cell">{item.fecha}</th>
+                                            <th>
+                                                <button
+                                                    onClick={() => navigate(`/pago/imprimir/cliente/${item.medidor}`)}
+                                                    className="bg-green-600 p-1 rounded-2xl text-white">
+                                                    Recibo
+                                                </button>
+                                            </th>
                                         </tr>
 
                                     ))}
