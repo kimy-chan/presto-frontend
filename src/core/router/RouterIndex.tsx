@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router"
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router"
 import { tarifaRouter } from "../../tarifa/router/tarifaRouter"
 import { RouterI } from "../interface/router"
 import { clienteRouter } from "../../cliente/routes/clienteRouter";
@@ -10,7 +10,11 @@ import { lecturaRouter } from "../../lectura/router/lecturaRouter";
 import { pagoRouter } from "../../pago/router/pagoRouter";
 import { usuarioRouter } from "../../usuario/router/usuarioRouter";
 import { rolRouter } from "../../rol/router/rolRouter";
-
+import { useContext } from "react";
+import { AutenticacionContext } from "../../autenticacion/context/AutenticacionContext";
+import { homeRouter } from "../../home/router/homeRouter";
+import { AutenticacionPage } from "../../autenticacion/page/AutenticacionPage";
+import { AutenticacionProvider } from "../../autenticacion/context/AutenticacionProvider";
 
 
 const RouterApp = ({ router }: { router: RouterI[] }) => {
@@ -27,9 +31,25 @@ const RouterApp = ({ router }: { router: RouterI[] }) => {
 };
 
 export const RouterIndex = () => {
+  const { isAutenticacion, token } = useContext(AutenticacionContext)
+  console.log('a', isAutenticacion);
+
+  if (!isAutenticacion && !token) {
+    return (
+
+      <Router>
+
+        <Routes>
+          <Route path="/" element={<AutenticacionPage />} />
+        </Routes>
+
+      </Router>
+    );
+  }
   return (
 
     <Router>
+
       <Menu>
         <RouterApp router={tarifaRouter} />
         <RouterApp router={clienteRouter} />
@@ -40,7 +60,9 @@ export const RouterIndex = () => {
         <RouterApp router={pagoRouter} />
         <RouterApp router={usuarioRouter} />
         <RouterApp router={rolRouter} />
+        <RouterApp router={homeRouter} />
       </Menu>
+
     </Router>
 
   );

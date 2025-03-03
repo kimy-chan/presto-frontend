@@ -1,4 +1,5 @@
 export interface CrearUsuarioI {
+  ci: string;
   nombre: string;
 
   apellidoMaterno?: string;

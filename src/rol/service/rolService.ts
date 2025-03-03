@@ -14,7 +14,16 @@ export const CrearRol = async (data: DataRol): Promise<response> => {
 
 export const listarRolesPublic = async (): Promise<ListarRolesI[]> => {
   try {
-    const renponse = await instance.get("rol");
+    const renponse = await instance.get("rol/publicas");
+    return renponse.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listarRolUser = async (): Promise<ListarRolesI> => {
+  try {
+    const renponse = await instance.get("rol/user");
     return renponse.data;
   } catch (error) {
     throw error;

@@ -71,10 +71,20 @@ export const CrearUsuariosModal = () => {
                                 &times;
                             </button>
                         </div>
-
-
                         <form onSubmit={(handleSubmit(onSubmit))}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-gray-700 font-medium mb-2" htmlFor="nombre">
+                                        Ci
+                                    </label>
+                                    <input
+                                        {...register("ci", { required: 'El ci es requerido' })}
+                                        id="ci"
+                                        type="text"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    {errors.nombre && <p className='text-red-500 text-xs'>{errors.nombre.message}</p>}
+                                </div>
                                 <div>
                                     <label className="block text-gray-700 font-medium mb-2" htmlFor="nombre">
                                         Nombre

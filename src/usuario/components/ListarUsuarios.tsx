@@ -35,22 +35,43 @@ export const ListarUsuarios = () => {
                                 <thead
                                     className="border-b border-neutral-200 font-medium dark:border-white/10">
                                     <tr>
-                                        <th className="py-2 px-4">Nombres</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Apellidos</th>
-                                        <th className="py-2 px-4">Usuario</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Celular</th>
+                                        <th scope="col" className="px-6 py-4">CI</th>
+                                        <th scope="col" className="px-6 py-4">Nombre</th>
+                                        <th scope="col" className="px-6 py-4">Apellidos</th>
+                                        <th scope="col" className="px-6 py-4">Usuario</th>
+                                        <th scope="col" className="px-6 py-4">Celular</th>
+                                        <th scope="col" className="px-6 py-4">Direccion</th>
+                                        <th scope="col" className="px-6 py-4">Rol</th>
 
-                                        <th className="py-2 px-4 hidden md:table-cell">Direccion</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Rol</th>
 
-
-                                        <th className="py-2 px-4 hidden md:table-cell">Accion</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {
+                                        usuarios.map((item) => (
+                                            <tr className="border-b border-neutral-200 dark:border-white/10">
+                                                <td className="whitespace-nowrap px-6 py-4 font-medium">{item.ci}</td>
+                                                <td className="whitespace-nowrap px-6 py-4">{item.nombre}</td>
+                                                <td className="whitespace-nowrap px-6 py-4">{item.apellidoPaterno} {item.apellidoMaterno}</td>
+                                                <td className="whitespace-nowrap px-6 py-4">{item.usuario}</td>
+                                                <td className="whitespace-nowrap px-6 py-4">{item.celular}</td>
+                                                <td className="whitespace-nowrap px-6 py-4">{item.direccion}</td>
+                                                <td className="whitespace-nowrap px-6 py-4">{item.rolNombre}</td>
+
+                                                <td className="whitespace-nowrap px-6 py-4">
+                                                    <button
+
+                                                        className="bg-green-600 p-1 rounded-2xl text-white">
+                                                        Recibo
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
 
                                 </tbody>
                             </table>
+
                             <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
                         </div>
                     </div>
