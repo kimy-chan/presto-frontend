@@ -1,37 +1,37 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { AutenticacionContext } from './AutenticacionContext'
-import Cookies from 'js-cookie';
+import { useCookies } from 'react-cookie';
+
 
 export const AutenticacionProvider = ({ children }: { children: ReactNode }) => {
-    const token = Cookies.get('token')
-    const [isAutenticacion, SetIsAutenticacion] = useState<boolean>(!!token)
+    const [cookies, setCookie, removeCookie] = useCookies(['token']);
+
+    const [isAutenticacion, SetIsAutenticacion] = useState<boolean>(!!cookies)
 
 
     const setToken = (token: string) => {
         if (token) {
-            Cookies.set('token', token, {
+            setCookie('token', token, {
             })
             SetIsAutenticacion(true)
         }
     }
     useEffect(() => {
-
-
-        if (token) {
+        if (cookies.token) {
             SetIsAutenticacion(true)
         } else {
             SetIsAutenticacion(false)
 
         }
 
-    }, [token])
+    }, [cookies])
 
     const cerrarSession = () => {
-        Cookies.remove('token')
+        removeCookie('token')
         SetIsAutenticacion(false)
     }
     return (
-        <AutenticacionContext.Provider value={{ cerrarSession, setToken, isAutenticacion: isAutenticacion, token: token }} >
+        <AutenticacionContext.Provider value={{ cerrarSession, setToken, isAutenticacion: isAutenticacion, token: cookies.token }} >
             {children}
         </AutenticacionContext.Provider>
     )
