@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { ClienteI } from "../interface/cliente";
 import { listarClientes } from "../services/clienteService";
 import { IoIosAddCircle } from "react-icons/io";
-import { FaEdit } from "react-icons/fa";
 import { BuscadorCliente } from "../components/BuscadorCliente";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { Paginador } from "../../core/components/Paginador";

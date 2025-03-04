@@ -11,13 +11,13 @@ import { AxiosError } from "axios";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 
-export const FormMedidor = () => {
+export const CrearMedidor = () => {
     const [dataTarifa, setDataTarifa] = useState<TarifaI[]>([])
-    const [cliente, setCliente] = useState<ClienteI>()
+    const [cliente, setCliente] = useState<ClienteI | null>()
     const [mesanje, setMensaje] = useState<string>()
     const [mesanjeConflicto, setMensajeConflicto] = useState<string>()
     const [mensajeCreado, setMensajeCreado] = useState<string>()
-    const { register, handleSubmit, formState: { errors }, watch } = useForm<FormMedidorI>()
+    const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormMedidorI>()
     const numeroMedidr = watch("numeroMedidor")
     useEffect(() => {
         tarifas()
@@ -40,11 +40,14 @@ export const FormMedidor = () => {
 
         if (cliente) {
             data.cliente = cliente._id
-            console.log(data);
+
             try {
                 const response = await crearMedidor(data)
                 if (response.status == HttpStatus.CREATED) {
                     setMensajeCreado("Registrado")
+                    setCliente(null)
+                    reset()
+
                 }
 
             } catch (error) {
@@ -154,7 +157,7 @@ export const FormMedidor = () => {
                     {errors.tarifa && <p className='text-xs text-red-500'>{errors.tarifa.message}</p>}
                 </div>
 
-                {mensajeCreado && <p className="col-span-2 text-2xl text-green-700">{mensajeCreado}</p>}
+                {mensajeCreado && <p className="col-span-2 text-center text-2xl text-green-700">{mensajeCreado}</p>}
 
                 <button
                     type="submit"

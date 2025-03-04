@@ -1,4 +1,5 @@
 export interface MedidorCliente {
+  _id: string;
   codigoCliente: string;
   ci: string;
   apellido: string;

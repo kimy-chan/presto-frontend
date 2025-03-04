@@ -1,9 +1,9 @@
 
-import { FormMedidor } from '../components/FormMedidor'
+import { CrearMedidor } from '../components/CrearMedidor'
 
 const CrearMedidorPage = () => {
   return (
-    <div><FormMedidor /></div>
+    <CrearMedidor />
   )
 }
 

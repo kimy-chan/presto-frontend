@@ -10,12 +10,14 @@ import { useNavigate } from "react-router"
 import { AxiosError } from "axios"
 import { ErrorConflictoI } from "../../core/interface/errorConflicto"
 import { alertaConfirmacionLectura } from "../util/alertaConfrmacionLectura"
+import { ErrorI } from "../../core/interface/error"
 
 
 export const RealizarLectura = () => {
     const navigate = useNavigate()
     const date = new Date()
     const [conflicto, setConflicto] = useState<string>()
+    const [error, setError] = useState<string>()
     const meses = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -24,12 +26,14 @@ export const RealizarLectura = () => {
     const [cliente, setCliente] = useState<DataClienteI | null>()
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormLecturaI>()
     const numeroMedidor = watch("numeroMedidor")
-
+    const lecturaAnterior = watch("lecturaAnterior")
 
     useEffect(() => {
         setCliente(null)
         setValue("lecturaActual", 0)
         buscarMedidorCliente()
+        setConflicto('')
+        setError('')
 
     }, [numeroMedidor])
 
@@ -74,11 +78,19 @@ export const RealizarLectura = () => {
             }
 
         } catch (error) {
+            console.log(error);
+
             const e = error as AxiosError
+
             if (e.status == HttpStatus.CONFLICT) {
                 const conflictoError = e.response?.data as ErrorConflictoI
                 setConflicto(conflictoError.message)
             }
+            if (e.status == HttpStatus.BAD_REQUEST) {
+                const err = e.response?.data as ErrorI
+                setError(err.message)
+            }
+
 
 
         }
@@ -159,6 +171,7 @@ export const RealizarLectura = () => {
                                                     if (!value || value <= 0) {
                                                         return "Ingrese la lectura anterior"
                                                     }
+
                                                     return true
                                                 }
                                             })}
@@ -178,6 +191,9 @@ export const RealizarLectura = () => {
                                                     if (!value || value <= 0) {
                                                         return "Ingrese la lectura actual"
                                                     }
+                                                    if (value < lecturaAnterior) {
+                                                        return "Ingrese las lecturas correctas"
+                                                    }
                                                     return true
                                                 }
                                             })}
@@ -190,6 +206,7 @@ export const RealizarLectura = () => {
                                     </div>
                                 </div>
                                 {conflicto && <p className='text-xs text-red-500'>{conflicto}</p>}
+                                {error && <p className='text-xs text-red-500'>{error}</p>}
                             </div>
 
                         </div>

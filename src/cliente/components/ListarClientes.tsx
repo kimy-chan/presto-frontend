@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { ClienteI } from "../interface/cliente";
-import { listarClientes } from "../services/clienteService";
+import { eliminarCliente, listarClientes } from "../services/clienteService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { BuscadorCliente } from "./BuscadorCliente";
 import { Paginador } from "../../core/components/Paginador";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
+import { EditarClienteModal } from "../modal/EditarClienteModal";
 
 export const ListarClientes = () => {
   const [data, setData] = useState<ClienteI[]>([])
@@ -16,6 +19,11 @@ export const ListarClientes = () => {
   const [codigo, setCodigo] = useState<string>('')
   const [apellidoPaterno, setApellidoPaterno] = useState<string>('')
   const [apellidoMaterno, setApellidoMaterno] = useState<string>('')
+  const [cliente, setCliente] = useState<string>()
+  const [isOpen, setIsOpen] = useState(false);
+
+
+  const closeModal = () => setIsOpen(false);
   useEffect(() => {
     listar()
   }, [limite, pagina, nombre, apellidoMaterno, ci, codigo, apellidoPaterno])
@@ -38,6 +46,24 @@ export const ListarClientes = () => {
     }
   }
 
+
+
+  const editarCliente = (cliente: string) => {
+    setCliente(cliente)
+    setIsOpen(true)
+  }
+
+  const eliminar = async (cliente: string) => {
+    try {
+      const response = await eliminarCliente(cliente)
+      if (response.status == HttpStatus.OK) {
+
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
   return (
     <div className="overflow-x-auto max-w-full">
       <BuscadorCliente
@@ -49,10 +75,12 @@ export const ListarClientes = () => {
       />
       <div className="relative overflow-x-aut">
         <ItemsPagina limite={setLimite} />
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-       
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="bg-gray-200 text-left">
+
+        <table
+          className="min-w-full text-start text-sm font-light text-surface dark:text-white">
+          <thead
+            className="bg-gray-700 text-white">
+            <tr>
               <th className="py-2 px-4">Cod</th>
               <th className="py-2 px-4">Ci</th>
               <th className="py-2 px-4">Nombre</th>
@@ -64,22 +92,29 @@ export const ListarClientes = () => {
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={item._id}>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center" key={item._id}>
                 <td className="py-2 px-4">{item.codigo}</td>
                 <td className="py-2 px-4">{item.ci}</td>
                 <td className="py-2 px-4">{item.nombre}</td>
                 <td className="py-2 px-4">{item.apellidoPaterno}</td>
                 <td className="py-2 px-4">{item.apellidoMaterno}</td>
                 <td className="py-2 px-4">
-                  <button className="text-blue-500 hover:text-blue-700">Ver</button>
+                  <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                    <MdDelete />
+                  </button>
+                  <button onClick={() => editarCliente(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                    <FaEdit />
+                  </button>
                 </td>
               </tr>
             ))}
 
           </tbody>
         </table>
+
         <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
       </div>
+      {isOpen && cliente && <EditarClienteModal cliente={cliente} closeModal={closeModal} isOpen={isOpen} />}
     </div>
   );
 };

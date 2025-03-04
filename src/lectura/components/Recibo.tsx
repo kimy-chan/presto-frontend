@@ -43,17 +43,18 @@ export const Recibo = ({ id }: { id: string }) => {
                 </div>
 
                 <div className="mt-4 border-t border-gray-400 pt-2">
+
                     <p className="text-sm text-gray-700"><span className="font-semibold">Nombre:</span> {dataRecibo.nombre} {dataRecibo.apellidoPaterno}  {dataRecibo.apellidoMaterno}</p>
                     <p className="text-sm text-gray-700"><span className="font-semibold">Dirección:</span> {dataRecibo.direccion}</p>
                     <p className="text-sm text-gray-700"><span className="font-semibold">Categoría:</span> {dataRecibo.categoria}</p>
-                    <p className="text-sm text-gray-700"><span className="font-semibold">Fecha y Hora:</span> {dataRecibo.fecha}</p>
+                    <p className="text-sm text-gray-700"><span className="font-semibold">Fecha:</span> {dataRecibo.fecha}</p>
                 </div>
 
-                <div className="mt-4 border-t border-gray-400 pt-2 grid grid-cols-2 gap-4">
+                <div className="mt-4 border-t border-gray-400 pt-2 grid grid-cols-2">
                     <p className="text-sm text-gray-700"><span className="font-semibold">Lectura Actual:</span> {dataRecibo.lecturaActual}</p>
                     <p className="text-sm text-gray-700"><span className="font-semibold">Lectura Anterior:</span> {dataRecibo.lecturaAnterior}</p>
                     <p className="text-sm text-gray-700"><span className="font-semibold">Consumo:</span> {dataRecibo.consumoTotal} m³</p>
-                    <p className="text-sm text-gray-700"><span className="font-semibold">Fecha Vencimiento:</span> 06/03/2025</p>
+                    <p className="text-sm text-gray-700"><span className="font-semibold">Vencimiento:</span> {dataRecibo.fechaVencimiento}</p>
                 </div>
 
                 <div className="mt-4 border-t border-gray-400 pt-4 text-center bg-gray-100 rounded-lg p-4 shadow-md">

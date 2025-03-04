@@ -4,6 +4,8 @@ import { ItemsPagina } from '../../core/components/ItemsPAgina'
 import { CrearUsuariosModal } from '../modal/CrearUsuariosModal'
 import { listarUsuarios } from '../service/usuarioService'
 import { ListarUsuariosI } from '../interface/listarUsuarios'
+import { MdDelete } from 'react-icons/md'
+import { FaEdit } from 'react-icons/fa'
 
 export const ListarUsuarios = () => {
     const [pagina, setPagina] = useState<number>(1)
@@ -42,6 +44,7 @@ export const ListarUsuarios = () => {
                                         <th scope="col" className="px-6 py-4">Celular</th>
                                         <th scope="col" className="px-6 py-4">Direccion</th>
                                         <th scope="col" className="px-6 py-4">Rol</th>
+                                        <th scope="col" className="px-6 py-4">Accion</th>
 
 
                                     </tr>
@@ -59,10 +62,11 @@ export const ListarUsuarios = () => {
                                                 <td className="whitespace-nowrap px-6 py-4">{item.rolNombre}</td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
-                                                    <button
-
-                                                        className="bg-green-600 p-1 rounded-2xl text-white">
-                                                        Recibo
+                                                    <button className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                        <MdDelete />
+                                                    </button>
+                                                    <button className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                        <FaEdit />
                                                     </button>
                                                 </td>
                                             </tr>

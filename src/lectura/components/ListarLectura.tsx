@@ -7,6 +7,8 @@ import { BuscadorLecturaI } from "../interface/buscadorLectura";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { Paginador } from "../../core/components/Paginador";
 import { HttpStatus } from "../../core/enums/httpStatus";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 export const ListarLectura = () => {
     const navigate = useNavigate()
@@ -93,6 +95,14 @@ export const ListarLectura = () => {
                                                         className="bg-green-600 p-1 rounded-2xl text-white">
                                                         Recibo
                                                     </button>
+
+                                                    <button className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                        <MdDelete />
+                                                    </button>
+                                                    <button className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                        <FaEdit />
+                                                    </button>
+
                                                 </td>
                                             </tr>
                                         ))
