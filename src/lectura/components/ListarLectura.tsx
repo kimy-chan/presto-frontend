@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listarLecturas } from "../service/lecturaService";
+import { eliminarLectura, listarLecturas } from "../service/lecturaService";
 import { ListarLecturaI } from "../interface/listarLecturas";
 import { BuscadorLectura } from "./BuscadorLectura";
 import { useNavigate } from "react-router";
@@ -9,10 +9,16 @@ import { Paginador } from "../../core/components/Paginador";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { EditarLecturaModal } from "../modal/EditarLecturaModal";
+import { EstadoPagoE } from "../../pago/enum/estadoPago";
 
 export const ListarLectura = () => {
     const navigate = useNavigate()
     const [data, setData] = useState<ListarLecturaI[]>([]);
+    const [lectura, setLectura] = useState<string>()
+    const [isOpen, setIsOpen] = useState(false);
+
+    const closeModal = () => setIsOpen(false);
     const [buscador, setBuscador] = useState<BuscadorLecturaI>(
         {
             fechaFin: null,
@@ -42,6 +48,23 @@ export const ListarLectura = () => {
         }
     }
 
+    const editarLectura = (lectura: string) => {
+        setLectura(lectura)
+        setIsOpen(true)
+
+
+    }
+
+    const eliminar = async (lectura: string) => {
+        try {
+            const response = await eliminarLectura(lectura)
+            if (response.status == HttpStatus.OK) {
+
+            }
+        } catch (error) {
+
+        }
+    }
     return (
         <>
 
@@ -57,7 +80,7 @@ export const ListarLectura = () => {
                                 className="min-w-full text-start text-sm font-light text-surface dark:text-white">
                                 <thead
                                     className="border-b border-neutral-200 font-medium dark:border-white/10">
-                                    <tr>
+                                    <tr className="bg-gray-700 text-white text-left">
                                         <th scope="col" className="px-6 py-4">CI</th>
                                         <th scope="col" className="px-6 py-4">Nombre</th>
                                         <th scope="col" className="px-6 py-4">Apellidos</th>
@@ -96,12 +119,15 @@ export const ListarLectura = () => {
                                                         Recibo
                                                     </button>
 
-                                                    <button className=" text-red-500 text-2xl px-3 py-1 rounded">
-                                                        <MdDelete />
-                                                    </button>
-                                                    <button className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                    {item.estado != EstadoPagoE.PAGADO &&
+                                                        <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                            <MdDelete />
+                                                        </button>}
+
+
+                                                    {item.estado != EstadoPagoE.PAGADO && <button onClick={() => editarLectura(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                                                         <FaEdit />
-                                                    </button>
+                                                    </button>}
 
                                                 </td>
                                             </tr>
@@ -115,6 +141,7 @@ export const ListarLectura = () => {
                     </div>
                 </div>
             </div>
+            {isOpen && lectura && <EditarLecturaModal closeModal={closeModal} isOpen={isOpen} lectura={lectura} />}
         </>
     );
 }

@@ -6,12 +6,17 @@ import { IoMdInformationCircle } from 'react-icons/io'
 import { FaRegEdit } from 'react-icons/fa'
 import { Rango } from '../modal/Rango'
 import { RangoI } from '../interface/rango'
+import { EditarTarifa } from '../modal/editarTarifa'
 
 
-export const TablaTarifas = () => {
+export const ListarTarifas = () => {
     const [abriModalRango, setModalRango] = useState(false)
     const [tarifas, setTarifas] = useState<TarifaI[]>([])
+    const [tarifa, setTarifa] = useState<string>()
     const [rangos, setRangos] = useState<RangoI[]>([])
+    const [isOpen, setIsOpen] = useState(false);
+
+    const closeModal = () => setIsOpen(false);
 
     useEffect(() => {
         listar()
@@ -38,11 +43,11 @@ export const TablaTarifas = () => {
 
         } catch (error) {
             console.log(error);
-
         }
-
-
-
+    }
+    const editar = (tarifa: string) => {
+        setTarifa(tarifa)
+        setIsOpen(true)
     }
     return (
         <div className="overflow-x-auto">
@@ -64,14 +69,14 @@ export const TablaTarifas = () => {
                                 {item.nombre}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <button className='text-2xl'>
+                                <button className='text-2xl text-red-500'>
                                     <MdDelete />
                                 </button>
                                 <button onClick={() => verRangoTarifa(item._id)} className='text-2xl' >
                                     <IoMdInformationCircle />
                                 </button>
 
-                                <button className='text-2xl' >
+                                <button onClick={() => editar(item._id)} className='text-2xl text-blue-500' >
                                     <FaRegEdit />
                                 </button>
                             </td>
@@ -80,6 +85,8 @@ export const TablaTarifas = () => {
                 </tbody>
             </table>
             {abriModalRango && <Rango isOpen={abriModalRango} closeModal={cerrarModalRango} data={rangos} />}
+            {isOpen && tarifa && <EditarTarifa closeModal={closeModal} isOpen={isOpen} tarifa={tarifa} />}
+
         </div>
     )
 }

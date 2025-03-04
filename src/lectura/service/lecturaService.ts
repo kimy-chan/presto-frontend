@@ -1,6 +1,8 @@
 import { instance } from "../../config/instance";
 import { ParamsI } from "../../core/interface/params";
+import { response } from "../../core/interface/response";
 import { ResponseDataI } from "../../core/interface/responseData";
+import { ResponseOneI } from "../../core/interface/responseOne";
 import { BuscadorLecturaI } from "../interface/buscadorLectura";
 
 import { FormLecturaI } from "../interface/formLectura";
@@ -69,6 +71,38 @@ export const listarLecturas = async (
     const response = await instance.get(`lectura`, {
       params,
     });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const lecturaId = async (
+  lectura: string
+): Promise<ResponseOneI<FormLecturaI>> => {
+  try {
+    const response = await instance.get(`lectura/${lectura}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const editarLectura = async (
+  lectura: string,
+  data: FormLecturaI
+): Promise<response> => {
+  try {
+    const response = await instance.patch(`lectura/${lectura}`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const eliminarLectura = async (lectura: string): Promise<response> => {
+  try {
+    const response = await instance.delete(`lectura/${lectura}`);
     return response.data;
   } catch (error) {
     throw error;

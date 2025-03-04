@@ -1,4 +1,6 @@
+import { MdDelete } from "react-icons/md";
 import { RangoI } from "../interface/rango";
+import { FaEdit } from "react-icons/fa";
 
 export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModal: () => void, data: RangoI[] }) => {
 
@@ -34,6 +36,7 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
                                         <th className="py-3 px-4 border-b text-left">Rango 1</th>
                                         <th className="py-3 px-4 border-b text-left">Rango 2</th>
                                         <th className="py-3 px-4 border-b text-left">costo</th>
+                                        <th className="py-3 px-4 border-b text-left">Accion</th>
 
                                     </tr>
                                 </thead>
@@ -44,6 +47,15 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
                                             <td className="py-3 px-4">{item.rango1}</td>
                                             <td className="py-3 px-4">{item.rango2}</td>
                                             <td className="py-3 px-4">{item.costo}</td>
+                                            <td className="py-2 px-4">
+
+                                                <button className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                    <MdDelete />
+                                                </button>
+                                                <button className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                    <FaEdit />
+                                                </button>
+                                            </td>
 
                                         </tr>
                                     ))}

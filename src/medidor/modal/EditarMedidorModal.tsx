@@ -8,6 +8,7 @@ import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 import { FormMedidorI } from "../interface/formMedidor";
 import { listarTarifas } from "../../tarifa/service/tarifasService";
 import { TarifaI } from "../../tarifa/interface/tarifa";
+import { editarMedidor, medidorFindOne } from "../service/MedidorService";
 
 export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
     medidor: string,
@@ -16,19 +17,26 @@ export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
 }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormMedidorI>()
-    const [mensaje, setMensaje] = useState<string>()
     const [mesanjeConflicto, setMensajeConflicto] = useState<string>()
-    const [mensajeCreado, setMensajeCreado] = useState<string>()
     const [dataTarifa, setDataTarifa] = useState<TarifaI[]>([])
     useEffect(() => {
         medidorOne()
-
+        tarifas()
     }, [isOpen])
 
 
     const medidorOne = async () => {
         try {
-
+            const response = await medidorFindOne(medidor)
+            if (response.status == HttpStatus.OK) {
+                setValue("numeroMedidor", response.data.numeroMedidor)
+                setValue("descripcion", response.data.descripcion)
+                setValue("estado", response.data.estado)
+                setValue("direccion", response.data.direccion)
+                const fechaInstalacion = new Date(response.data.fechaInstalacion).toISOString().split('T')[0];
+                setValue("fechaInstalacion", fechaInstalacion);
+                setValue("tarifa", response.data.tarifa)
+            }
 
         } catch (error) {
             console.log(error);
@@ -40,14 +48,19 @@ export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
     const onSubmit = async (data: FormMedidorI) => {
         try {
 
-
+            const response = await editarMedidor(medidor, data)
+            if (response.status == HttpStatus.OK) {
+                closeModal()
+            }
         } catch (error) {
+            console.log(error);
+
             const e = error as AxiosError
             if (e.status == HttpStatus.CONFLICT) {
                 const conflicto = e.response?.data as ErrorConflictoI
-                console.log(conflicto);
 
-                setMensaje(conflicto.message)
+
+                setMensajeConflicto(conflicto.message)
             }
 
 
@@ -133,7 +146,7 @@ export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
 
                                 <div>
                                     <label className="block text-gray-600 text-sm font-medium mb-1">
-                                        Dirección del medidor
+                                        Dirección
                                     </label>
                                     <input
                                         {...register("direccion", { validate: value => value ? true : "Ingrese la dirección" })}
@@ -145,9 +158,26 @@ export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
 
                                 <div>
                                     <label className="block text-gray-600 text-sm font-medium mb-1">
+                                        Seleccione el estado
+                                    </label>
+                                    <select
+                                        {...register("estado", { validate: value => value ? true : "Seleccione una tarifa" })}
+                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    >
+                                        <option value="">Seleccione el estado</option>
+                                        <option value="ACTIVO">Activo</option>
+                                        <option value="INACTIVO">Inactivo</option>
+                                        <option value="MANTENIMIENTO">Mantenimiento</option>
+
+                                    </select>
+                                    {errors.tarifa && <p className='text-xs text-red-500'>{errors.tarifa.message}</p>}
+                                </div>
+                                <div>
+                                    <label className="block text-gray-600 text-sm font-medium mb-1">
                                         Seleccione la tarifa
                                     </label>
                                     <select
+
                                         {...register("tarifa", { validate: value => value ? true : "Seleccione una tarifa" })}
                                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     >
@@ -159,7 +189,6 @@ export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
                                     {errors.tarifa && <p className='text-xs text-red-500'>{errors.tarifa.message}</p>}
                                 </div>
 
-                                {mensajeCreado && <p className="col-span-2 text-center text-2xl text-green-700">{mensajeCreado}</p>}
 
                                 <button
                                     type="submit"

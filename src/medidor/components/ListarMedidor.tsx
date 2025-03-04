@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listarMedidor } from "../service/MedidorService";
+import { eliminarMedidor, listarMedidor } from "../service/MedidorService";
 import { MedidorCliente } from "../interface/medidorCliente";
 import { BuscadorMedidor } from "./BuscadorMedidor";
 import { BuscadorMedidorClientI } from "../interface/buscadorMedidorCliente";
@@ -9,6 +9,7 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { MdDelete } from "react-icons/md";
 import { FaBookReader, FaEdit } from "react-icons/fa";
 import { EditarMedidorModal } from "../modal/EditarMedidorModal";
+import { EstadoMedidorE } from "../enum/estadoMedidor";
 
 export const ListarMedidor = () => {
     const [data, setData] = useState<MedidorCliente[]>([]);
@@ -20,6 +21,7 @@ export const ListarMedidor = () => {
         nombre: null,
         numeroMedidor: null
     });
+
     const [pagina, setPagina] = useState<number>(1)
     const [limite, setLimite] = useState<number>(20)
     const [paginas, setPaginas] = useState<number>(1)
@@ -52,6 +54,18 @@ export const ListarMedidor = () => {
     const medidorId = (medidor: string) => {
         setMedidor(medidor)
         setIsOpen(true)
+    }
+
+    const eliminar = async (medidor: string) => {
+        try {
+            const response = await eliminarMedidor(medidor)
+            if (response.status == HttpStatus.OK) {
+
+            }
+        } catch (error) {
+
+        }
+
     }
     return (
         <>
@@ -86,14 +100,11 @@ export const ListarMedidor = () => {
                                             <td className="py-2 px-4">{item.apellidoMaterno}</td>
                                             <td className="py-2 px-4">{item.codigo}</td>
                                             <td className="py-2 px-4">{item.numeroMedidor}</td>
-                                            <td className="py-2 px-4">{item.estado}</td>
+                                            <td className={`py-2 px-4 ${item.estado == EstadoMedidorE.activo ? 'bg-green-400' : item.estado == EstadoMedidorE.inactivo ? 'bg-red-400' : 'bg-amber-400'}  `} >{item.estado}</td>
                                             <td className="py-2 px-4">{item.direccion}</td>
                                             <td className="py-2 px-4">
-                                                <button className="text-black-500 text-2xl px-3">
-                                                    <FaBookReader />
-                                                </button>
 
-                                                <button className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                     <MdDelete />
                                                 </button>
                                                 <button onClick={() => medidorId(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
