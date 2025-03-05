@@ -1,8 +1,7 @@
-import { RolModal } from "../modal/RolModal"
 
 export const ListarRol = () => {
     return (
-        <div><RolModal />
+        <div>
 
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

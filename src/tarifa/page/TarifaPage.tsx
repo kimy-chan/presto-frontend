@@ -1,9 +1,9 @@
 import { ListarTarifas } from "../components/ListarTarifas";
-import { FormTarifa } from "../modal/FormTarifa";
+import { CrearTarifa } from "../modal/CrearTarifa";
 
 export const TarifaPage = () => {
   return <div>
-    <FormTarifa />
+    <CrearTarifa />
     <ListarTarifas />
   </div>;
 };

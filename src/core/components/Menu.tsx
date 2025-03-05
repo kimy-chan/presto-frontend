@@ -177,6 +177,14 @@ export const Menu = ({ children }: { children: ReactNode }) => {
                         <span>Listar usuarios</span>
                       </Link>
                     </li>
+
+                    <li>
+                      <Link to="/crear/rol" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
+                        <FaKey size={24} />
+                        <span>Crear rol</span>
+                      </Link>
+                    </li>
+
                     <li>
                       <Link to="/listar/rol" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <FaKey size={24} />

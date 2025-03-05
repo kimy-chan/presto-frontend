@@ -3,7 +3,7 @@ import { response } from "../../core/interface/response";
 import { DataRol } from "../interface/dataRo";
 import { ListarRolesI } from "../interface/ListarRoles";
 
-export const CrearRol = async (data: DataRol): Promise<response> => {
+export const crearRol = async (data: DataRol): Promise<response> => {
   try {
     const renponse = await instance.post("rol", data);
     return renponse.data;

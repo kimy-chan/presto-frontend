@@ -4,23 +4,24 @@ import { TarifaI } from '../interface/tarifa'
 import { MdDelete } from 'react-icons/md'
 import { IoMdInformationCircle } from 'react-icons/io'
 import { FaRegEdit } from 'react-icons/fa'
-import { Rango } from '../modal/Rango'
+import { ListarRangoModal } from '../modal/ListarRangoModal'
 import { RangoI } from '../interface/rango'
-import { EditarTarifa } from '../modal/editarTarifa'
+import { EditarTarifa } from '../modal/EditarTarifa'
 
 
 export const ListarTarifas = () => {
     const [abriModalRango, setModalRango] = useState(false)
     const [tarifas, setTarifas] = useState<TarifaI[]>([])
     const [tarifa, setTarifa] = useState<string>()
-    const [rangos, setRangos] = useState<RangoI[]>([])
+
     const [isOpen, setIsOpen] = useState(false);
+    const [recargar, setRecargar] = useState(false)
 
     const closeModal = () => setIsOpen(false);
 
     useEffect(() => {
         listar()
-    }, [])
+    }, [recargar])
 
     const listar = async () => {
 
@@ -37,13 +38,7 @@ export const ListarTarifas = () => {
 
     const verRangoTarifa = async (tarifa: string) => {
         setModalRango(true)
-        try {
-            const response = await listarRangoTarifa(tarifa)
-            setRangos(response)
-
-        } catch (error) {
-            console.log(error);
-        }
+        setTarifa(tarifa)
     }
     const editar = (tarifa: string) => {
         setTarifa(tarifa)
@@ -84,8 +79,14 @@ export const ListarTarifas = () => {
                     ))}
                 </tbody>
             </table>
-            {abriModalRango && <Rango isOpen={abriModalRango} closeModal={cerrarModalRango} data={rangos} />}
-            {isOpen && tarifa && <EditarTarifa closeModal={closeModal} isOpen={isOpen} tarifa={tarifa} />}
+            {abriModalRango && tarifa && <ListarRangoModal isOpen={abriModalRango} closeModal={cerrarModalRango} tarifa={tarifa} />}
+            {isOpen && tarifa && <EditarTarifa
+                closeModal={closeModal}
+                isOpen={isOpen} tarifa={tarifa}
+                recargar={recargar}
+                setRecargar={setRecargar}
+
+            />}
 
         </div>
     )

@@ -1,9 +1,38 @@
 import { MdDelete } from "react-icons/md";
 import { RangoI } from "../interface/rango";
 import { FaEdit } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { EditarRangoModal } from "./EditarRango";
+import { listarRangoTarifa } from "../service/tarifasService";
 
-export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModal: () => void, data: RangoI[] }) => {
+export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boolean, closeModal: () => void, tarifa: string }) => {
+    const [isOpenEdit, setIsOpenEdit] = useState(false);
+    const [rango, setRango] = useState<string>()
+    const [rangos, setRangos] = useState<RangoI[]>([])
+    const [recargar, setRecargar] = useState<boolean>(false)
+    const closeModalEdit = () => setIsOpenEdit(false);
 
+    useEffect(() => {
+        if (isOpen) {
+            verRangoTarifa()
+        }
+    }, [isOpen, recargar])
+    const verRangoTarifa = async () => {
+
+        try {
+            const response = await listarRangoTarifa(tarifa)
+            setRangos(response)
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const editarRango = (rango: string) => {
+        setRango(rango)
+        setIsOpenEdit(true)
+
+    }
     return (
         <div className="p-4">
 
@@ -21,7 +50,7 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
 
                     <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-full max-w-md">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">{data.length > 0 && data[0].tarifa}</h2>
+                            <h2 className="text-xl font-semibold">{rangos.length > 0 && rangos[0].tarifa}</h2>
                             <button
                                 onClick={closeModal}
                                 className="text-gray-600 hover:text-gray-800 text-2xl"
@@ -41,7 +70,7 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data.map((item, index) => (
+                                    {rangos.map((item, index) => (
                                         <tr key={index} className="text-sm border-b hover:bg-gray-100 transition duration-200">
 
                                             <td className="py-3 px-4">{item.rango1}</td>
@@ -52,7 +81,7 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
                                                 <button className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                     <MdDelete />
                                                 </button>
-                                                <button className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                <button onClick={() => editarRango(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                                                     <FaEdit />
                                                 </button>
                                             </td>
@@ -73,6 +102,12 @@ export const Rango = ({ isOpen, closeModal, data }: { isOpen: boolean, closeModa
                     </div>
                 </div>
             )}
+            {isOpenEdit && rango &&
+                <EditarRangoModal closeModal={closeModalEdit}
+                    isOpen={isOpenEdit} rango={rango}
+                    recargar={recargar}
+                    setRecargar={setRecargar}
+                />}
         </div>
     );
 };
