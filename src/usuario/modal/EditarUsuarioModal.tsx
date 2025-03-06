@@ -3,26 +3,51 @@ import { listarRolesPublic } from '../../rol/service/rolService';
 import { ListarRolesI } from '../../rol/interface/ListarRoles';
 import { useForm } from 'react-hook-form';
 import { CrearUsuarioI } from '../interface/crearUsuario';
-import { crearUsuario } from '../service/usuarioService';
+import { editarUsuario, usuarioOne } from '../service/usuarioService';
 import { HttpStatus } from '../../core/enums/httpStatus';
 import { AxiosError } from 'axios';
 import { ErrorI } from '../../core/interface/error';
 
-export const CrearUsuariosModal = () => {
-    const { register, handleSubmit, formState: { errors }, watch } = useForm<CrearUsuarioI>()
-    const [isOpen, setIsOpen] = useState(false);
+export const EditarUsuarioModal = (
+    { usuario, closeModal, isOpen, recargar, setRecargar }: {
+        usuario: string,
+        closeModal: () => void, isOpen: boolean,
+        recargar: boolean,
+
+        setRecargar: (recargar: boolean) => void
+    }
+) => {
+
     const [roles, setRoles] = useState<ListarRolesI[]>([])
     const [ciConflicto, setCiConflicto] = useState<string>('')
     const [usuarioConflicto, setUsuarioConflicto] = useState<string>('')
-    const password = watch("password")
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<CrearUsuarioI>()
 
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
     useEffect(() => {
         if (isOpen) {
+            listarUsuario()
             listarRoles()
         }
     }, [isOpen])
+
+    const listarUsuario = async () => {
+        try {
+            const response = await usuarioOne(usuario)
+            if (response.status == HttpStatus.OK) {
+                setValue("nombre", response.data.nombre)
+                setValue("apellidoPaterno", response.data.apellidoPaterno)
+                setValue("apellidoMaterno", response.data.apellidoMaterno)
+                setValue("celular", response.data.celular)
+                setValue("ci", response.data.ci)
+                setValue("rol", response.data.rol)
+                setValue("usuario", response.data.usuario)
+                setValue("direccion", response.data.direccion)
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
 
     const listarRoles = async () => {
         try {
@@ -35,13 +60,15 @@ export const CrearUsuariosModal = () => {
     }
     const onSubmit = async (data: CrearUsuarioI) => {
         try {
-            const response = await crearUsuario(data)
-            if (response.status == HttpStatus.CREATED) {
+
+
+            const response = await editarUsuario(usuario, data)
+            if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
                 closeModal()
+
             }
         } catch (error) {
-            console.log(error);
-
             const e = error as AxiosError
             const er = e.response?.data as ErrorI
 
@@ -61,12 +88,7 @@ export const CrearUsuariosModal = () => {
 
     return (
         <div className="p-4">
-            <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                onClick={openModal}
-            >
-                Abrir Modal
-            </button>
+
 
             {isOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -155,41 +177,7 @@ export const CrearUsuariosModal = () => {
                                     {usuarioConflicto && <p className='text-red-500 text-xs'>{usuarioConflicto}</p>}
                                 </div>
 
-                                <div>
-                                    <label className="block text-gray-700 font-medium mb-2" htmlFor="password">
-                                        Contraseña
-                                    </label>
-                                    <input
-                                        {...register("password", { required: 'El contraseña  es requerido' })}
-                                        id="password"
-                                        type="password"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    {errors.password && <p className='text-red-500 text-xs'>{errors.password.message}</p>}
-                                </div>
 
-                                <div>
-                                    <label className="block text-gray-700 font-medium mb-2" htmlFor="repetirContraseña">
-                                        Repita la contraseña
-                                    </label>
-                                    <input
-                                        {...register("password2", {
-                                            validate: (value) => {
-                                                if (!value) {
-                                                    return 'Ingrese la contraseña'
-                                                }
-                                                if (password != value) {
-                                                    return 'La contraseñas no conciden'
-                                                }
-                                                return true
-                                            }
-                                        })}
-                                        id="repetirContraseña"
-                                        type="password"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    {errors.password2 && <p className='text-red-500 text-xs'>{errors.password2.message}</p>}
-                                </div>
 
                                 <div>
                                     <label className="block text-gray-700 font-medium mb-2" htmlFor="direccion">
