@@ -1,44 +1,99 @@
+import { useEffect, useState } from 'react'
+import { eliminarRol, listarRoles } from '../service/rolService'
+import { ListarRolesI } from '../interface/ListarRoles'
+import { FaEdit } from 'react-icons/fa'
+import { MdDelete } from 'react-icons/md'
+import { useNavigate } from 'react-router'
+import { HttpStatus } from '../../core/enums/httpStatus'
 
 export const ListarRol = () => {
+    const navidate = useNavigate()
+    const [rol, setRol] = useState<ListarRolesI[]>([])
+    const [openPermission, setOpenPermission] = useState<string | null>(null)
+    const [recargar, setRecargar] = useState<boolean>(false)
+
+    useEffect(() => {
+        roles()
+    }, [recargar])
+
+    const roles = async () => {
+        try {
+            const response = await listarRoles()
+            setRol(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const togglePermission = (id: string) => {
+        setOpenPermission(openPermission === id ? null : id)
+    }
+
+    const eliminar = async (id: string) => {
+        try {
+            const response = await eliminarRol(id)
+            if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
     return (
-        <div>
-
-
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div className="overflow-x-auto max-w-full">
+            <div className="overflow-x-auto shadow-lg rounded-lg">
+                <table className="min-w-full text-start text-sm font-light text-surface dark:text-white">
+                    <thead className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white">
                         <tr>
-                            <th scope="col" className="px-6 py-3">
-                                Rol
-                            </th>
+                            <th className="py-3 px-4 text-left">Rol</th>
+                            <th className="py-3 px-4 text-left">Permisos</th>
+                            <th className="py-3 px-4 text-center">Acción</th>
 
-                            <th scope="col" className="px-6 py-3">
-                                Action
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Apple MacBook Pro 17"
-                            </th>
+                        {rol.map((item) => (
+                            <tr
+                                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center"
+                                key={item._id}
+                            >
+                                <td className="py-3 px-4">{item.nombre}</td>
+                                <td className="py-3 px-4">
+                                    <button
+                                        onClick={() => togglePermission(item._id)}
+                                        className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-500 focus:outline-none transition duration-300"
+                                    >
+                                        {openPermission === item._id ? "Ocultar Permisos" : "Ver Permisos"}
+                                    </button>
+
+                                    {openPermission === item._id && (
+                                        <div className="mt-3 p-4">
+                                            <div className="space-y-2">
+                                                {item.permisos.map((permiso, index) => (
+                                                    <p
+                                                        key={index}
+                                                        className="text-gray-700 dark:text-gray-300"
+                                                    >
+                                                        - {permiso}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </td>
 
 
-
-                            <td className="px-6 py-4">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr>
-                        <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Microsoft Surface Pro
-                            </th>
-
-                            <td className="px-6 py-4">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr>
-
+                                <td className="py-3 px-4">
+                                    <button onClick={() => eliminar(item._id)} className="text-red-500 text-2xl px-3 py-1 rounded hover:bg-red-100 transition duration-200">
+                                        <MdDelete />
+                                    </button>
+                                    <button onClick={() => navidate(`/editar/rol/${item._id}`)} className="text-blue-500 text-2xl px-3 py-1 rounded hover:bg-blue-100 transition duration-200">
+                                        <FaEdit />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

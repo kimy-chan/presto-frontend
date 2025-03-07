@@ -1,19 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataRol } from "../interface/dataRo";
-import { crearRol } from "../service/rolService";
+import { editarRol, listarRolOne } from "../service/rolService";
+import { HttpStatus } from "../../core/enums/httpStatus";
+import { useNavigate } from "react-router";
 import { PermissionsState } from "../interface/rol";
 import { availablePermissions } from "../util/permisos";
 
 
 
-
-export const CrearRol = () => {
-
+export const EditarRol = ({ id }: { id: string }) => {
+    const navigate = useNavigate()
     const [roleName, setRoleName] = useState("");
     const [permissions, setPermissions] = useState<PermissionsState>({});
 
 
-    // Cambiar el estado de los permisos
+
+    useEffect(() => {
+
+        const rol = async () => {
+            try {
+                const response = await listarRolOne(id);
+                if (response.status === HttpStatus.OK) {
+                    console.log(response.data);
+                    setRoleName(response.data.nombre);
+                    const permisosIniciales: PermissionsState = {};
+                    response.data.permisos.forEach((permiso: string) => {
+                        permisosIniciales[permiso] = true;
+                    });
+                    setPermissions(permisosIniciales);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        rol();
+    }, [id]);
+
+
     const handlePermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
         setPermissions((prevPermissions) => ({
@@ -22,31 +46,29 @@ export const CrearRol = () => {
         }));
     };
 
-    // Enviar los datos del rol y permisos seleccionados
+
     const handleSubmit = async () => {
         const selectedPermissions = Object.keys(permissions).filter(
             (permissionId) => permissions[permissionId]
         );
         const dataRol: DataRol = {
             nombre: roleName,
-            permisos: selectedPermissions
-        }
+            permisos: selectedPermissions,
+        };
 
         try {
-            console.log(dataRol);
 
-            const response = await crearRol(dataRol)
-            console.log(response);
-
+            const response = await editarRol(id, dataRol);
+            if (response.status == HttpStatus.OK) {
+                navigate('/listar/rol')
+            }
         } catch (error) {
             console.log(error);
-
         }
-
     };
 
     return (
-        <div className="rounded-lg shadow-lg p-6  ">
+        <div className="rounded-lg shadow-lg p-6">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-semibold text-gray-800">Asignar Rol</h2>
             </div>
@@ -110,7 +132,5 @@ export const CrearRol = () => {
                 </button>
             </div>
         </div>
-
-
     );
 };
