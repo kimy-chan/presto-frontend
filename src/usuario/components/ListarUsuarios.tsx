@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Paginador } from '../../core/components/Paginador'
 import { ItemsPagina } from '../../core/components/ItemsPAgina'
 import { CrearUsuariosModal } from '../modal/CrearUsuariosModal'
@@ -10,6 +10,8 @@ import { EditarUsuarioModal } from '../modal/EditarUsuarioModal'
 import { HttpStatus } from '../../core/enums/httpStatus'
 import { BuscadorUsuario } from './BuscadorUsuario'
 import { BuscadorUsuarioI } from '../interface/buscadorCliente'
+import { PermisosE } from '../../core/enums/permisos'
+import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 
 export const ListarUsuarios = () => {
     const [buscador, setBuscador] = useState<BuscadorUsuarioI>()
@@ -20,6 +22,7 @@ export const ListarUsuarios = () => {
     const [usuarios, setUsuarios] = useState<ListarUsuariosI[]>([])
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [recargar, setRecargar] = useState<boolean>(false);
+    const { permisosUsuario } = useContext(PermisosContext)
 
     const closeModal = () => setIsOpen(false);
     console.log(buscador);
@@ -59,7 +62,7 @@ export const ListarUsuarios = () => {
 
     return (
         < >
-            <CrearUsuariosModal />
+            {permisosUsuario.some((i) => i.includes(PermisosE.LISTAR_USUARIO)) && <CrearUsuariosModal />}
             <BuscadorUsuario onSubmit={setBuscador} />
             <ItemsPagina limite={setLimite} />
             <div className="flex flex-col overflow-x-auto">
@@ -96,12 +99,12 @@ export const ListarUsuarios = () => {
                                                 <td className="whitespace-nowrap px-6 py-4">{item.rolNombre}</td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
-                                                    <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                    {permisosUsuario.some((i) => i.includes(PermisosE.ELIMINAR_USUARIO)) && <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                         <MdDelete />
-                                                    </button>
-                                                    <button onClick={() => editarUsuario(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                    </button>}
+                                                    {permisosUsuario.some((i) => i.includes(PermisosE.EDITAR_USUARIO)) && <button onClick={() => editarUsuario(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                                                         <FaEdit />
-                                                    </button>
+                                                    </button>}
                                                 </td>
                                             </tr>
                                         ))

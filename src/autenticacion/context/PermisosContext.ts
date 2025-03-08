@@ -9,4 +9,5 @@ export const PermisosContext = createContext<PermisosI>({
   permisosUsuario: [],
   permisosTarifa: [],
   permisosMedidor: [],
+  permisosCliente: [],
 });

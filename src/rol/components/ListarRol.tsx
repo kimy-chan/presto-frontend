@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { eliminarRol, listarRoles } from '../service/rolService'
 import { ListarRolesI } from '../interface/ListarRoles'
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { useNavigate } from 'react-router'
 import { HttpStatus } from '../../core/enums/httpStatus'
+import { PermisosContext } from '../../autenticacion/context/PermisosContext'
+import { PermisosE } from '../../core/enums/permisos'
 
 export const ListarRol = () => {
     const navidate = useNavigate()
     const [rol, setRol] = useState<ListarRolesI[]>([])
     const [openPermission, setOpenPermission] = useState<string | null>(null)
     const [recargar, setRecargar] = useState<boolean>(false)
-
+    const { permisosRol } = useContext(PermisosContext)
     useEffect(() => {
         roles()
     }, [recargar])
@@ -40,6 +42,8 @@ export const ListarRol = () => {
 
         }
     }
+    console.log(permisosRol);
+
     return (
         <div className="overflow-x-auto max-w-full">
             <div className="overflow-x-auto shadow-lg rounded-lg">
@@ -85,12 +89,12 @@ export const ListarRol = () => {
 
 
                                 <td className="py-3 px-4">
-                                    <button onClick={() => eliminar(item._id)} className="text-red-500 text-2xl px-3 py-1 rounded hover:bg-red-100 transition duration-200">
+                                    {permisosRol.some((i) => i.includes(PermisosE.ELIMINAR_ROL)) && <button onClick={() => eliminar(item._id)} className="text-red-500 text-2xl px-3 py-1 rounded hover:bg-red-100 transition duration-200">
                                         <MdDelete />
-                                    </button>
-                                    <button onClick={() => navidate(`/editar/rol/${item._id}`)} className="text-blue-500 text-2xl px-3 py-1 rounded hover:bg-blue-100 transition duration-200">
+                                    </button>}
+                                    {permisosRol.some((i) => i.includes(PermisosE.EDITAR_ROL)) && <button onClick={() => navidate(`/editar/rol/${item._id}`)} className="text-blue-500 text-2xl px-3 py-1 rounded hover:bg-blue-100 transition duration-200">
                                         <FaEdit />
-                                    </button>
+                                    </button>}
                                 </td>
                             </tr>
                         ))}

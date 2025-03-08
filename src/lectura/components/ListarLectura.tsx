@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { eliminarLectura, listarLecturas } from "../service/lecturaService";
 import { ListarLecturaI } from "../interface/listarLecturas";
 import { BuscadorLectura } from "./BuscadorLectura";
@@ -11,13 +11,15 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { EditarLecturaModal } from "../modal/EditarLecturaModal";
 import { EstadoPagoE } from "../../pago/enum/estadoPago";
+import { PermisosContext } from "../../autenticacion/context/PermisosContext";
+import { PermisosE } from "../../core/enums/permisos";
 
 export const ListarLectura = () => {
     const navigate = useNavigate()
     const [data, setData] = useState<ListarLecturaI[]>([]);
     const [lectura, setLectura] = useState<string>()
     const [isOpen, setIsOpen] = useState(false);
-
+    const { permisosLectura } = useContext(PermisosContext)
     const closeModal = () => setIsOpen(false);
     const [buscador, setBuscador] = useState<BuscadorLecturaI>(
         {
@@ -120,14 +122,18 @@ export const ListarLectura = () => {
                                                     </button>
 
                                                     {item.estado != EstadoPagoE.PAGADO &&
-                                                        <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+
+                                                        permisosLectura.some((i) => i.includes(PermisosE.ELIMINAR_LECTURA)) && (<button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                             <MdDelete />
-                                                        </button>}
+                                                        </button>)
 
 
-                                                    {item.estado != EstadoPagoE.PAGADO && <button onClick={() => editarLectura(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                    }
+
+
+                                                    {item.estado != EstadoPagoE.PAGADO && permisosLectura.some((i) => i.includes(PermisosE.EDITAR_LECTURA)) && (<button onClick={() => editarLectura(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                                                         <FaEdit />
-                                                    </button>}
+                                                    </button>)}
 
                                                 </td>
                                             </tr>

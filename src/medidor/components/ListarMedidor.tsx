@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { eliminarMedidor, listarMedidor } from "../service/MedidorService";
 import { MedidorCliente } from "../interface/medidorCliente";
 import { BuscadorMedidor } from "./BuscadorMedidor";
@@ -10,6 +10,8 @@ import { MdDelete } from "react-icons/md";
 import { FaBookReader, FaEdit } from "react-icons/fa";
 import { EditarMedidorModal } from "../modal/EditarMedidorModal";
 import { EstadoMedidorE } from "../enum/estadoMedidor";
+import { PermisosContext } from "../../autenticacion/context/PermisosContext";
+import { PermisosE } from "../../core/enums/permisos";
 
 export const ListarMedidor = () => {
     const [data, setData] = useState<MedidorCliente[]>([]);
@@ -21,10 +23,11 @@ export const ListarMedidor = () => {
         nombre: null,
         numeroMedidor: null
     });
-
+    const { permisosMedidor } = useContext(PermisosContext)
     const [pagina, setPagina] = useState<number>(1)
     const [limite, setLimite] = useState<number>(20)
     const [paginas, setPaginas] = useState<number>(1)
+
 
     const [medidor, setMedidor] = useState<string>()
 
@@ -32,6 +35,8 @@ export const ListarMedidor = () => {
 
 
     const closeModal = () => setIsOpen(false);
+
+
 
     useEffect(() => {
         listar();
@@ -104,12 +109,12 @@ export const ListarMedidor = () => {
                                             <td className="py-2 px-4">{item.direccion}</td>
                                             <td className="py-2 px-4">
 
-                                                <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                {permisosMedidor.some((i) => i.includes(PermisosE.ELIMINAR_MEDIDOR)) && <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                     <MdDelete />
-                                                </button>
-                                                <button onClick={() => medidorId(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                </button>}
+                                                {permisosMedidor.some((i) => i.includes(PermisosE.EDITAR_MEDIDOR)) && <button onClick={() => medidorId(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                                                     <FaEdit />
-                                                </button>
+                                                </button>}
                                             </td>
                                         </tr>
                                     ))}

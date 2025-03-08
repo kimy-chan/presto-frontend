@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ClienteI } from "../interface/cliente";
 import { eliminarCliente, listarClientes } from "../services/clienteService";
 import { HttpStatus } from "../../core/enums/httpStatus";
@@ -8,8 +8,13 @@ import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { EditarClienteModal } from "../modal/EditarClienteModal";
+import { PermisosContext } from "../../autenticacion/context/PermisosContext";
+import { PermisosE } from "../../core/enums/permisos";
 
 export const ListarClientes = () => {
+  const { permisosCliente } = useContext(PermisosContext)
+
+
   const [data, setData] = useState<ClienteI[]>([])
   const [pagina, setPagina] = useState<number>(1)
   const [limite, setLimite] = useState<number>(20)
@@ -99,12 +104,12 @@ export const ListarClientes = () => {
                 <td className="py-2 px-4">{item.apellidoPaterno}</td>
                 <td className="py-2 px-4">{item.apellidoMaterno}</td>
                 <td className="py-2 px-4">
-                  <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                  {permisosCliente.some((i) => i.includes(PermisosE.ELIMINAR_CLIENTE)) && <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
                     <MdDelete />
-                  </button>
-                  <button onClick={() => editarCliente(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                  </button>}
+                  {permisosCliente.some((i) => i.includes(PermisosE.EDITAR_CLIENTE)) && <button onClick={() => editarCliente(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                     <FaEdit />
-                  </button>
+                  </button>}
                 </td>
               </tr>
             ))}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ClientesModal } from "../../cliente/modal/ClientesModal";
 import { RegistarClienteModal } from "../../cliente/modal/RegistrarCliente";
 import { listarTarifas } from "../../tarifa/service/tarifasService";
@@ -10,6 +10,8 @@ import { ClienteI } from "../../cliente/interface/cliente";
 import { AxiosError } from "axios";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
+import { PermisosContext } from "../../autenticacion/context/PermisosContext";
+import { PermisosE } from "../../core/enums/permisos";
 
 export const CrearMedidor = () => {
     const [dataTarifa, setDataTarifa] = useState<TarifaI[]>([])
@@ -17,6 +19,7 @@ export const CrearMedidor = () => {
     const [mesanje, setMensaje] = useState<string>()
     const [mesanjeConflicto, setMensajeConflicto] = useState<string>()
     const [mensajeCreado, setMensajeCreado] = useState<string>()
+    const { permisosCliente } = useContext(PermisosContext)
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormMedidorI>()
     const numeroMedidr = watch("numeroMedidor")
     useEffect(() => {
@@ -71,8 +74,8 @@ export const CrearMedidor = () => {
         <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-700 mb-4">Registrar Medidor</h2>
             <div className="grid grid-cols-2 gap-4">
-                <ClientesModal setCliente={setCliente} />
-                <RegistarClienteModal setCliente={setCliente} />
+                {permisosCliente.some((i) => i.includes(PermisosE.LISTAR_CLIENTE)) && <ClientesModal setCliente={setCliente} />}
+                {permisosCliente.some((i) => i.includes(PermisosE.CREAR_CLIENTE)) && <RegistarClienteModal setCliente={setCliente} />}
             </div>
 
             <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>

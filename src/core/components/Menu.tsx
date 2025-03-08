@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useState } from 'react';
-import { FaBars, FaHome, FaKey, FaTimes, FaUserAlt, FaUsers, FaUserTie } from 'react-icons/fa'; // Importamos los íconos
+import { FaBars, FaHome, FaKey, FaTimes, FaUserAlt, FaUsers } from 'react-icons/fa'; // Importamos los íconos
 import { FaMoneyBills } from 'react-icons/fa6';
 import { FcReadingEbook } from 'react-icons/fc';
 import { GrMoney } from 'react-icons/gr';
@@ -9,11 +9,13 @@ import { MdOutlineLogout, MdOutlinePayments } from 'react-icons/md';
 import { Link } from 'react-router';
 import { AutenticacionContext } from '../../autenticacion/context/AutenticacionContext';
 import { PermisosContext } from '../../autenticacion/context/PermisosContext';
+import { PermisosE } from '../enums/permisos';
 
 export const Menu = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
   const { cerrarSession } = useContext(AutenticacionContext)
-  const { permisosTarifa } = useContext(PermisosContext)
+  const { permisosTarifa, permisosCliente, permisosUsuario, permisosRol, permisosLectura, permisosMedidor, permisosPago } = useContext(PermisosContext)
+
 
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     medidores: false,
@@ -54,65 +56,65 @@ export const Menu = ({ children }: { children: ReactNode }) => {
                 </Link>
               </li>
 
-              <li className="mb-4">
+              {permisosCliente.some((i) => i.includes(PermisosE.LISTAR_CLIENTE)) && <li className="mb-4">
                 <Link to="/clientes" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                   <FaUsers size={24} />
                   <span>Clientes</span>
                 </Link>
-              </li>
+              </li>}
 
               {/* Sección de Medidores */}
-              <li>
+              {permisosMedidor.length > 0 && <li>
                 <button onClick={() => toggleSection("medidores")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
                   <LiaTachometerAltSolid size={24} />
                   <span>Medidores</span>
                 </button>
                 {openSections.medidores && (
                   <ul className="ml-6">
-                    <li>
+                    {permisosMedidor.some((i) => i.includes(PermisosE.LISTAR_MEDIDOR)) && <li>
                       <Link to="/medidor" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
-                        <span>Ver Medidores</span>
+                        <span>Listar Medidores</span>
                       </Link>
-                    </li>
-                    <li>
+                    </li>}
+                    {permisosMedidor.some((i) => i.includes(PermisosE.CREAR_MEDIDOR)) && <li>
                       <Link to="/medidor/crear" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
-                        <span>Registrar Medidor</span>
+                        <span>crear Medidor</span>
                       </Link>
-                    </li>
+                    </li>}
                   </ul>
                 )}
-              </li>
+              </li>}
 
               {/* Sección de Pagos y Tarifas */}
-              <li>
+              {(permisosPago.length > 0 || permisosTarifa.length > 0) && <li>
                 <button onClick={() => toggleSection("pagos")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
                   <MdOutlinePayments size={24} />
                   <span>Pagos y Tarifas</span>
                 </button>
                 {openSections.pagos && (
                   <ul className="ml-6">
-                    {permisosTarifa.length > 0 && <li>
+                    {permisosTarifa.some((i) => i.includes(PermisosE.LISTAR_TARIFA)) && <li>
                       <Link to="/tarifas" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <GrMoney size={24} />
                         <span>Tarifas</span>
                       </Link>
                     </li>}
-                    <li>
+                    {permisosPago.some((i) => i.includes(PermisosE.CREAR_PAGO)) && <li>
                       <Link to="/realizar/pago" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <GrMoney size={24} />
                         <span>Realizar pagos</span>
                       </Link>
-                    </li>
-                    <li>
+                    </li>}
+                    {permisosPago.some((i) => i.includes(PermisosE.LISTAR_PAGO)) && <li>
                       <Link to="/listar/Pagos" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <GrMoney size={24} />
                         <span>Listar pagos</span>
                       </Link>
-                    </li>
+                    </li>}
                   </ul>
                 )}
               </li>
-
+              }
 
 
               {/* Sección de Gastos */}
@@ -138,63 +140,63 @@ export const Menu = ({ children }: { children: ReactNode }) => {
               </li>
 
               {/* Sección de Lecturas */}
-              <li>
+              {permisosLectura.length > 0 && <li>
                 <button onClick={() => toggleSection("lecturas")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
                   <IoReaderOutline size={24} />
                   <span>Lecturas</span>
                 </button>
                 {openSections.lecturas && (
                   <ul className="ml-6">
-                    <li>
+                    {permisosLectura.some((i) => i.includes(PermisosE.CREAR_LECTURA)) && <li>
                       <Link to="/lectura/registrar" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <FcReadingEbook size={24} />
                         <span>Realizar Lecturas</span>
                       </Link>
-                    </li>
-                    <li>
+                    </li>}
+                    {permisosLectura.some((i) => i.includes(PermisosE.LISTAR_LECTURA)) && <li>
                       <Link to="/listar/lectura" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <FcReadingEbook size={24} />
                         <span>Listar Lecturas</span>
                       </Link>
-                    </li>
+                    </li>}
                   </ul>
                 )}
-              </li>
+              </li>}
 
 
 
 
-              <li>
+              {(permisosRol.length > 0 || permisosUsuario.length > 0) && <li>
                 <button onClick={() => toggleSection("usuarios")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
                   <LiaUsersCogSolid size={24} />
                   <span>Administracion</span>
                 </button>
                 {openSections.usuarios && (
                   <ul className="ml-6">
-                    <li>
+                    {permisosUsuario.some((i) => i.includes(PermisosE.LISTAR_USUARIO)) && <li>
                       <Link to="/listar/usuarios" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <FaUserAlt size={24} />
                         <span>Listar usuarios</span>
                       </Link>
-                    </li>
+                    </li>}
 
-                    <li>
+                    {permisosRol.some((i) => i.includes(PermisosE.CREAR_ROL)) && <li>
                       <Link to="/crear/rol" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <FaKey size={24} />
                         <span>Crear rol</span>
                       </Link>
-                    </li>
+                    </li>}
 
-                    <li>
+                    {permisosRol.some((i) => i.includes(PermisosE.LISTAR_ROL)) && <li>
                       <Link to="/listar/rol" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <FaKey size={24} />
                         <span>Listar roles</span>
                       </Link>
-                    </li>
+                    </li>}
 
                   </ul>
                 )}
-              </li>
+              </li>}
             </ul>
           </div>
         )}

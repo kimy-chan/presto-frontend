@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import { listarRolUser } from '../../rol/service/rolService'
 import { PermisosContext } from './PermisosContext'
 import { PermisosI } from '../interface/permisos';
@@ -13,7 +13,8 @@ export const PermisosProvider = ({ children }: { children: ReactNode }) => {
         permisosUsuario: [],
         permisosTarifa: [],
         permisosRol: [],
-        permisosMedidor: []
+        permisosMedidor: [],
+        permisosCliente: []
     });
     useEffect(() => {
         roles()
@@ -26,9 +27,11 @@ export const PermisosProvider = ({ children }: { children: ReactNode }) => {
             const permisosPago: string[] = response.permisos.filter((item) => item.includes('PAGO'))
             const permisosMedidor: string[] = response.permisos.filter((item) => item.includes('MEDIDOR'))
             const permisosRol: string[] = response.permisos.filter((item) => item.includes('ROL'))
-            const permisosUsuario: string[] = response.permisos.filter((item) => item.includes('ROL'))
+            const permisosUsuario: string[] = response.permisos.filter((item) => item.includes('USUARIO'))
             const permisosTarifa: string[] = response.permisos.filter((item) => item.includes('TARIFA'))
-            setPermisos({ permisosGasto, permisosLectura, permisosPago, permisosRol, permisosUsuario, permisosTarifa, permisosMedidor })
+            const permisosCliente: string[] = response.permisos.filter((item) => item.includes('CLIENTE'))
+
+            setPermisos({ permisosGasto, permisosLectura, permisosPago, permisosRol, permisosUsuario, permisosTarifa, permisosMedidor, permisosCliente })
         } catch (error) {
             console.log(error);
 

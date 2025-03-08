@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { listarRangoTarifa, listarTarifas } from '../service/tarifasService'
 import { TarifaI } from '../interface/tarifa'
 import { MdDelete } from 'react-icons/md'
@@ -7,12 +7,18 @@ import { FaRegEdit } from 'react-icons/fa'
 import { ListarRangoModal } from '../modal/ListarRangoModal'
 import { RangoI } from '../interface/rango'
 import { EditarTarifa } from '../modal/EditarTarifa'
+import { PermisosContext } from '../../autenticacion/context/PermisosContext'
+import { PermisosE } from '../../core/enums/permisos'
+import { CrearTarifa } from '../modal/CrearTarifa'
 
 
 export const ListarTarifas = () => {
     const [abriModalRango, setModalRango] = useState(false)
     const [tarifas, setTarifas] = useState<TarifaI[]>([])
     const [tarifa, setTarifa] = useState<string>()
+    const { permisosTarifa } = useContext(PermisosContext)
+    console.log(permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)));
+
 
     const [isOpen, setIsOpen] = useState(false);
     const [recargar, setRecargar] = useState(false)
@@ -46,6 +52,9 @@ export const ListarTarifas = () => {
     }
     return (
         <div className="overflow-x-auto">
+
+            {permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)) && <CrearTarifa />}
+
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>
@@ -71,9 +80,9 @@ export const ListarTarifas = () => {
                                     <IoMdInformationCircle />
                                 </button>
 
-                                <button onClick={() => editar(item._id)} className='text-2xl text-blue-500' >
+                                {permisosTarifa.some((i) => i.includes(PermisosE.EDITAR_TARIFA)) && <button onClick={() => editar(item._id)} className='text-2xl text-blue-500' >
                                     <FaRegEdit />
-                                </button>
+                                </button>}
                             </td>
                         </tr>
                     ))}

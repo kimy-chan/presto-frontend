@@ -1,9 +1,8 @@
 import { ListarUsuarios } from "../components/ListarUsuarios"
 
-const ListarUsuariosPage = () => {
+export const ListarUsuariosPage = () => {
     return (
         <ListarUsuarios />
     )
 }
 
-export default ListarUsuariosPage

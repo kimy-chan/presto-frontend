@@ -9,7 +9,7 @@ export const availablePermissions: ModulePermissions = {
   ],
   LECTURA: [
     { id: "CREAR_LECTURA", label: "Ver Lecturas" },
-    { id: "LISTAR_LECTRURA", label: "Crear Lecturas" },
+    { id: "LISTAR_LECTURA", label: "Crear Lecturas" },
     { id: "EDITAR_LECTURA", label: "Editar Lecturas" },
     { id: "ELIMINAR_LECTURA", label: "Eliminar Lecturas" },
   ],
@@ -45,7 +45,7 @@ export const availablePermissions: ModulePermissions = {
   ],
 
   Usuario: [
-    { id: "LISTAR_USURIO", label: "Ver Usuario" },
+    { id: "LISTAR_USUARIO", label: "Ver Usuario" },
     { id: "EDITAR_USUARIO", label: "Editar Usuario" },
     { id: "CREAR_USUARIO", label: "Crear Usuario" },
     { id: "ELIMINAR_USUARIO", label: "Eliminar Usuario" },

@@ -6,4 +6,5 @@ export interface PermisosI {
   permisosTarifa: string[];
   permisosRol: string[];
   permisosMedidor: string[];
+  permisosCliente: string[];
 }
