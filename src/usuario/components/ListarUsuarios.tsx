@@ -12,9 +12,16 @@ import { BuscadorUsuario } from './BuscadorUsuario'
 import { BuscadorUsuarioI } from '../interface/buscadorCliente'
 import { PermisosE } from '../../core/enums/permisos'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
+import { AlertaEliminar } from '../../core/util/alertaEliminar'
 
 export const ListarUsuarios = () => {
-    const [buscador, setBuscador] = useState<BuscadorUsuarioI>()
+    const [buscador, setBuscador] = useState<BuscadorUsuarioI>({
+        apellidoMaterno: '',
+        apellidoPaterno: '',
+        ci: '',
+        nombre: '',
+        rol: ''
+    })
     const [pagina, setPagina] = useState<number>(1)
     const [limite, setLimite] = useState<number>(20)
     const [paginas, setPaginas] = useState<number>(1)
@@ -25,15 +32,18 @@ export const ListarUsuarios = () => {
     const { permisosUsuario } = useContext(PermisosContext)
 
     const closeModal = () => setIsOpen(false);
-    console.log(buscador);
+
 
     useEffect(() => {
         listar()
-    }, [recargar])
+    }, [recargar, pagina, limite, buscador])
     const listar = async () => {
         try {
-            const response = await listarUsuarios()
-            setUsuarios(response)
+            const response = await listarUsuarios(limite, pagina, buscador)
+            if (response.status == HttpStatus.OK) {
+                setUsuarios(response.data)
+                setPaginas(response.paginas)
+            }
         } catch (error) {
             console.log(error);
 
@@ -48,7 +58,7 @@ export const ListarUsuarios = () => {
     const eliminar = async (usuario: string) => {
         try {
             const response = await eliminarUsuario(usuario)
-            console.log(response);
+
 
             if (response.status == HttpStatus.OK) {
                 setRecargar(!recargar)
@@ -62,7 +72,7 @@ export const ListarUsuarios = () => {
 
     return (
         < >
-            {permisosUsuario.some((i) => i.includes(PermisosE.LISTAR_USUARIO)) && <CrearUsuariosModal />}
+            {permisosUsuario.some((i) => i.includes(PermisosE.LISTAR_USUARIO)) && <CrearUsuariosModal recargar={recargar} setRecargar={setRecargar} />}
             <BuscadorUsuario onSubmit={setBuscador} />
             <ItemsPagina limite={setLimite} />
             <div className="flex flex-col overflow-x-auto">
@@ -99,7 +109,7 @@ export const ListarUsuarios = () => {
                                                 <td className="whitespace-nowrap px-6 py-4">{item.rolNombre}</td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
-                                                    {permisosUsuario.some((i) => i.includes(PermisosE.ELIMINAR_USUARIO)) && <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                    {permisosUsuario.some((i) => i.includes(PermisosE.ELIMINAR_USUARIO)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                         <MdDelete />
                                                     </button>}
                                                     {permisosUsuario.some((i) => i.includes(PermisosE.EDITAR_USUARIO)) && <button onClick={() => editarUsuario(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">

@@ -7,7 +7,13 @@ import { ErrorI } from "../../core/interface/error";
 import { useEffect, useState } from "react";
 import { editarLectura, lecturaId } from "../service/lecturaService";
 
-export const EditarLecturaModal = ({ closeModal, isOpen, lectura }: { lectura: string, closeModal: () => void, isOpen: boolean }) => {
+export const EditarLecturaModal = ({ closeModal, isOpen, lectura, recargar, setRecargar }: {
+    lectura: string,
+    closeModal: () => void,
+    isOpen: boolean,
+    recargar: boolean,
+    setRecargar: (recargar: boolean) => void
+}) => {
     const [error, setError] = useState<string>()
 
     const [conflicto, setConflicto] = useState<string>()
@@ -49,7 +55,8 @@ export const EditarLecturaModal = ({ closeModal, isOpen, lectura }: { lectura: s
 
             const response = await editarLectura(lectura, data)
             if (response.status == HttpStatus.OK) {
-
+                setRecargar(!recargar)
+                closeModal()
             }
 
 

@@ -8,7 +8,7 @@ import { HttpStatus } from '../../core/enums/httpStatus';
 import { AxiosError } from 'axios';
 import { ErrorI } from '../../core/interface/error';
 
-export const CrearUsuariosModal = () => {
+export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<CrearUsuarioI>()
     const [isOpen, setIsOpen] = useState(false);
     const [roles, setRoles] = useState<ListarRolesI[]>([])
@@ -37,6 +37,7 @@ export const CrearUsuariosModal = () => {
         try {
             const response = await crearUsuario(data)
             if (response.status == HttpStatus.CREATED) {
+                setRecargar(!recargar)
                 closeModal()
             }
         } catch (error) {
@@ -65,7 +66,7 @@ export const CrearUsuariosModal = () => {
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                 onClick={openModal}
             >
-                Abrir Modal
+                Registrar
             </button>
 
             {isOpen && (

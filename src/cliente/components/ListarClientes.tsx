@@ -10,6 +10,7 @@ import { FaEdit } from "react-icons/fa";
 import { EditarClienteModal } from "../modal/EditarClienteModal";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
+import { AlertaEliminar } from "../../core/util/alertaEliminar";
 
 export const ListarClientes = () => {
   const { permisosCliente } = useContext(PermisosContext)
@@ -26,12 +27,13 @@ export const ListarClientes = () => {
   const [apellidoMaterno, setApellidoMaterno] = useState<string>('')
   const [cliente, setCliente] = useState<string>()
   const [isOpen, setIsOpen] = useState(false);
+  const [recargar, setRecargar] = useState<boolean>(false)
 
 
   const closeModal = () => setIsOpen(false);
   useEffect(() => {
     listar()
-  }, [limite, pagina, nombre, apellidoMaterno, ci, codigo, apellidoPaterno])
+  }, [limite, pagina, nombre, apellidoMaterno, ci, codigo, apellidoPaterno, recargar])
 
   const listar = async () => {
     try {
@@ -62,7 +64,7 @@ export const ListarClientes = () => {
     try {
       const response = await eliminarCliente(cliente)
       if (response.status == HttpStatus.OK) {
-
+        setRecargar(!recargar)
       }
     } catch (error) {
       console.log(error);
@@ -104,7 +106,7 @@ export const ListarClientes = () => {
                 <td className="py-2 px-4">{item.apellidoPaterno}</td>
                 <td className="py-2 px-4">{item.apellidoMaterno}</td>
                 <td className="py-2 px-4">
-                  {permisosCliente.some((i) => i.includes(PermisosE.ELIMINAR_CLIENTE)) && <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                  {permisosCliente.some((i) => i.includes(PermisosE.ELIMINAR_CLIENTE)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
                     <MdDelete />
                   </button>}
                   {permisosCliente.some((i) => i.includes(PermisosE.EDITAR_CLIENTE)) && <button onClick={() => editarCliente(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
@@ -119,7 +121,7 @@ export const ListarClientes = () => {
 
         <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
       </div>
-      {isOpen && cliente && <EditarClienteModal cliente={cliente} closeModal={closeModal} isOpen={isOpen} />}
+      {isOpen && cliente && <EditarClienteModal cliente={cliente} closeModal={closeModal} isOpen={isOpen} recargar={recargar} setRecargar={setRecargar} />}
     </div>
   );
 };

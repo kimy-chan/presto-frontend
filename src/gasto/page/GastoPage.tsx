@@ -1,9 +1,8 @@
-import { TablaGasto } from "../components/TablaGasto"
-import { GastoModal } from "../modal/GastoModal"
+import { ListarGasto } from "../components/ListarGasto"
 
 export const GastoPage = () => {
   return (
-    <div><GastoModal /> <TablaGasto /></div>
+    <ListarGasto />
   )
 }
 

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 import { HttpStatus } from '../../core/enums/httpStatus'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 import { PermisosE } from '../../core/enums/permisos'
+import { AlertaEliminar } from '../../core/util/alertaEliminar'
 
 export const ListarRol = () => {
     const navidate = useNavigate()
@@ -89,7 +90,7 @@ export const ListarRol = () => {
 
 
                                 <td className="py-3 px-4">
-                                    {permisosRol.some((i) => i.includes(PermisosE.ELIMINAR_ROL)) && <button onClick={() => eliminar(item._id)} className="text-red-500 text-2xl px-3 py-1 rounded hover:bg-red-100 transition duration-200">
+                                    {permisosRol.some((i) => i.includes(PermisosE.ELIMINAR_ROL)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className="text-red-500 text-2xl px-3 py-1 rounded hover:bg-red-100 transition duration-200">
                                         <MdDelete />
                                     </button>}
                                     {permisosRol.some((i) => i.includes(PermisosE.EDITAR_ROL)) && <button onClick={() => navidate(`/editar/rol/${item._id}`)} className="text-blue-500 text-2xl px-3 py-1 rounded hover:bg-blue-100 transition duration-200">

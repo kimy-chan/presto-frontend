@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { listarRangoTarifa, listarTarifas } from '../service/tarifasService'
+import { eliminarTarifa, listarRangoTarifa, listarTarifas } from '../service/tarifasService'
 import { TarifaI } from '../interface/tarifa'
 import { MdDelete } from 'react-icons/md'
 import { IoMdInformationCircle } from 'react-icons/io'
@@ -10,6 +10,8 @@ import { EditarTarifa } from '../modal/EditarTarifa'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 import { PermisosE } from '../../core/enums/permisos'
 import { CrearTarifa } from '../modal/CrearTarifa'
+import { HttpStatus } from '../../core/enums/httpStatus'
+import { AlertaEliminar } from '../../core/util/alertaEliminar'
 
 
 export const ListarTarifas = () => {
@@ -50,18 +52,32 @@ export const ListarTarifas = () => {
         setTarifa(tarifa)
         setIsOpen(true)
     }
+    const eliminar = async (tarifa: string) => {
+        try {
+            const response = await eliminarTarifa(tarifa)
+            console.log(response);
+
+            if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     return (
         <div className="overflow-x-auto">
 
             {permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)) && <CrearTarifa />}
 
             <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                    <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <thead>
+                    <tr className="bg-gray-700 text-white text-left">
+                        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                             Nombre Tarifa
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                             Acción
                         </th>
                     </tr>
@@ -73,9 +89,9 @@ export const ListarTarifas = () => {
                                 {item.nombre}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <button className='text-2xl text-red-500'>
+                                {permisosTarifa.some((i) => i.includes(PermisosE.ELIMINAR_TARIFA)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className='text-2xl text-red-500'>
                                     <MdDelete />
-                                </button>
+                                </button>}
                                 <button onClick={() => verRangoTarifa(item._id)} className='text-2xl' >
                                     <IoMdInformationCircle />
                                 </button>

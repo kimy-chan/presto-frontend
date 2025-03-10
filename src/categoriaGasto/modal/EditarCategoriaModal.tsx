@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FormCategoriaGastoI } from "../interface/formCategoriaGasto";
-import { crearCategoriaGasto } from "../service/categoriaGastoService";
+import { categoriaGastoOne, editarCategoriaGasto } from "../service/categoriaGastoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 
-export const FormCategoriaModal = () => {
-    const [isOpen, setIsOpen] = useState(false);
+export const EditarCategoriaModal = (
+    { recargar, setRecargar, categoria, closeModal, isOpen }:
+        { categoria: string, recargar: boolean, setRecargar: (recargar: boolean) => void, closeModal: () => void, isOpen: boolean }
+) => {
 
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
-    const { handleSubmit, register } = useForm<FormCategoriaGastoI>()
+    const { handleSubmit, register, formState: { errors }, setValue } = useForm<FormCategoriaGastoI>()
     const onSubmit = async (data: FormCategoriaGastoI) => {
         try {
-            const response = await crearCategoriaGasto(data)
-            if (response.status == HttpStatus.CREATED) {
-                console.log('registrado');
+            const response = await editarCategoriaGasto(data, categoria)
+            if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
+                closeModal()
 
             }
         } catch (error) {
@@ -23,15 +24,23 @@ export const FormCategoriaModal = () => {
         }
 
     }
+
+    useEffect(() => { if (isOpen) { categoriaOne() } }, [])
+    const categoriaOne = async () => {
+        try {
+            const response = await categoriaGastoOne(categoria)
+            if (response.status == HttpStatus.OK) {
+                setValue("nombre", response.data.nombre)
+            }
+        } catch (error) {
+
+        }
+    }
+
     return (
         <div className="p-4">
 
-            <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                onClick={openModal}
-            >
-                Registar categoria
-            </button>
+
 
 
             {isOpen && (
@@ -56,8 +65,10 @@ export const FormCategoriaModal = () => {
                         <div className="mt-4">
                             <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg  space-y-4">
                                 <label htmlFor="categoria" className="block text-gray-700 font-medium">Nombre de categoría</label>
-                                <input {...register("nombre")} type="text" id="categoria" className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ingrese categoría" />
+                                <input {...register("nombre", { required: 'Ingrese el nombre' })} type="text" id="categoria" className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ingrese categoría" />
+                                {errors.nombre && <p className="text-red-500 text-xs">{errors.nombre.message}</p>}
                                 <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">Guardar</button>
+
                             </form>
                         </div>
 

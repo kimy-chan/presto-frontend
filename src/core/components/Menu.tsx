@@ -14,7 +14,8 @@ import { PermisosE } from '../enums/permisos';
 export const Menu = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
   const { cerrarSession } = useContext(AutenticacionContext)
-  const { permisosTarifa, permisosCliente, permisosUsuario, permisosRol, permisosLectura, permisosMedidor, permisosPago } = useContext(PermisosContext)
+  const { permisosTarifa, permisosCliente, permisosUsuario, permisosRol,
+    permisosLectura, permisosMedidor, permisosPago, permisosGasto } = useContext(PermisosContext)
 
 
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
@@ -117,27 +118,27 @@ export const Menu = ({ children }: { children: ReactNode }) => {
               }
 
 
-              {/* Sección de Gastos */}
-              <li>
-                <button onClick={() => toggleSection("gastos")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
-                  <FaMoneyBills size={24} />
-                  <span>Gastos</span>
-                </button>
-                {openSections.gastos && (
-                  <ul className="ml-6">
-                    <li>
-                      <Link to="/categorias/gasto" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
-                        <span>Categoría de Gasto</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/gastos" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
-                        <span>Lista de Gastos</span>
-                      </Link>
-                    </li>
-                  </ul>
-                )}
-              </li>
+              {permisosGasto.length > 0 &&
+                < li >
+                  <button onClick={() => toggleSection("gastos")} className="flex items-center w-full p-2 rounded-lg hover:bg-gray-700">
+                    <FaMoneyBills size={24} />
+                    <span>Gastos</span>
+                  </button>
+                  {openSections.gastos && (
+                    <ul className="ml-6">
+                      <li>
+                        <Link to="/categorias/gasto" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
+                          <span>Categoría de Gasto</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/gastos" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
+                          <span>Lista de Gastos</span>
+                        </Link>
+                      </li>
+                    </ul>
+                  )}
+                </li>}
 
               {/* Sección de Lecturas */}
               {permisosLectura.length > 0 && <li>
@@ -215,6 +216,6 @@ export const Menu = ({ children }: { children: ReactNode }) => {
       <div className="flex-1 p-6">
         <div>{children}</div>
       </div>
-    </div>
+    </div >
   );
 };

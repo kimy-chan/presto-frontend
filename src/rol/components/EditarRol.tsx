@@ -7,6 +7,7 @@ import { PermissionsState } from "../interface/rol";
 import { availablePermissions } from "../util/permisos";
 
 
+import toast from 'react-hot-toast';
 
 export const EditarRol = ({ id }: { id: string }) => {
     const navigate = useNavigate()
@@ -60,6 +61,7 @@ export const EditarRol = ({ id }: { id: string }) => {
 
             const response = await editarRol(id, dataRol);
             if (response.status == HttpStatus.OK) {
+                toast.success('Rol Editado')
                 navigate('/listar/rol')
             }
         } catch (error) {

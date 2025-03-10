@@ -1,6 +1,9 @@
 import { instance } from "../../config/instance";
+import { ParamsI } from "../../core/interface/params";
 import { response } from "../../core/interface/response";
+import { ResponseDataI } from "../../core/interface/responseData";
 import { ResponseOneI } from "../../core/interface/responseOne";
+import { BuscadorUsuarioI } from "../interface/buscadorCliente";
 import { CrearUsuarioI } from "../interface/crearUsuario";
 import { ListarUsuariosI } from "../interface/listarUsuarios";
 
@@ -13,9 +16,31 @@ export const crearUsuario = async (data: CrearUsuarioI): Promise<response> => {
   }
 };
 
-export const listarUsuarios = async (): Promise<ListarUsuariosI[]> => {
+export const listarUsuarios = async (
+  limite: number,
+  pagina: number,
+  buscador: BuscadorUsuarioI
+): Promise<ResponseDataI<ListarUsuariosI>> => {
+  const params: ParamsI & BuscadorUsuarioI = {
+    limite: limite,
+    pagina: pagina,
+  };
+  buscador.apellidoMaterno
+    ? (params.apellidoMaterno = buscador.apellidoMaterno)
+    : params;
+  buscador.apellidoPaterno
+    ? (params.apellidoPaterno = buscador.apellidoPaterno)
+    : params;
+  buscador.ci ? (params.ci = buscador.ci) : params;
+  buscador.rol ? (params.rol = buscador.rol) : params;
+  buscador.nombre ? (params.nombre = buscador.nombre) : params;
+
+  console.log(params);
+
   try {
-    const response = await instance.get("usuario");
+    const response = await instance.get("usuario", {
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;

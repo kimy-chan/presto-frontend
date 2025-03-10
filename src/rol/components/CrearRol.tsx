@@ -4,11 +4,13 @@ import { crearRol } from "../service/rolService";
 import { PermissionsState } from "../interface/rol";
 import { availablePermissions } from "../util/permisos";
 
-
+import toast from 'react-hot-toast';
+import { HttpStatus } from "../../core/enums/httpStatus";
+import { useNavigate } from "react-router";
 
 
 export const CrearRol = () => {
-
+    const navigate = useNavigate()
     const [roleName, setRoleName] = useState("");
     const [permissions, setPermissions] = useState<PermissionsState>({});
 
@@ -36,7 +38,10 @@ export const CrearRol = () => {
             console.log(dataRol);
 
             const response = await crearRol(dataRol)
-            console.log(response);
+            if (response.status == HttpStatus.CREATED) {
+                toast.success('Rol registrado')
+                navigate('/listar/rol')
+            }
 
         } catch (error) {
             console.log(error);

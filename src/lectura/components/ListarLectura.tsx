@@ -13,9 +13,11 @@ import { EditarLecturaModal } from "../modal/EditarLecturaModal";
 import { EstadoPagoE } from "../../pago/enum/estadoPago";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
+import { AlertaEliminar } from "../../core/util/alertaEliminar";
 
 export const ListarLectura = () => {
     const navigate = useNavigate()
+    const [recargar, setRecargar] = useState<boolean>(false);
     const [data, setData] = useState<ListarLecturaI[]>([]);
     const [lectura, setLectura] = useState<string>()
     const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +37,7 @@ export const ListarLectura = () => {
 
     useEffect(() => {
         lecturas()
-    }, [limite, pagina, buscador])
+    }, [limite, pagina, buscador, recargar])
 
     const lecturas = async () => {
         try {
@@ -61,7 +63,7 @@ export const ListarLectura = () => {
         try {
             const response = await eliminarLectura(lectura)
             if (response.status == HttpStatus.OK) {
-
+                setRecargar(!recargar)
             }
         } catch (error) {
 
@@ -100,8 +102,8 @@ export const ListarLectura = () => {
                                 </thead>
                                 <tbody>
                                     {
-                                        data.map((item) => (
-                                            <tr className="border-b border-neutral-200 dark:border-white/10">
+                                        data.map((item, i) => (
+                                            <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
                                                 <td className="whitespace-nowrap px-6 py-4 font-medium">{item.ci}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.nombre}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.apellidoPaterno} {item.apellidoMaterno}</td>
@@ -123,7 +125,7 @@ export const ListarLectura = () => {
 
                                                     {item.estado != EstadoPagoE.PAGADO &&
 
-                                                        permisosLectura.some((i) => i.includes(PermisosE.ELIMINAR_LECTURA)) && (<button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                        permisosLectura.some((i) => i.includes(PermisosE.ELIMINAR_LECTURA)) && (<button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                             <MdDelete />
                                                         </button>)
 
@@ -147,7 +149,7 @@ export const ListarLectura = () => {
                     </div>
                 </div>
             </div>
-            {isOpen && lectura && <EditarLecturaModal closeModal={closeModal} isOpen={isOpen} lectura={lectura} />}
+            {isOpen && lectura && <EditarLecturaModal closeModal={closeModal} isOpen={isOpen} lectura={lectura} recargar={recargar} setRecargar={setRecargar} />}
         </>
     );
 }

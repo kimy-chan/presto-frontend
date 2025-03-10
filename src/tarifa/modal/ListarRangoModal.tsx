@@ -1,15 +1,20 @@
 import { MdDelete } from "react-icons/md";
 import { RangoI } from "../interface/rango";
 import { FaEdit } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EditarRangoModal } from "./EditarRango";
-import { listarRangoTarifa } from "../service/tarifasService";
+import { eliminarRango, listarRangoTarifa } from "../service/tarifasService";
+import { HttpStatus } from "../../core/enums/httpStatus";
+import { AlertaEliminar } from "../../core/util/alertaEliminar";
+import { PermisosContext } from "../../autenticacion/context/PermisosContext";
+import { PermisosE } from "../../core/enums/permisos";
 
 export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boolean, closeModal: () => void, tarifa: string }) => {
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [rango, setRango] = useState<string>()
     const [rangos, setRangos] = useState<RangoI[]>([])
     const [recargar, setRecargar] = useState<boolean>(false)
+    const { permisosTarifa } = useContext(PermisosContext)
     const closeModalEdit = () => setIsOpenEdit(false);
 
     useEffect(() => {
@@ -32,6 +37,20 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
         setRango(rango)
         setIsOpenEdit(true)
 
+    }
+
+    const eliminar = async (rango: string) => {
+        try {
+            const response = await eliminarRango(rango)
+            console.log(response);
+
+            if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
     }
     return (
         <div className="p-4">
@@ -78,12 +97,12 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
                                             <td className="py-3 px-4">{item.costo}</td>
                                             <td className="py-2 px-4">
 
-                                                <button className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                {permisosTarifa.some((i) => i.includes(PermisosE.ELIMINAR_TARIFA)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                     <MdDelete />
-                                                </button>
-                                                <button onClick={() => editarRango(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                </button>}
+                                                {permisosTarifa.some((i) => i.includes(PermisosE.EDITAR_TARIFA)) && <button onClick={() => editarRango(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
                                                     <FaEdit />
-                                                </button>
+                                                </button>}
                                             </td>
 
                                         </tr>

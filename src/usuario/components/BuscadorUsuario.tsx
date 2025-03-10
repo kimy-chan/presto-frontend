@@ -54,7 +54,7 @@ export const BuscadorUsuario = ({ onSubmit }: { onSubmit: (onSubmit: BuscadorUsu
                     {...register("rol")}
                     name="rol"
                     className="p-2 border rounded-md w-full">
-                    <option>Seleccion el rol</option>
+                    <option value=''>Seleccion el rol</option>
                     {roles.map((item, i) => (
                         <option value={item._id} key={i}>
                             {item.nombre}

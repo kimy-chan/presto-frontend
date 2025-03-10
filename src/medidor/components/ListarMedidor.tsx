@@ -12,6 +12,7 @@ import { EditarMedidorModal } from "../modal/EditarMedidorModal";
 import { EstadoMedidorE } from "../enum/estadoMedidor";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
+import { AlertaEliminar } from "../../core/util/alertaEliminar";
 
 export const ListarMedidor = () => {
     const [data, setData] = useState<MedidorCliente[]>([]);
@@ -27,6 +28,7 @@ export const ListarMedidor = () => {
     const [pagina, setPagina] = useState<number>(1)
     const [limite, setLimite] = useState<number>(20)
     const [paginas, setPaginas] = useState<number>(1)
+    const [recargar, setRecargar] = useState<boolean>(false)
 
 
     const [medidor, setMedidor] = useState<string>()
@@ -40,7 +42,7 @@ export const ListarMedidor = () => {
 
     useEffect(() => {
         listar();
-    }, [buscador, limite, pagina]);
+    }, [buscador, limite, pagina, recargar]);
 
     const listar = async () => {
         try {
@@ -65,7 +67,7 @@ export const ListarMedidor = () => {
         try {
             const response = await eliminarMedidor(medidor)
             if (response.status == HttpStatus.OK) {
-
+                setRecargar(!recargar)
             }
         } catch (error) {
 
@@ -109,7 +111,7 @@ export const ListarMedidor = () => {
                                             <td className="py-2 px-4">{item.direccion}</td>
                                             <td className="py-2 px-4">
 
-                                                {permisosMedidor.some((i) => i.includes(PermisosE.ELIMINAR_MEDIDOR)) && <button onClick={() => eliminar(item._id)} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                                {permisosMedidor.some((i) => i.includes(PermisosE.ELIMINAR_MEDIDOR)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                     <MdDelete />
                                                 </button>}
                                                 {permisosMedidor.some((i) => i.includes(PermisosE.EDITAR_MEDIDOR)) && <button onClick={() => medidorId(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
@@ -126,7 +128,7 @@ export const ListarMedidor = () => {
                     </div>
                 </div>
             </div>
-            {isOpen && medidor && <EditarMedidorModal closeModal={closeModal} isOpen={isOpen} medidor={medidor} />}
+            {isOpen && medidor && <EditarMedidorModal recargar={recargar} setRecargar={setRecargar} closeModal={closeModal} isOpen={isOpen} medidor={medidor} />}
         </>
     );
 };

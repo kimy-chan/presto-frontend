@@ -10,10 +10,12 @@ import { listarTarifas } from "../../tarifa/service/tarifasService";
 import { TarifaI } from "../../tarifa/interface/tarifa";
 import { editarMedidor, medidorFindOne } from "../service/MedidorService";
 
-export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
+export const EditarMedidorModal = ({ medidor, closeModal, isOpen, recargar, setRecargar }: {
     medidor: string,
     closeModal: () => void
     isOpen: boolean
+    recargar: boolean,
+    setRecargar: (recargar: boolean) => void
 }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormMedidorI>()
@@ -50,6 +52,7 @@ export const EditarMedidorModal = ({ medidor, closeModal, isOpen }: {
 
             const response = await editarMedidor(medidor, data)
             if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
                 closeModal()
             }
         } catch (error) {

@@ -7,10 +7,12 @@ import { ClienteI } from "../interface/cliente";
 import { AxiosError } from "axios";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 
-export const EditarClienteModal = ({ cliente, closeModal, isOpen }: {
+export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setRecargar }: {
     cliente: string,
     closeModal: () => void
     isOpen: boolean
+    recargar: boolean,
+    setRecargar: (recargar: boolean) => void
 }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormClienteI>()
@@ -44,6 +46,7 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen }: {
         try {
             const response = await editarCliente(cliente, data)
             if (response.status == HttpStatus.OK) {
+                setRecargar(!recargar)
                 closeModal()
             }
 

@@ -87,3 +87,21 @@ export const editarRango = async (
     throw error;
   }
 };
+
+export const eliminarTarifa = async (id: string): Promise<response> => {
+  try {
+    const response = await instance.delete(`tarifa/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const eliminarRango = async (id: string): Promise<response> => {
+  try {
+    const response = await instance.delete(`rango/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
