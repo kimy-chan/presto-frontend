@@ -22,7 +22,8 @@ export const ListarMedidor = () => {
         apellidoPaterno: null,
         ci: null,
         nombre: null,
-        numeroMedidor: null
+        numeroMedidor: null,
+        estado: null
     });
     const { permisosMedidor } = useContext(PermisosContext)
     const [pagina, setPagina] = useState<number>(1)

@@ -6,6 +6,7 @@ import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 import { ErrorI } from "../../core/interface/error";
 import { useEffect, useState } from "react";
 import { editarLectura, lecturaId } from "../service/lecturaService";
+import toast from "react-hot-toast";
 
 export const EditarLecturaModal = ({ closeModal, isOpen, lectura, recargar, setRecargar }: {
     lectura: string,
@@ -55,6 +56,7 @@ export const EditarLecturaModal = ({ closeModal, isOpen, lectura, recargar, setR
 
             const response = await editarLectura(lectura, data)
             if (response.status == HttpStatus.OK) {
+                toast.success('Editado')
                 setRecargar(!recargar)
                 closeModal()
             }

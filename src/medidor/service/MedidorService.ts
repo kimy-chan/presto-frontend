@@ -8,6 +8,7 @@ import { BuscadorMedidorClientI } from "../interface/buscadorMedidorCliente";
 import { DataMedidorClienteI } from "../interface/dataMedidorCliente";
 import { FormMedidorI } from "../interface/formMedidor";
 import { MedidorCliente } from "../interface/medidorCliente";
+import { MedidorCorteI } from "../interface/MedidoresCorte";
 
 export const crearMedidor = async (data: FormMedidorI): Promise<response> => {
   try {
@@ -50,7 +51,8 @@ export const listarMedidor = async (
     buscador.numeroMedidor
       ? (params.numeroMedidor = buscador.numeroMedidor)
       : params;
-    console.log(params);
+
+    buscador.estado ? (params.estado = buscador.estado) : params;
 
     const response = await instance.get("medidor", {
       params,
@@ -98,6 +100,26 @@ export const editarMedidor = async (
 export const eliminarMedidor = async (id: string): Promise<response> => {
   try {
     const response = await instance.delete(`medidor/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listarMedidoresConTresLecturasPendientes = async (): Promise<
+  ResponseDataI<MedidorCorteI>
+> => {
+  try {
+    const response = await instance.get("medidor/tres/lecturas/pendientes");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const realizarCorte = async (id: string): Promise<response> => {
+  try {
+    const response = await instance.patch(`medidor/corte/${id}`);
     return response.data;
   } catch (error) {
     throw error;

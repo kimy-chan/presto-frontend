@@ -6,9 +6,10 @@ import { MdDelete } from 'react-icons/md';
 import { DataI } from '../interface/data';
 import { crearTarifa } from '../service/tarifasService';
 import { HttpStatus } from '../../core/enums/httpStatus';
+import toast from 'react-hot-toast';
 
 
-export const CrearTarifa = () => {
+export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm<FormTarifaI>()
     const openModal = () => setIsOpen(true);
@@ -34,8 +35,10 @@ export const CrearTarifa = () => {
         try {
             const response = await crearTarifa(data)
             if (response.status == HttpStatus.CREATED) {
+                toast.success('Tarifa registrada')
                 setTarifas([])
                 setDisableNombre(false)
+                setRecargar(!recargar)
 
             }
 

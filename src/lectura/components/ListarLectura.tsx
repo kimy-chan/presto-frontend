@@ -14,6 +14,7 @@ import { EstadoPagoE } from "../../pago/enum/estadoPago";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import { AlertaEliminar } from "../../core/util/alertaEliminar";
+import toast from "react-hot-toast";
 
 export const ListarLectura = () => {
     const navigate = useNavigate()
@@ -63,6 +64,7 @@ export const ListarLectura = () => {
         try {
             const response = await eliminarLectura(lectura)
             if (response.status == HttpStatus.OK) {
+                toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
@@ -85,9 +87,6 @@ export const ListarLectura = () => {
                                 <thead
                                     className="border-b border-neutral-200 font-medium dark:border-white/10">
                                     <tr className="bg-gray-700 text-white text-left">
-                                        <th scope="col" className="px-6 py-4">CI</th>
-                                        <th scope="col" className="px-6 py-4">Nombre</th>
-                                        <th scope="col" className="px-6 py-4">Apellidos</th>
                                         <th scope="col" className="px-6 py-4">Gestion</th>
                                         <th scope="col" className="px-6 py-4">N° Medidor</th>
                                         <th scope="col" className="px-6 py-4">Mes</th>
@@ -97,16 +96,14 @@ export const ListarLectura = () => {
                                         <th scope="col" className="px-6 py-4">Monto</th>
                                         <th scope="col" className="px-6 py-4">Estado</th>
                                         <th scope="col" className="px-6 py-4">fecha</th>
-                                        <th scope="col" className="px-6 py-4">recibo</th>
+                                        <th scope="col" className="px-6 py-4">Accion</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         data.map((item, i) => (
                                             <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
-                                                <td className="whitespace-nowrap px-6 py-4 font-medium">{item.ci}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.nombre}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.apellidoPaterno} {item.apellidoMaterno}</td>
+
                                                 <td className="whitespace-nowrap px-6 py-4">{item.gestion}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.numeroMedidor}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.mes}</td>

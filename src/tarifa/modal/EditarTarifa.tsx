@@ -3,6 +3,7 @@ import { editarTarifa, tarifaPorId } from "../service/tarifasService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useForm } from "react-hook-form";
 import { FormTarifaI } from "../interface/formTarifa";
+import toast from "react-hot-toast";
 
 export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar }: {
     tarifa: string,
@@ -42,7 +43,7 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
 
             const response = await editarTarifa(tarifa, data.nombre)
             if (response.status == HttpStatus.OK) {
-
+                toast.success('Tarifa editada')
                 closeModal()
                 setRecargar(!recargar)
             }

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormClienteI } from "../interface/formCliente";
-import { clienteId, crearCliente, editarCliente } from "../services/clienteService";
+import { clienteId, editarCliente } from "../services/clienteService";
 import { HttpStatus } from "../../core/enums/httpStatus";
-import { ClienteI } from "../interface/cliente";
+
 import { AxiosError } from "axios";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
+import toast from "react-hot-toast";
 
 export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setRecargar }: {
     cliente: string,
@@ -46,6 +47,7 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setR
         try {
             const response = await editarCliente(cliente, data)
             if (response.status == HttpStatus.OK) {
+                toast.success('Editado')
                 setRecargar(!recargar)
                 closeModal()
             }

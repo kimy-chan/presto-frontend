@@ -7,6 +7,7 @@ import { crearUsuario } from '../service/usuarioService';
 import { HttpStatus } from '../../core/enums/httpStatus';
 import { AxiosError } from 'axios';
 import { ErrorI } from '../../core/interface/error';
+import toast from 'react-hot-toast';
 
 export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<CrearUsuarioI>()
@@ -37,6 +38,7 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
         try {
             const response = await crearUsuario(data)
             if (response.status == HttpStatus.CREATED) {
+                toast.success('Usuario registrado')
                 setRecargar(!recargar)
                 closeModal()
             }

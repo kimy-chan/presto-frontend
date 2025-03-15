@@ -18,6 +18,7 @@ export interface dataReciboPago {
       consumoTotal: number;
       mes: string;
       gestion: string;
+      fecha: string;
       observaciones: string;
       _id: string;
     }

@@ -8,6 +8,7 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { AlertaEliminar } from "../../core/util/alertaEliminar";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
+import toast from "react-hot-toast";
 
 export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boolean, closeModal: () => void, tarifa: string }) => {
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -45,6 +46,7 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
             console.log(response);
 
             if (response.status == HttpStatus.OK) {
+                toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {

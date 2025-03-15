@@ -12,8 +12,9 @@ import { BuscadorGasto } from './BuscadorGasto'
 import { BuscadorGastoI } from '../interface/BuscadorGasto'
 import { HttpStatus } from '../../core/enums/httpStatus'
 import { ItemsPagina } from '../../core/components/ItemsPAgina'
-import { CrearGastoModal } from '../modal/crearGastoModal'
+import { CrearGastoModal } from '../modal/CrearGastoModal'
 import { EditarGastoModal } from '../modal/EditarGastoModal'
+import toast from 'react-hot-toast'
 
 export const ListarGasto = () => {
     const { permisosGasto } = useContext(PermisosContext)
@@ -50,6 +51,7 @@ export const ListarGasto = () => {
         try {
             const response = await eliminarGasto(gasto)
             if (response.status == HttpStatus.OK) {
+                toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {

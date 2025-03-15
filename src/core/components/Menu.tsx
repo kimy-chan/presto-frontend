@@ -70,6 +70,7 @@ export const Menu = ({ children }: { children: ReactNode }) => {
                   <LiaTachometerAltSolid size={24} />
                   <span>Medidores</span>
                 </button>
+
                 {openSections.medidores && (
                   <ul className="ml-6">
                     {permisosMedidor.some((i) => i.includes(PermisosE.LISTAR_MEDIDOR)) && <li>
@@ -80,6 +81,12 @@ export const Menu = ({ children }: { children: ReactNode }) => {
                     {permisosMedidor.some((i) => i.includes(PermisosE.CREAR_MEDIDOR)) && <li>
                       <Link to="/medidor/crear" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
                         <span>crear Medidor</span>
+                      </Link>
+                    </li>}
+
+                    {permisosMedidor.some((i) => i.includes(PermisosE.LISTAR_MEDIDOR)) && <li>
+                      <Link to="/listar/corte/medidor" className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-700">
+                        <span>Corte medidor</span>
                       </Link>
                     </li>}
                   </ul>

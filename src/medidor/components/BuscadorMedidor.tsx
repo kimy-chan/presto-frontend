@@ -7,7 +7,7 @@ export const BuscadorMedidor = ({ onSubmit }: { onSubmit: (data: BuscadorMedidor
         <div className="p-4">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4"
+                className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4"
             >
                 <div className="flex flex-col w-full">
                     <label htmlFor="ci" className="text-gray-700">CI</label>
@@ -62,6 +62,21 @@ export const BuscadorMedidor = ({ onSubmit }: { onSubmit: (data: BuscadorMedidor
                         className="p-2 border border-gray-300 rounded mt-1"
                         placeholder="Ingrese número de medidor"
                     />
+                </div>
+                <div className="flex flex-col w-full">
+                    <label htmlFor="numeroMedidor" className="block text-gray-700 font-medium mb-2">
+                        Estado medidor
+                    </label>
+                    <select
+                        {...register("estado")}
+                        id="estado"
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    >
+                        <option value="">Seleccione el estado</option>
+                        <option value="ACTIVO">Activo</option>
+                        <option value="INACTIVO">Inactivo</option>
+                        <option value="MANTENIMIENTO">Mantenimiento</option>
+                    </select>
                 </div>
 
                 <button

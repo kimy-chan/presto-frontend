@@ -11,6 +11,7 @@ import { CrearCategoriaModal } from "../modal/CrearCategoriaModal"
 import { EditarCategoriaModal } from "../modal/EditarCategoriaModal"
 import { ItemsPagina } from "../../core/components/ItemsPAgina"
 import { Paginador } from "../../core/components/Paginador"
+import toast from "react-hot-toast"
 
 export const ListarCategoriaGasto = () => {
     const [recargar, setRecargar] = useState(false)
@@ -43,6 +44,7 @@ export const ListarCategoriaGasto = () => {
         try {
             const response = await eliminarCategoria(cat)
             if (response.status == HttpStatus.OK) {
+                toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {

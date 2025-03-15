@@ -7,6 +7,7 @@ import { editarUsuario, usuarioOne } from '../service/usuarioService';
 import { HttpStatus } from '../../core/enums/httpStatus';
 import { AxiosError } from 'axios';
 import { ErrorI } from '../../core/interface/error';
+import toast from 'react-hot-toast';
 
 export const EditarUsuarioModal = (
     { usuario, closeModal, isOpen, recargar, setRecargar }: {
@@ -64,6 +65,7 @@ export const EditarUsuarioModal = (
 
             const response = await editarUsuario(usuario, data)
             if (response.status == HttpStatus.OK) {
+                toast.success('Usuario actualizado')
                 setRecargar(!recargar)
                 closeModal()
 

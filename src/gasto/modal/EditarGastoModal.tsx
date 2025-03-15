@@ -5,6 +5,7 @@ import { crearGasto, editarGasto, gastoOne } from "../service/gastoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { listarCategoriaGasto, listarCategoriaGastoPublico } from "../../categoriaGasto/service/categoriaGastoService";
 import { CategoriaGastoI } from "../../categoriaGasto/interface/categoriaGasto";
+import toast from "react-hot-toast";
 
 
 export const EditarGastoModal = ({ recargar, setRecargar, gasto, closeModal, isOpen }:
@@ -22,6 +23,7 @@ export const EditarGastoModal = ({ recargar, setRecargar, gasto, closeModal, isO
             data.factorValides = Number(data.factorValides)
             const response = await editarGasto(data, gasto)
             if (response.status == HttpStatus.OK) {
+                toast.success('Editado')
                 setRecargar(!recargar)
                 closeModal()
             }

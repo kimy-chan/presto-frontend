@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataRol } from "../interface/dataRo";
 import { crearRol } from "../service/rolService";
 import { PermissionsState } from "../interface/rol";
@@ -7,14 +7,17 @@ import { availablePermissions } from "../util/permisos";
 import toast from 'react-hot-toast';
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
+import { AxiosError } from "axios";
+import { ErrorI } from "../../core/interface/error";
 
 
 export const CrearRol = () => {
     const navigate = useNavigate()
     const [roleName, setRoleName] = useState("");
+    const [error, setError] = useState<string>()
     const [permissions, setPermissions] = useState<PermissionsState>({});
 
-
+    useEffect((() => setError('')), [roleName])
     // Cambiar el estado de los permisos
     const handlePermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
@@ -44,6 +47,15 @@ export const CrearRol = () => {
             }
 
         } catch (error) {
+            const e = error as AxiosError
+            if (e.response?.status == HttpStatus.CONFLICT) {
+                const mensaje = e.response.data as ErrorI
+                console.log(mensaje.message);
+
+                setError(mensaje.message)
+
+            }
+
             console.log(error);
 
         }
@@ -74,6 +86,7 @@ export const CrearRol = () => {
                                 className="mt-1 p-2 w-full border rounded-md"
                                 placeholder="Ingrese el nombre del rol"
                             />
+                            {error && <p className="text-red-600 text-xs">{error}</p>}
                         </div>
 
                         {/* Segunda fila: Permisos por Módulo */}

@@ -1,17 +1,18 @@
 import { useContext, useEffect, useState } from 'react'
-import { eliminarTarifa, listarRangoTarifa, listarTarifas } from '../service/tarifasService'
+import { eliminarTarifa, listarTarifas } from '../service/tarifasService'
 import { TarifaI } from '../interface/tarifa'
 import { MdDelete } from 'react-icons/md'
 import { IoMdInformationCircle } from 'react-icons/io'
 import { FaRegEdit } from 'react-icons/fa'
 import { ListarRangoModal } from '../modal/ListarRangoModal'
-import { RangoI } from '../interface/rango'
+
 import { EditarTarifa } from '../modal/EditarTarifa'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 import { PermisosE } from '../../core/enums/permisos'
 import { CrearTarifa } from '../modal/CrearTarifa'
 import { HttpStatus } from '../../core/enums/httpStatus'
 import { AlertaEliminar } from '../../core/util/alertaEliminar'
+import toast from 'react-hot-toast'
 
 
 export const ListarTarifas = () => {
@@ -19,11 +20,12 @@ export const ListarTarifas = () => {
     const [tarifas, setTarifas] = useState<TarifaI[]>([])
     const [tarifa, setTarifa] = useState<string>()
     const { permisosTarifa } = useContext(PermisosContext)
+    const [recargar, setRecargar] = useState<boolean>(false)
     console.log(permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)));
 
 
     const [isOpen, setIsOpen] = useState(false);
-    const [recargar, setRecargar] = useState(false)
+
 
     const closeModal = () => setIsOpen(false);
 
@@ -58,6 +60,7 @@ export const ListarTarifas = () => {
             console.log(response);
 
             if (response.status == HttpStatus.OK) {
+                toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
@@ -69,7 +72,7 @@ export const ListarTarifas = () => {
     return (
         <div className="overflow-x-auto">
 
-            {permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)) && <CrearTarifa />}
+            {permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)) && <CrearTarifa recargar={recargar} setRecargar={setRecargar} />}
 
             <table className="min-w-full divide-y divide-gray-200">
                 <thead>

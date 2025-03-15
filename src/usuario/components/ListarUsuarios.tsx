@@ -13,6 +13,7 @@ import { BuscadorUsuarioI } from '../interface/buscadorCliente'
 import { PermisosE } from '../../core/enums/permisos'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 import { AlertaEliminar } from '../../core/util/alertaEliminar'
+import toast from 'react-hot-toast'
 
 export const ListarUsuarios = () => {
     const [buscador, setBuscador] = useState<BuscadorUsuarioI>({
@@ -61,6 +62,7 @@ export const ListarUsuarios = () => {
 
 
             if (response.status == HttpStatus.OK) {
+                toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {

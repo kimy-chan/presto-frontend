@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { EditarRangoI } from "../interface/editarRango";
 import { editarRango, rangoPorId } from "../service/tarifasService";
 import { HttpStatus } from "../../core/enums/httpStatus";
+import toast from "react-hot-toast";
 
 export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecargar }: {
     rango: string,
@@ -40,6 +41,7 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
         try {
             const response = await editarRango(rango, data)
             if (response.status == HttpStatus.OK) {
+                toast.success('Rango editado')
                 closeModal()
                 setRecargar(!recargar)
             }

@@ -47,6 +47,7 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
                             <p>
                                 <strong>Dirección:</strong> {dataCliente.cliente.direccion}{" "}
                             </p>
+
                         </div>
                         <div>
                             <p>
@@ -63,12 +64,13 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
                     <table className="w-full mt-5 border border-black">
                         <thead>
                             <tr className="border border-black">
-                                <th className="border border-black p-1">Meses</th>
+                                <th className="border border-black p-1">Mes</th>
                                 <th className="border border-black p-1">Año</th>
-                                <th className="border border-black p-1">Lectura Anterior</th>
-                                <th className="border border-black p-1">Lectura Actual</th>
-                                <th className="border border-black p-1">Consumo Total m³</th>
+                                <th className="border border-black p-1">Lect. Anterior</th>
+                                <th className="border border-black p-1">Lect. Actual</th>
+                                <th className="border border-black p-1">Consumo m³</th>
                                 <th className="border border-black p-1">Total Pagado</th>
+                                <th className="border border-black p-1">Fecha</th>
                                 <th className="border border-black p-1">Observaciones</th>
                             </tr>
                         </thead>
@@ -86,6 +88,7 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
                                         <td className="border border-black p-1">{pago?.lecturaActual}</td>
                                         <td className="border border-black p-1">{pago?.consumoTotal}</td>
                                         <td className="border border-black p-1">{pago?.costoPagado}</td>
+                                        <td className="border border-black p-1">{pago?.fecha}</td>
                                         <td className="border border-black p-1">{pago?.observaciones}</td>
                                     </tr>
                                 );

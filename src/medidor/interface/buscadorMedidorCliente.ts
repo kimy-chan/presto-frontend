@@ -4,4 +4,5 @@ export interface BuscadorMedidorClientI {
   apellidoPaterno?: string | null;
   apellidoMaterno?: string | null;
   numeroMedidor?: string | null;
+  estado?: string | null;
 }

@@ -8,13 +8,17 @@ import { availablePermissions } from "../util/permisos";
 
 
 import toast from 'react-hot-toast';
+import { AxiosError } from "axios";
+import { ErrorI } from "../../core/interface/error";
 
 export const EditarRol = ({ id }: { id: string }) => {
     const navigate = useNavigate()
     const [roleName, setRoleName] = useState("");
+    const [error, setError] = useState<string>()
     const [permissions, setPermissions] = useState<PermissionsState>({});
 
 
+    useEffect((() => setError('')), [roleName])
 
     useEffect(() => {
 
@@ -32,6 +36,8 @@ export const EditarRol = ({ id }: { id: string }) => {
                 }
             } catch (error) {
                 console.log(error);
+
+
             }
         };
 
@@ -65,7 +71,14 @@ export const EditarRol = ({ id }: { id: string }) => {
                 navigate('/listar/rol')
             }
         } catch (error) {
-            console.log(error);
+            const e = error as AxiosError
+            if (e.response?.status == HttpStatus.CONFLICT) {
+                const mensaje = e.response.data as ErrorI
+                console.log(mensaje.message);
+
+                setError(mensaje.message)
+
+            }
         }
     };
 
@@ -93,6 +106,7 @@ export const EditarRol = ({ id }: { id: string }) => {
                                 className="mt-1 p-2 w-full border rounded-md"
                                 placeholder="Ingrese el nombre del rol"
                             />
+                            {error && <p className="text-red-600 text-xs">{error}</p>}
                         </div>
 
                         {/* Segunda fila: Permisos por Módulo */}

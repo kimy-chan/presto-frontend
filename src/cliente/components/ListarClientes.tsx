@@ -11,6 +11,7 @@ import { EditarClienteModal } from "../modal/EditarClienteModal";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import { AlertaEliminar } from "../../core/util/alertaEliminar";
+import toast from "react-hot-toast";
 
 export const ListarClientes = () => {
   const { permisosCliente } = useContext(PermisosContext)
@@ -64,6 +65,7 @@ export const ListarClientes = () => {
     try {
       const response = await eliminarCliente(cliente)
       if (response.status == HttpStatus.OK) {
+        toast.success('Eliminado')
         setRecargar(!recargar)
       }
     } catch (error) {

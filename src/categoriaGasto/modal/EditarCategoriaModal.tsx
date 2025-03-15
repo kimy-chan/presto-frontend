@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { FormCategoriaGastoI } from "../interface/formCategoriaGasto";
 import { categoriaGastoOne, editarCategoriaGasto } from "../service/categoriaGastoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
+import toast from "react-hot-toast";
 
 export const EditarCategoriaModal = (
     { recargar, setRecargar, categoria, closeModal, isOpen }:
@@ -14,6 +15,7 @@ export const EditarCategoriaModal = (
         try {
             const response = await editarCategoriaGasto(data, categoria)
             if (response.status == HttpStatus.OK) {
+                toast.success('Editado')
                 setRecargar(!recargar)
                 closeModal()
 
