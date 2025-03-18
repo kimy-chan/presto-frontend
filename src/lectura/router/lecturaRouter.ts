@@ -9,7 +9,7 @@ export const lecturaRouter: RouterI[] = [
     element: LecturaPage,
   },
   {
-    path: "/lectura/recibo/:id",
+    path: "/lectura/recibo/:medidor/:lectura",
     element: ReciboPage,
   },
   {

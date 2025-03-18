@@ -7,7 +7,7 @@ export interface ListarLecturaI {
   consumoTotal: number;
   costoApagar: number;
   estado: string;
-
+  medidor: string;
   estadoMedidor: string;
   fecha: string;
   gestion: string;

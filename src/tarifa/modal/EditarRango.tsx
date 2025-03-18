@@ -28,6 +28,7 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
                 setValue("costo", response.data.costo)
                 setValue("rango2", response.data.rango2)
                 setValue("rango1", response.data.rango1)
+                setValue("iva", response.data.iva)
 
             }
         } catch (error) {
@@ -125,6 +126,34 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
                                         className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
                                     />
                                     {errors.costo && <p className="text-xs text-red-500">{errors.costo.message}</p>}
+                                </div>
+
+
+                                <div className="col-span-2 sm:col-span-1">
+
+                                    <label htmlFor="iva" className="block text-gray-700 font-bold mb-2">
+                                        iva %
+                                    </label>
+                                    <input
+                                        {...register("iva", {
+                                            valueAsNumber: true,
+                                            validate: (valuen: number) => {
+                                                if (valuen < 0) {
+                                                    return "Ingrese el iva"
+                                                }
+                                                return true
+                                            }
+
+                                        })}
+                                        type="number"
+                                        id="iva"
+                                        name="iva"
+                                        step="any"
+                                        defaultValue={0}
+                                        placeholder="Ingresa el iva"
+                                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                    {errors.iva && <p className='text-xs text-red-500'>{errors.iva.message}</p>}
                                 </div>
 
                                 <div className="mt-6 flex justify-end">

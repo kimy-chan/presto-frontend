@@ -78,3 +78,14 @@ export const eliminarUsuario = async (usuario: string): Promise<response> => {
     throw error;
   }
 };
+
+export const perfilUsuario = async (): Promise<
+  ResponseOneI<ListarUsuariosI>
+> => {
+  try {
+    const response = await instance.get(`usuario/perfil/cuenta`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

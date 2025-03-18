@@ -24,10 +24,13 @@ export const crearLectura = async (
 };
 
 export const lecturaRecibo = async (
-  id: string
+  medidor: string,
+  lectura: string
 ): Promise<ResponseReciboData> => {
   try {
-    const response = await instance.get(`lectura/recibo/${id}`);
+    const response = await instance.get(
+      `lectura/recibo/${medidor}/${lectura} `
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -58,7 +61,7 @@ export const listarLecturas = async (
     ? (params.numeroMedidor = buscadorLecturaI.numeroMedidor)
     : params;
 
-  buscadorLecturaI.mes ? (params.mes = buscadorLecturaI.mes) : params;
+  buscadorLecturaI.estado ? (params.estado = buscadorLecturaI.estado) : params;
 
   buscadorLecturaI.fechaInicio
     ? (params.fechaInicio = buscadorLecturaI.fechaInicio)

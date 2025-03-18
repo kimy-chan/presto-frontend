@@ -31,7 +31,7 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
     return (
         <>
             {dataCliente && (
-                <div id="recibo" className="w-[210mm] h-[230mm] p-10 bg-white text-black mx-auto">
+                <div id="recibo" className="w-[210mm] h-[230mm] p-2 bg-white text-black mx-auto">
                     <h2 className="text-center font-bold text-lg">
                         ASOCIACIÓN DE AGUA POTABLE Y SANEAMIENTO
                     </h2>
@@ -66,13 +66,25 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
                             <tr className="border border-black">
                                 <th className="border border-black p-1">Mes</th>
                                 <th className="border border-black p-1">Año</th>
-                                <th className="border border-black p-1">Lect. Anterior</th>
-                                <th className="border border-black p-1">Lect. Actual</th>
-                                <th className="border border-black p-1">Consumo m³</th>
-                                <th className="border border-black p-1">Total Pagado</th>
+
+                                <th className="border border-black p-1" colSpan={2}>
+                                    Lectura
+                                    <table className="w-full">
+                                        <tr>
+                                            <th >Ant</th>
+                                            <th >Act</th>
+                                        </tr>
+                                    </table>
+                                </th>
+
+
+
+                                <th className="border border-black p-1">m³</th>
+                                <th className="border border-black p-1">Total</th>
                                 <th className="border border-black p-1">Fecha</th>
                                 <th className="border border-black p-1">Observaciones</th>
                             </tr>
+
                         </thead>
                         <tbody>
                             {meses.map((mes, index) => {
@@ -131,10 +143,9 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
 
 
 const imprimir = () => {
-    const content = document.getElementById("recibo"); // Obtener el div del recibo
+    const content = document.getElementById("recibo");
     if (content) {
-        const printWindow = window.open("", "", "width=800,height=900");
-
+        const printWindow = window.open("width=800,height=900");
 
         const styles = [...document.styleSheets]
             .map((styleSheet) => {
@@ -146,7 +157,8 @@ const imprimir = () => {
             })
             .join("");
 
-        printWindow?.document.write(`
+        if (printWindow) {
+            printWindow.document.write(`
             <html>
                 <head>
                     <style>${styles}</style>
@@ -157,10 +169,13 @@ const imprimir = () => {
             </html>
         `);
 
-        printWindow?.document.close();
-        printWindow?.focus();
-        printWindow?.print();
-        printWindow?.close();
+            printWindow.document.close();
+            printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+
     }
 };
-

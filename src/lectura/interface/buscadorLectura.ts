@@ -1,6 +1,6 @@
 export interface BuscadorLecturaI {
   numeroMedidor?: string | null;
-  mes?: string | null;
+  estado?: string | null;
   fechaInicio?: string | null;
   fechaFin?: string | null;
 }

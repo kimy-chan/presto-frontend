@@ -69,7 +69,7 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
                     ></div>
 
 
-                    <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-full max-w-md">
+                    <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-full max-w-2xl">
                         <div className="flex justify-between items-center">
                             <h2 className="text-xl font-semibold">{rangos.length > 0 && rangos[0].tarifa}</h2>
                             <button
@@ -86,6 +86,7 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
                                         <th className="py-3 px-4 border-b text-left">Rango 1</th>
                                         <th className="py-3 px-4 border-b text-left">Rango 2</th>
                                         <th className="py-3 px-4 border-b text-left">costo</th>
+                                        <th className="py-3 px-4 border-b text-left">Iva</th>
                                         <th className="py-3 px-4 border-b text-left">Accion</th>
 
                                     </tr>
@@ -97,6 +98,7 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
                                             <td className="py-3 px-4">{item.rango1}</td>
                                             <td className="py-3 px-4">{item.rango2}</td>
                                             <td className="py-3 px-4">{item.costo}</td>
+                                            <td className="py-3 px-4">{item.iva}</td>
                                             <td className="py-2 px-4">
 
                                                 {permisosTarifa.some((i) => i.includes(PermisosE.ELIMINAR_TARIFA)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">

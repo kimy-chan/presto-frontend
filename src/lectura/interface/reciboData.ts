@@ -2,22 +2,40 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 
 export interface ReciboDataI {
   _id: string;
-  lecturaActual: number;
-  lecturaAnterior: number;
-  consumoTotal: number;
-  fecha: string;
-  codigoCliente: number;
   numeroMedidor: string;
+  ci: string;
   nombre: string;
   apellidoPaterno: string;
   apellidoMaterno: string;
   direccion: string;
-  categoria: string;
+  codigoCliente: string;
+  tarifaNombre?: string;
+}
+
+export interface LecturasReciboI {
+  codigo: string;
+  consumoTotal: number;
   costoApagar: number;
+  estado: string;
+  fecha: string;
   fechaVencimiento: string;
+  flag: string;
+  gestion: string;
+  lecturaActual: number;
+  lecturaAnterior: number;
+  medidor: string;
+  mes: string;
+  numeroLectura: string;
+  usuario: string;
+
+  _id: string;
 }
 
 export interface ResponseReciboData {
   status: HttpStatus;
-  data: ReciboDataI;
+  data: {
+    dataCliente: ReciboDataI;
+    lecturas: LecturasReciboI[];
+    lectura: LecturasReciboI;
+  };
 }

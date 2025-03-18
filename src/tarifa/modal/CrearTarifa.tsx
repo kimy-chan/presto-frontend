@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormTarifaI } from '../interface/formTarifa';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,11 +7,15 @@ import { DataI } from '../interface/data';
 import { crearTarifa } from '../service/tarifasService';
 import { HttpStatus } from '../../core/enums/httpStatus';
 import toast from 'react-hot-toast';
+import { AxiosError, HttpStatusCode } from 'axios';
+import { ErrorI } from '../../core/interface/error';
 
 
 export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { register, handleSubmit, formState: { errors } } = useForm<FormTarifaI>()
+    const [conflicto, setConflicto] = useState<string>()
+    const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormTarifaI>()
+
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
     const [tarifas, setTarifas] = useState<FormTarifaI[]>([])
@@ -25,11 +29,12 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
 
     }
 
+
     const guardar = async () => {
         const data: DataI = {
             nombre: nombre,
             rangos: tarifas.map((item) => {
-                return { rango1: Number(item.rango1), rango2: Number(item.rango2), costo: Number(item.costo) }
+                return { rango1: Number(item.rango1), rango2: Number(item.rango2), costo: Number(item.costo), iva: item.iva }
             })
         }
         try {
@@ -39,11 +44,16 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                 setTarifas([])
                 setDisableNombre(false)
                 setRecargar(!recargar)
-
+                setConflicto('')
+                reset()
             }
 
         } catch (error) {
-            console.log(error);
+            const e = error as AxiosError
+            if (e.response?.status == HttpStatusCode.Conflict) {
+                const Conflict = e.response.data as ErrorI
+                setConflicto(Conflict.message)
+            }
 
         }
 
@@ -107,6 +117,7 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
                                         />
                                         {errors.nombre && <p className='text-xs text-red-500'>{errors.nombre.message}</p>}
+                                        {conflicto && <p className='text-xs text-red-500'>{conflicto}</p>}
                                     </div>
 
 
@@ -119,7 +130,7 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                                 valueAsNumber: true, validate: (valuen: number) => {
 
                                                     if (!valuen && valuen < 0) {
-                                                        return "Ingre el de inicio"
+                                                        return "Ingre el rango 1"
                                                     }
                                                     return true
                                                 }
@@ -142,7 +153,10 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                             {...register("rango2", {
                                                 valueAsNumber: true, validate: (value: number) => {
                                                     if (!value) {
-                                                        return "Ingre el de Fin"
+                                                        return "Ingre el rango 2"
+                                                    }
+                                                    if (value < watch("rango1")) {
+                                                        return 'El rango 2 debe ser mayor que rango 1'
                                                     }
                                                     return true
                                                 }
@@ -164,10 +178,11 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                         <input
                                             {...register("costo", {
                                                 valueAsNumber: true,
-                                                validate: (valuen: number) => {
-                                                    if (!valuen) {
+                                                validate: (value: number) => {
+                                                    if (!value) {
                                                         return "Ingre el costo"
                                                     }
+
                                                     return true
                                                 }
 
@@ -177,9 +192,37 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                             name="costo"
                                             step="any"
                                             placeholder="Ingresa el costo"
+                                            defaultValue={0}
                                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
                                         />
                                         {errors.costo && <p className='text-xs text-red-500'>{errors.costo.message}</p>}
+                                    </div>
+
+                                    <div className="col-span-2 sm:col-span-1">
+
+                                        <label htmlFor="iva" className="block text-gray-700 font-bold mb-2">
+                                            iva %
+                                        </label>
+                                        <input
+                                            {...register("iva", {
+                                                valueAsNumber: true,
+                                                validate: (valuen: number) => {
+                                                    if (valuen < 0) {
+                                                        return "Ingrese el iva"
+                                                    }
+                                                    return true
+                                                }
+
+                                            })}
+                                            type="number"
+                                            id="iva"
+                                            name="iva"
+                                            step="any"
+                                            defaultValue={0}
+                                            placeholder="Ingresa el iva"
+                                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                                        />
+                                        {errors.iva && <p className='text-xs text-red-500'>{errors.iva.message}</p>}
                                     </div>
                                 </div>
 
@@ -205,6 +248,7 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                         <th className="py-3 px-4 border-b text-left">Rango 1</th>
                                         <th className="py-3 px-4 border-b text-left">Rango 2</th>
                                         <th className="py-3 px-4 border-b text-left">Precio</th>
+                                        <th className="py-3 px-4 border-b text-left">Iva</th>
                                         <th className="py-3 px-4 border-b text-center">Acción</th>
                                     </tr>
                                 </thead>
@@ -215,6 +259,7 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
                                             <td className="py-3 px-4">{item.rango1}</td>
                                             <td className="py-3 px-4">{item.rango2}</td>
                                             <td className="py-3 px-4">{item.costo}</td>
+                                            <td className="py-3 px-4">{item.iva}</td>
                                             <td className="py-3 px-4 text-center">
                                                 <button onClick={() => {
                                                     const tarifa = tarifas.filter((i) => i.uuid !== item.uuid)

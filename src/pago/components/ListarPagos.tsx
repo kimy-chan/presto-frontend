@@ -9,6 +9,8 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
 
 export const ListarPagos = () => {
+    const date = new Date()
+    const fecha = date.toISOString().split('T')[0]
     const navigate = useNavigate()
     const [data, setData] = useState<ListarPagosI[]>([]);
     const [buscador, setBuscador] = useState<BuscadorPagosI>({
@@ -17,8 +19,8 @@ export const ListarPagos = () => {
         apellidoMaterno: null,
         apellidoPaterno: null,
         nombre: null,
-        fechaFin: null,
-        fechaInicio: null
+        fechaFin: fecha,
+        fechaInicio: fecha
     });
     console.log(buscador);
 

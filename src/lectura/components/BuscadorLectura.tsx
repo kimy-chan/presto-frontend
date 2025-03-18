@@ -1,15 +1,17 @@
 import { useForm } from "react-hook-form";
 import { BuscadorLecturaI } from "../interface/buscadorLectura";
+import { useEffect } from "react";
 
 
 export const BuscadorLectura = ({ onSubmit }: { onSubmit: (data: BuscadorLecturaI) => void }) => {
-    const { register, handleSubmit } = useForm<BuscadorLecturaI>();
+    const { register, handleSubmit, setValue } = useForm<BuscadorLecturaI>();
+    useEffect(() => {
+        const date = new Date()
+        const fecha = date.toISOString().split('T')[0]
+        setValue("fechaFin", fecha)
+        setValue("fechaInicio", fecha)
 
-    const meses = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-
+    }, [])
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -23,13 +25,14 @@ export const BuscadorLectura = ({ onSubmit }: { onSubmit: (data: BuscadorLectura
 
                 {/* Campo: Mes */}
                 <div>
-                    <label htmlFor="mes" className="block text-gray-700 font-semibold mb-2">Mes</label>
+                    <label htmlFor="estado" className="block text-gray-700 font-semibold mb-2">Estado</label>
                     <select
-                        {...register("mes")}
-                        id="mes"
+                        {...register("estado")}
+                        id="estado"
                         className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Seleccione el mes</option>
-                        {meses.map((item, index) => <option value={item} key={index}>{item}</option>)}
+                        <option value="">Seleccione el estado</option>
+                        <option value='PENDIENTE'>Pendiente</option>
+                        <option value='PAGADO'>Pagado</option>
                     </select>
                 </div>
 

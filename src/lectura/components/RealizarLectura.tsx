@@ -11,6 +11,7 @@ import { AxiosError } from "axios"
 import { ErrorConflictoI } from "../../core/interface/errorConflicto"
 import { alertaConfirmacionLectura } from "../util/alertaConfrmacionLectura"
 import { ErrorI } from "../../core/interface/error"
+import { EstadoMedidorE } from "../../medidor/enum/estadoMedidor"
 
 
 export const RealizarLectura = () => {
@@ -67,8 +68,12 @@ export const RealizarLectura = () => {
                     data.lecturaActual = Number(data.lecturaActual)
                     data.lecturaAnterior = Number(data.lecturaAnterior)
                     const response = await crearLectura(data)
+                    console.log(response);
+
                     if (response.status == HttpStatus.CREATED) {
-                        navigate(`/lectura/recibo/${response.lectura}`)
+                        console.log(response);
+
+                        navigate(`/lectura/recibo/${response.medidor}/${response.lectura}`)
 
                     }
                 }
@@ -136,7 +141,7 @@ export const RealizarLectura = () => {
                                         </div>
                                         <div className="p-4 bg-white rounded-lg shadow-md">
                                             <p className="font-semibold text-lg text-blue-600 mb-2">Datos del Medidor</p>
-                                            <p><strong className="text-gray-800">Estado:</strong> <span className="text-gray-600">{cliente.estado}</span></p>
+                                            <p><strong className="text-gray-800">Estado:</strong> <span className={`text-gray-600  ${cliente.estado == EstadoMedidorE.inactivo && 'bg-red-700 text-white p-1 rounded-2xl'}`}>{cliente.estado}</span></p>
                                             <p><strong className="text-gray-800">Número de Medidor:</strong> <span className="text-gray-600">{cliente.numeroMedidor}</span></p>
                                             <p><strong className="text-gray-800">Código Medidor:</strong> <span className="text-gray-600">{cliente.codigo}</span></p>
                                         </div>

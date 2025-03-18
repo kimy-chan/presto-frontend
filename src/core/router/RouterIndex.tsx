@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { AutenticacionContext } from "../../autenticacion/context/AutenticacionContext";
 import { homeRouter } from "../../home/router/homeRouter";
 import { AutenticacionPage } from "../../autenticacion/page/AutenticacionPage";
-import { AutenticacionProvider } from "../../autenticacion/context/AutenticacionProvider";
+import { NotFound } from "../components/NotFound";
 
 
 const RouterApp = ({ router }: { router: RouterI[] }) => {
@@ -25,6 +25,7 @@ const RouterApp = ({ router }: { router: RouterI[] }) => {
         {router.map((item, index) => (
           <Route key={index} path={item.path} element={<item.element />} />
         ))}
+
       </Routes>
     </>
   );
@@ -32,15 +33,13 @@ const RouterApp = ({ router }: { router: RouterI[] }) => {
 
 export const RouterIndex = () => {
   const { isAutenticacion, token } = useContext(AutenticacionContext)
-  console.log('a', isAutenticacion);
-
   if (!isAutenticacion && !token) {
     return (
-
       <Router>
 
         <Routes>
           <Route path="/" element={<AutenticacionPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
       </Router>
@@ -48,22 +47,24 @@ export const RouterIndex = () => {
   }
   return (
 
-    <Router>
+    <> {
+      isAutenticacion && token && <Router>
 
-      <Menu>
-        <RouterApp router={tarifaRouter} />
-        <RouterApp router={clienteRouter} />
-        <RouterApp router={medidorRouter} />
-        <RouterApp router={gastoRouter} />
-        <RouterApp router={categoriaGastoRouter} />
-        <RouterApp router={lecturaRouter} />
-        <RouterApp router={pagoRouter} />
-        <RouterApp router={usuarioRouter} />
-        <RouterApp router={rolRouter} />
-        <RouterApp router={homeRouter} />
-      </Menu>
+        <Menu>
+          <RouterApp router={tarifaRouter} />
+          <RouterApp router={clienteRouter} />
+          <RouterApp router={medidorRouter} />
+          <RouterApp router={gastoRouter} />
+          <RouterApp router={categoriaGastoRouter} />
+          <RouterApp router={lecturaRouter} />
+          <RouterApp router={pagoRouter} />
+          <RouterApp router={usuarioRouter} />
+          <RouterApp router={rolRouter} />
+          <RouterApp router={homeRouter} />
+        </Menu>
 
-    </Router>
+      </Router>
+    }</>
 
   );
 };

@@ -17,6 +17,8 @@ import { AlertaEliminar } from "../../core/util/alertaEliminar";
 import toast from "react-hot-toast";
 
 export const ListarLectura = () => {
+    const date = new Date()
+    const fecha = date.toISOString().split('T')[0]
     const navigate = useNavigate()
     const [recargar, setRecargar] = useState<boolean>(false);
     const [data, setData] = useState<ListarLecturaI[]>([]);
@@ -24,11 +26,12 @@ export const ListarLectura = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { permisosLectura } = useContext(PermisosContext)
     const closeModal = () => setIsOpen(false);
+
     const [buscador, setBuscador] = useState<BuscadorLecturaI>(
         {
-            fechaFin: null,
-            fechaInicio: null,
-            mes: null,
+            fechaFin: fecha,
+            fechaInicio: fecha,
+            estado: null,
             numeroMedidor: null
         }
     )
@@ -114,13 +117,17 @@ export const ListarLectura = () => {
                                                 <td className="whitespace-nowrap px-6 py-4">{item.estado}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.fecha}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">
+
+
                                                     <button
-                                                        onClick={() => navigate(`/lectura/recibo/${item._id}`)}
+                                                        onClick={() => navigate(`/lectura/recibo/${item.medidor}/${item._id}`)}
                                                         className="bg-green-600 p-1 rounded-2xl text-white">
                                                         Recibo
                                                     </button>
 
+
                                                     {item.estado != EstadoPagoE.PAGADO &&
+
 
                                                         permisosLectura.some((i) => i.includes(PermisosE.ELIMINAR_LECTURA)) && (<button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
                                                             <MdDelete />

@@ -1,8 +1,16 @@
 import { useForm } from "react-hook-form";
 import { BuscadorPagosI } from "../interface/buscadorPagos";
+import { useEffect, useState } from "react";
 
 export const BuscadorPagos = ({ onSubmit }: { onSubmit: (data: BuscadorPagosI) => void }) => {
-    const { handleSubmit, register } = useForm<BuscadorPagosI>();
+    const { handleSubmit, register, setValue, watch } = useForm<BuscadorPagosI>();
+    useEffect(() => {
+        const date = new Date()
+        const fecha = date.toISOString().split('T')[0]
+        setValue("fechaInicio", fecha)
+        setValue("fechaFin", fecha)
+    }, [])
+
     return (
         <div className="p-4">
             <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-8 gap-4 items-center">
