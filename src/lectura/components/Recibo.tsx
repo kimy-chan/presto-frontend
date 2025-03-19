@@ -117,7 +117,7 @@ export const Recibo = ({ medidor, lectura }: { medidor: string, lectura: string 
                                         <td colSpan={2}>
                                             {lecturas
                                                 .filter((item) => item.estado === EstadoPagoE.PENDIENTE)
-                                                .reduce((acc, item) => acc + item.costoApagar, 0)} Bs
+                                                .reduce((acc, item) => acc + item.costoApagar, 0).toFixed(1)} Bs
                                         </td>
                                     </tr>
                                 </tfoot>
