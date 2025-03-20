@@ -81,7 +81,7 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
                     ></div>
 
                     {/* Modal */}
-                    <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-full max-w-lg">
+                    <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg overflow-auto">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-2xl font-semibold text-gray-800">Regitrar usuario</h2>
                             <button
@@ -92,7 +92,7 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
                             </button>
                         </div>
                         <form onSubmit={(handleSubmit(onSubmit))}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-gray-700 font-medium mb-2" htmlFor="nombre">
                                         Ci
@@ -206,9 +206,8 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
                                     />
                                 </div>
 
-
                                 <div>
-                                    <label className="block text-gray-700 font-medium mb-2" htmlFor="direccion">
+                                    <label className="block text-gray-700 font-medium mb-2" htmlFor="celular">
                                         Celular
                                     </label>
                                     <input
@@ -238,7 +237,6 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
 
                             {/* Botones */}
                             <div className="mt-6 flex justify-end">
-
                                 <button
                                     type='submit'
                                     className="ml-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"

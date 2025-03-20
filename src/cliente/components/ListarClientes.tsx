@@ -82,15 +82,15 @@ export const ListarClientes = () => {
         setCodigo={setCodigo}
         setNombre={setNombre}
       />
-      <div className="relative overflow-x-aut">
+      <div className="relative overflow-x-auto">
         <ItemsPagina limite={setLimite} />
 
         <table
-          className="min-w-full text-start text-sm font-light text-surface dark:text-white">
+          className="min-w-full text-start text-sm font-light text-surface  ">
           <thead
             className="bg-gray-700 text-white">
             <tr>
-              <th className="py-2 px-4">Cod</th>
+              <th className="py-2 px-4 hidden sm:table-cell">Cod</th>
               <th className="py-2 px-4">Ci</th>
               <th className="py-2 px-4">Nombre</th>
               <th className="py-2 px-4">Apellido Paterno</th>
@@ -101,8 +101,8 @@ export const ListarClientes = () => {
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center" key={item._id}>
-                <td className="py-2 px-4">{item.codigo}</td>
+              <tr className="bg-white border-b  border-gray-200 text-center" key={item._id}>
+                <td className="py-2 px-4 hidden sm:table-cell">{item.codigo}</td>
                 <td className="py-2 px-4">{item.ci}</td>
                 <td className="py-2 px-4">{item.nombre}</td>
                 <td className="py-2 px-4">{item.apellidoPaterno}</td>

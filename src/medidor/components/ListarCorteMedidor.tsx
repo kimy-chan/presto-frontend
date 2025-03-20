@@ -54,27 +54,29 @@ export const ListarCorteMedidor = () => {
                 <div className="sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full border border-gray-300 rounded-lg shadow-lg">
+                            <table className="min-w-full border border-gray-300 rounded-lg shadow-lg text-xs sm:text-sm">
                                 <thead>
                                     <tr className="bg-gray-700 text-white text-left">
-                                        <th scope="col" className="px-6 py-4">Cod Medidor</th>
-                                        <th scope="col" className="px-6 py-4">N° Medidor</th>
-                                        <th scope="col" className="px-6 py-4">Estado</th>
-                                        <th scope="col" className="px-6 py-4">Dirección</th>
-                                        <th scope="col" className="px-6 py-4">Lecturas pendientes</th>
-                                        <th scope="col" className="px-6 py-4">Acción</th>
+                                        <th scope="col" className="px-2 py-1 hidden sm:table-cell">Cod Medidor</th>
+                                        <th scope="col" className="px-2 py-1">N° Medidor</th>
+                                        <th scope="col" className="px-2 py-1">Estado</th>
+                                        <th scope="col" className="px-2 py-1">Dirección</th>
+                                        <th scope="col" className="px-2 py-1">Lecturas pendientes</th>
+                                        <th scope="col" className="px-2 py-1">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {data.map((item, i) => (
                                         <tr key={i} className="odd:bg-gray-100 even:bg-white">
-                                            <td className="py-2 px-4">{item.codigo}</td>
-                                            <td className="py-2 px-4">{item.numeroMedidor}</td>
-                                            <td className="py-2 px-4">{item.estado}</td>
-                                            <td className="py-2 px-4">{item.direccion}</td>
-                                            <td className="py-2 px-4">{item.lecturas.length}</td>
-                                            <td className="py-2 px-4">
-                                                <button onClick={() => corte(item._id)} className=" p-2 bg-red-500 rounded-2xl  text-white">Realizar corte</button>
+                                            <td className="py-1 px-2 hidden sm:table-cell">{item.codigo}</td>
+                                            <td className="py-1 px-2">{item.numeroMedidor}</td>
+                                            <td className="py-1 px-2">{item.estado}</td>
+                                            <td className="py-1 px-2">{item.direccion}</td>
+                                            <td className="py-1 px-2">{item.lecturas.length}</td>
+                                            <td className="py-1 px-2">
+                                                <button onClick={() => corte(item._id)} className="p-1 sm:p-2 bg-red-500 rounded-lg text-white text-xs sm:text-sm">
+                                                    Realizar corte
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -85,6 +87,7 @@ export const ListarCorteMedidor = () => {
                     </div>
                 </div>
             </div>
+
         </>
     )
 }

@@ -9,11 +9,12 @@ export const CrearCategoriaModal = ({ recargar, setRecargar }: { recargar: boole
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
-    const { handleSubmit, register, formState: { errors } } = useForm<FormCategoriaGastoI>()
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<FormCategoriaGastoI>()
     const onSubmit = async (data: FormCategoriaGastoI) => {
         try {
             const response = await crearCategoriaGasto(data)
             if (response.status == HttpStatus.CREATED) {
+                reset()
                 setRecargar(!recargar)
                 closeModal()
 

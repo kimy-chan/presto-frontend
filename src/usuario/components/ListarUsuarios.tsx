@@ -82,15 +82,15 @@ export const ListarUsuarios = () => {
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                         <div className="overflow-x-auto">
                             <table
-                                className="min-w-full text-start text-sm font-light text-surface dark:text-white">
+                                className="min-w-full text-start text-sm font-light text-surface">
                                 <thead
-                                    className="border-b border-neutral-200 font-medium dark:border-white/10">
+                                    className="bg-gray-700 text-white text-left text-xs sm:text-sm">
                                     <tr>
-                                        <th scope="col" className="px-6 py-4">CI</th>
+                                        <th scope="col" className="px-6 py-4 hidden md:table-cell">CI</th>
                                         <th scope="col" className="px-6 py-4">Nombre</th>
                                         <th scope="col" className="px-6 py-4">Apellidos</th>
                                         <th scope="col" className="px-6 py-4">Usuario</th>
-                                        <th scope="col" className="px-6 py-4">Celular</th>
+                                        <th scope="col" className="px-6 py-4 hidden md:table-cell">Celular</th>
                                         <th scope="col" className="px-6 py-4">Direccion</th>
                                         <th scope="col" className="px-6 py-4">Rol</th>
                                         <th scope="col" className="px-6 py-4">Accion</th>
@@ -102,11 +102,11 @@ export const ListarUsuarios = () => {
                                     {
                                         usuarios.map((item, i) => (
                                             <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
-                                                <td className="whitespace-nowrap px-6 py-4 font-medium">{item.ci}</td>
+                                                <td className="whitespace-nowrap px-6 py-4 hidden md:table-cell">{item.ci}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.nombre}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.apellidoPaterno} {item.apellidoMaterno}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.usuario}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.celular}</td>
+                                                <td className="whitespace-nowrap px-6 py-4 hidden md:table-cell">{item.celular}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.direccion}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{item.rolNombre}</td>
 
@@ -127,9 +127,9 @@ export const ListarUsuarios = () => {
 
                             <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </div >
+                </div >
+            </div >
             {isOpen && usuario && <EditarUsuarioModal closeModal={closeModal} isOpen={isOpen} usuario={usuario} setRecargar={setRecargar} recargar={recargar} />}
         </>
     )

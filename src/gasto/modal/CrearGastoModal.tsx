@@ -9,7 +9,7 @@ import { CategoriaGastoI } from "../../categoriaGasto/interface/categoriaGasto";
 
 export const CrearGastoModal = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { register, handleSubmit, formState: { errors } } = useForm<FormGastoI>()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormGastoI>()
     const [categoriaGastos, setCategoriaGastos] = useState<CategoriaGastoI[]>([])
 
 
@@ -22,6 +22,7 @@ export const CrearGastoModal = ({ recargar, setRecargar }: { recargar: boolean, 
             data.factorValides = Number(data.factorValides)
             const response = await crearGasto(data)
             if (response.status == HttpStatus.CREATED) {
+                reset()
                 setRecargar(!recargar)
                 closeModal()
             }

@@ -48,8 +48,8 @@ export const ListarRol = () => {
     return (
         <div className="overflow-x-auto max-w-full">
             <div className="overflow-x-auto shadow-lg rounded-lg">
-                <table className="min-w-full text-start text-sm font-light text-surface dark:text-white">
-                    <thead className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white">
+                <table className="min-w-full text-start text-sm font-light text-surface ">
+                    <thead className="bg-gray-700 text-white text-left text-xs sm:text-sm">
                         <tr>
                             <th className="py-3 px-4 text-left">Rol</th>
                             <th className="py-3 px-4 text-left">Permisos</th>
@@ -60,7 +60,7 @@ export const ListarRol = () => {
                     <tbody>
                         {rol.map((item) => (
                             <tr
-                                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center"
+                                className="bg-white border-b  dark:border-gray-700 border-gray-200 text-center"
                                 key={item._id}
                             >
                                 <td className="py-3 px-4">{item.nombre}</td>
@@ -76,12 +76,12 @@ export const ListarRol = () => {
                                         <div className="mt-3 p-4">
                                             <div className="space-y-2">
                                                 {item.permisos.map((permiso, index) => (
-                                                    <p
+                                                    <ol
                                                         key={index}
-                                                        className="text-gray-700 dark:text-gray-300"
+                                                        className="text-gray-700"
                                                     >
-                                                        - {permiso}
-                                                    </p>
+                                                        {permiso}
+                                                    </ol>
                                                 ))}
                                             </div>
                                         </div>
@@ -100,8 +100,8 @@ export const ListarRol = () => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
-            </div>
-        </div>
+                </table >
+            </div >
+        </div >
     )
 }

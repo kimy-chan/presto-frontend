@@ -74,47 +74,46 @@ export const ListarGasto = () => {
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="overflow-x-auto">
                         <ItemsPagina limite={setLimite} />
-                        <table className="min-w-full border border-gray-300 rounded-lg shadow-lg">
+                        <table className="min-w-full border border-gray-300 rounded-lg shadow-lg text-sm sm:text-base">
                             <thead>
-                                <tr className="bg-gray-700 text-white text-left">
-                                    <th scope="col" className="px-6 py-4">Categoria gasto</th>
-                                    <th scope="col" className="px-6 py-4">Descripcion</th>
-                                    <th scope="col" className="px-6 py-4">Unidad de Manejo</th>
-                                    <th scope="col" className="px-6 py-4">Cantidad</th>
-                                    <th scope="col" className="px-6 py-4">Costo Unitario</th>
-                                    <th scope="col" className="px-6 py-4">Factor Validez P/Año</th>
-                                    <th scope="col" className="px-6 py-4">Costo por Año</th>
-
-                                    <th scope="col" className="px-6 py-4">fecha</th>
-
-                                    <th scope="col" className="px-6 py-4">Acción</th>
+                                <tr className="bg-gray-700 text-white text-left text-xs sm:text-sm">
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Categoria gasto</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Descripcion</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Unidad de Manejo</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Cantidad</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Costo Unitario</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Factor Validez P/Año</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Costo por Año</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">fecha</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {gastos.map((item, i) => (
-                                    <tr key={i} className="odd:bg-gray-100 ">
-                                        <td className="py-2 px-4">{item.categoria}</td>
-                                        <td className="py-2 px-4">{item.descripcion}</td>
-                                        <td className="py-2 px-4">{item.unidadManejo}</td>
-                                        <td className="py-2 px-4">{item.cantidad}</td>
-                                        <td className="py-2 px-4">{item.costoUnitario.toLocaleString(separadorMiles)}</td>
-                                        <td className="py-2 px-4">{item.factorValides}</td>
-                                        <td className="py-2 px-4">{item.costoAqo.toLocaleString(separadorMiles)}</td>
-                                        <td className="py-2 px-4">{item.fecha}</td>
-
-                                        <td className="py-2 px-4">
-
-                                            {permisosGasto.some((i) => i.includes(PermisosE.ELIMINAR_GASTO)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
-                                                <MdDelete />
-                                            </button>}
-                                            {permisosGasto.some((i) => i.includes(PermisosE.EDITAR_GASTO)) && <button onClick={() => editar(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
-                                                <FaEdit />
-                                            </button>}
+                                    <tr key={i} className="odd:bg-gray-100">
+                                        <td className="py-2 px-3 sm:px-4">{item.categoria}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.descripcion}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.unidadManejo}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.cantidad}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.costoUnitario.toLocaleString(separadorMiles)}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.factorValides}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.costoAqo.toLocaleString(separadorMiles)}</td>
+                                        <td className="py-2 px-3 sm:px-4">{item.fecha}</td>
+                                        <td className="py-2 px-3 sm:px-4">
+                                            {permisosGasto.some((i) => i.includes(PermisosE.ELIMINAR_GASTO)) && (
+                                                <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className="text-red-500 text-xl sm:text-2xl px-3 py-1 rounded">
+                                                    <MdDelete />
+                                                </button>
+                                            )}
+                                            {permisosGasto.some((i) => i.includes(PermisosE.EDITAR_GASTO)) && (
+                                                <button onClick={() => editar(item._id)} className="text-blue-500 text-xl sm:text-2xl px-3 py-1 rounded">
+                                                    <FaEdit />
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
-
                         </table>
                         <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
                     </div>

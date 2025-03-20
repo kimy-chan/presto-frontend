@@ -12,7 +12,7 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
-    const { register, handleSubmit, formState: { errors } } = useForm<FormClienteI>()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormClienteI>()
     const [mensaje, setMensaje] = useState<string>()
 
 
@@ -21,8 +21,10 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
             const response = await crearCliente(data)
 
             if (response.status == HttpStatus.CREATED) {
+                reset()
                 setCliente(response.cliente)
                 setIsOpen(false)
+                setMensaje('')
             }
 
 

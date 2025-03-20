@@ -53,68 +53,53 @@ export const ListarPagos = () => {
                 <div className="sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                         <div className="overflow-x-auto">
-                            <table
-                                className="min-w-full text-start text-sm font-light text-surface dark:text-white">
-                                <thead
-                                    className="border-b border-neutral-200 font-medium dark:border-white/10">
+                            <table className="min-w-full text-start text-xs sm:text-sm font-light text-surface border border-gray-300 rounded-lg shadow-lg">
+                                <thead className="border-b border-neutral-200 font-medium bg-gray-700 text-white">
                                     <tr>
-                                        <th className="py-2 px-4">Cod Cliente</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">CI</th>
-                                        <th className="py-2 px-4">Nombre</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Apellidos</th>
-
-                                        <th className="py-2 px-4 hidden md:table-cell">Cod Medidor</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">N° Medidor</th>
-
-
-                                        <th className="py-2 px-4 hidden md:table-cell">Lect. Ant</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Lect. Act</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Cons (m³)</th>
-
-                                        <th className="py-2 px-4 hidden md:table-cell">Monto</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Pagado</th>
-
-                                        <th className="py-2 px-4 hidden md:table-cell">Mes</th>
-                                        <th className="py-2 px-4">Estado</th>
-                                        <th className="py-2 px-4">tarifa</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Recibo</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Fecha</th>
-                                        <th className="py-2 px-4 hidden md:table-cell">Accion</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Cod Cliente</th>
+                                        <th className="py-1 px-2">CI</th>
+                                        <th className="py-1 px-2">Nombre</th>
+                                        <th className="py-1 px-2">Apellidos</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Cod Medidor</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">N° Medidor</th>
+                                        <th className="py-1 px-2">Lect. Ant</th>
+                                        <th className="py-1 px-2">Lect. Act</th>
+                                        <th className="py-1 px-2">Cons (m³)</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Monto</th>
+                                        <th className="py-1 px-2">Pagado</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Mes</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Estado</th>
+                                        <th className="py-1 px-2">Tarifa</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Recibo</th>
+                                        <th className="py-1 px-2 hidden md:table-cell">Fecha</th>
+                                        <th className="py-1 px-2 ">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {data.map((item, index) => (
-                                        <tr key={index}>
-                                            <th className="py-2 px-4">{item.codigoCliente}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.ci}</th>
-                                            <th className="py-2 px-4">{item.nombre}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.apellidoPaterno} {item.apellidoMaterno}</th>
-
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.codigoMedidor}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.numeroMedidor}</th>
-
-
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.lecturaAnterior}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.lecturaActual}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.consumoTotal}</th>
-
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.costoApagar}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.costoPagado}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.mes}</th>
-                                            <th className="py-2 px-4">{item.estado}</th>
-                                            <th className="py-2 px-4">{item.tarifa}</th>
-
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.numeroPago}</th>
-                                            <th className="py-2 px-4 hidden md:table-cell">{item.fecha}</th>
-                                            <th>
-                                                <button
-                                                    onClick={() => navigate(`/pago/imprimir/cliente/${item.medidor}`)}
-                                                    className="bg-green-600 p-1 rounded-2xl text-white">
+                                        <tr key={index} className="odd:bg-gray-100 even:bg-white">
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.codigoCliente}</td>
+                                            <td className="py-1 px-2">{item.ci}</td>
+                                            <td className="py-1 px-2">{item.nombre}</td>
+                                            <td className="py-1 px-2">{item.apellidoPaterno} {item.apellidoMaterno}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.codigoMedidor}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.numeroMedidor}</td>
+                                            <td className="py-1 px-2">{item.lecturaAnterior}</td>
+                                            <td className="py-1 px-2">{item.lecturaActual}</td>
+                                            <td className="py-1 px-2">{item.consumoTotal}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.costoApagar}</td>
+                                            <td className="py-1 px-2">{item.costoPagado}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.mes}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.estado}</td>
+                                            <td className="py-1 px-2">{item.tarifa}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.numeroPago}</td>
+                                            <td className="py-1 px-2 hidden md:table-cell">{item.fecha}</td>
+                                            <td className="py-1 px-2">
+                                                <button onClick={() => navigate(`/pago/imprimir/cliente/${item.medidor}`)} className="bg-green-600 p-1 rounded text-white text-xs sm:text-sm">
                                                     Recibo
                                                 </button>
-                                            </th>
+                                            </td>
                                         </tr>
-
                                     ))}
                                 </tbody>
                             </table>
