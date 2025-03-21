@@ -12,6 +12,7 @@ import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import { AlertaEliminar } from "../../core/util/alertaEliminar";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 export const ListarClientes = () => {
   const { permisosCliente } = useContext(PermisosContext)
@@ -29,7 +30,7 @@ export const ListarClientes = () => {
   const [cliente, setCliente] = useState<string>()
   const [isOpen, setIsOpen] = useState(false);
   const [recargar, setRecargar] = useState<boolean>(false)
-
+  const [loading, setLoading] = useState(false);
 
   const closeModal = () => setIsOpen(false);
   useEffect(() => {
@@ -38,17 +39,19 @@ export const ListarClientes = () => {
 
   const listar = async () => {
     try {
-
+      setLoading(true)
       const response = await listarClientes(limite,
         pagina, codigo,
         ci, apellidoMaterno,
         apellidoPaterno,
         nombre)
       if (response.status == HttpStatus.OK) {
+        setLoading(false)
         setData(response.data)
         setPaginas(response.paginas)
       }
     } catch (error) {
+      setLoading(false)
       console.log(error);
 
     }
@@ -124,6 +127,8 @@ export const ListarClientes = () => {
         <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
       </div>
       {isOpen && cliente && <EditarClienteModal cliente={cliente} closeModal={closeModal} isOpen={isOpen} recargar={recargar} setRecargar={setRecargar} />}
+      {loading && <Loader />}
     </div>
+
   );
 };

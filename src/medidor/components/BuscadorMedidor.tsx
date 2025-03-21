@@ -54,7 +54,7 @@ export const BuscadorMedidor = ({ onSubmit }: { onSubmit: (data: BuscadorMedidor
                 </div>
 
                 <div className="flex flex-col w-full">
-                    <label htmlFor="numeroMedidor" className="text-gray-700">Número de Medidor</label>
+                    <label htmlFor="numeroMedidor" className="text-gray-700">N°. de Medidor</label>
                     <input
                         {...register("numeroMedidor")}
                         type="text"

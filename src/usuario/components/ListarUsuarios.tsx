@@ -14,6 +14,7 @@ import { PermisosE } from '../../core/enums/permisos'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 import { AlertaEliminar } from '../../core/util/alertaEliminar'
 import toast from 'react-hot-toast'
+import { Loader } from '../../core/components/Loader'
 
 export const ListarUsuarios = () => {
     const [buscador, setBuscador] = useState<BuscadorUsuarioI>({
@@ -31,7 +32,7 @@ export const ListarUsuarios = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [recargar, setRecargar] = useState<boolean>(false);
     const { permisosUsuario } = useContext(PermisosContext)
-
+    const [loading, setLoading] = useState(false);
     const closeModal = () => setIsOpen(false);
 
 
@@ -40,12 +41,15 @@ export const ListarUsuarios = () => {
     }, [recargar, pagina, limite, buscador])
     const listar = async () => {
         try {
+            setLoading(true)
             const response = await listarUsuarios(limite, pagina, buscador)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setUsuarios(response.data)
                 setPaginas(response.paginas)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -58,14 +62,17 @@ export const ListarUsuarios = () => {
 
     const eliminar = async (usuario: string) => {
         try {
+            setLoading(true)
             const response = await eliminarUsuario(usuario)
 
 
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -131,6 +138,7 @@ export const ListarUsuarios = () => {
                 </div >
             </div >
             {isOpen && usuario && <EditarUsuarioModal closeModal={closeModal} isOpen={isOpen} usuario={usuario} setRecargar={setRecargar} recargar={recargar} />}
+            {loading && <Loader />}
         </>
     )
 }

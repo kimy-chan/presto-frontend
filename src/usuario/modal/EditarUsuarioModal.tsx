@@ -8,6 +8,7 @@ import { HttpStatus } from '../../core/enums/httpStatus';
 import { AxiosError } from 'axios';
 import { ErrorI } from '../../core/interface/error';
 import toast from 'react-hot-toast';
+import { Loader } from '../../core/components/Loader';
 
 export const EditarUsuarioModal = (
     { usuario, closeModal, isOpen, recargar, setRecargar }: {
@@ -18,7 +19,7 @@ export const EditarUsuarioModal = (
         setRecargar: (recargar: boolean) => void
     }
 ) => {
-
+    const [loading, setLoading] = useState(false);
     const [roles, setRoles] = useState<ListarRolesI[]>([])
     const [ciConflicto, setCiConflicto] = useState<string>('')
     const [usuarioConflicto, setUsuarioConflicto] = useState<string>('')
@@ -33,8 +34,10 @@ export const EditarUsuarioModal = (
 
     const listarUsuario = async () => {
         try {
+            setLoading(true)
             const response = await usuarioOne(usuario)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setValue("nombre", response.data.nombre)
                 setValue("apellidoPaterno", response.data.apellidoPaterno)
                 setValue("apellidoMaterno", response.data.apellidoMaterno)
@@ -45,6 +48,7 @@ export const EditarUsuarioModal = (
                 setValue("direccion", response.data.direccion)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -62,15 +66,17 @@ export const EditarUsuarioModal = (
     const onSubmit = async (data: CrearUsuarioI) => {
         try {
 
-
+            setLoading(true)
             const response = await editarUsuario(usuario, data)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Usuario actualizado')
                 setRecargar(!recargar)
                 closeModal()
 
             }
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             const er = e.response?.data as ErrorI
 
@@ -237,6 +243,7 @@ export const EditarUsuarioModal = (
                     </div>
                 </div>
             )}
+            {loading && <Loader />}
         </div>
 
     );

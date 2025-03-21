@@ -8,9 +8,11 @@ import { RealizaPago } from "../interface/realizarPago";
 import { realizarPagos } from "../service/pagoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
+import { Loader } from "../../core/components/Loader";
 
 export const RealizarPago = () => {
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<ClienteMedidorLecturaI>();
     const { register, handleSubmit, formState: { errors } } = useForm<RealizaPago>()
 
@@ -19,17 +21,15 @@ export const RealizarPago = () => {
         try {
             if (data) {
                 dataRegistrada.lectura = data.idLectura
-
+                setLoading(true)
                 const response = await realizarPagos(dataRegistrada)
                 if (response.status == HttpStatus.CREATED) {
+                    setLoading(false)
                     navigate(`/pago/imprimir/cliente/${response.medidor}`)
                 }
-
-
             }
-
-
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -117,6 +117,9 @@ export const RealizarPago = () => {
                     Realizar Pago
                 </button>
             </form>
+
+            {loading && <Loader />}
         </div>
+
     );
 };

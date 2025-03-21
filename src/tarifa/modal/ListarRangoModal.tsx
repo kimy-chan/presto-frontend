@@ -9,6 +9,7 @@ import { AlertaEliminar } from "../../core/util/alertaEliminar";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boolean, closeModal: () => void, tarifa: string }) => {
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -17,7 +18,7 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
     const [recargar, setRecargar] = useState<boolean>(false)
     const { permisosTarifa } = useContext(PermisosContext)
     const closeModalEdit = () => setIsOpenEdit(false);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (isOpen) {
             verRangoTarifa()
@@ -26,10 +27,13 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
     const verRangoTarifa = async () => {
 
         try {
+            setLoading(true)
             const response = await listarRangoTarifa(tarifa)
+            setLoading(false)
             setRangos(response)
 
         } catch (error) {
+            setLoading(false)
             console.log(error);
         }
     }
@@ -42,14 +46,15 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
 
     const eliminar = async (rango: string) => {
         try {
+            setLoading(true)
             const response = await eliminarRango(rango)
-            console.log(response);
-
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -131,6 +136,8 @@ export const ListarRangoModal = ({ isOpen, closeModal, tarifa }: { isOpen: boole
                     recargar={recargar}
                     setRecargar={setRecargar}
                 />}
+
+            {loading && <Loader />}
         </div>
     );
 };

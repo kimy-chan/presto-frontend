@@ -10,13 +10,14 @@ import { availablePermissions } from "../util/permisos";
 import toast from 'react-hot-toast';
 import { AxiosError } from "axios";
 import { ErrorI } from "../../core/interface/error";
+import { Loader } from "../../core/components/Loader";
 
 export const EditarRol = ({ id }: { id: string }) => {
     const navigate = useNavigate()
     const [roleName, setRoleName] = useState("");
     const [error, setError] = useState<string>()
     const [permissions, setPermissions] = useState<PermissionsState>({});
-
+    const [loading, setLoading] = useState(false);
 
     useEffect((() => setError('')), [roleName])
 
@@ -24,9 +25,11 @@ export const EditarRol = ({ id }: { id: string }) => {
 
         const rol = async () => {
             try {
+                setLoading(true)
                 const response = await listarRolOne(id);
                 if (response.status === HttpStatus.OK) {
-                    console.log(response.data);
+                    setLoading(false)
+
                     setRoleName(response.data.nombre);
                     const permisosIniciales: PermissionsState = {};
                     response.data.permisos.forEach((permiso: string) => {
@@ -35,6 +38,7 @@ export const EditarRol = ({ id }: { id: string }) => {
                     setPermissions(permisosIniciales);
                 }
             } catch (error) {
+                setLoading(false)
                 console.log(error);
 
 
@@ -64,13 +68,15 @@ export const EditarRol = ({ id }: { id: string }) => {
         };
 
         try {
-
+            setLoading(true)
             const response = await editarRol(id, dataRol);
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Rol Editado')
                 navigate('/listar/rol')
             }
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             if (e.response?.status == HttpStatus.CONFLICT) {
                 const mensaje = e.response.data as ErrorI
@@ -147,6 +153,8 @@ export const EditarRol = ({ id }: { id: string }) => {
                     Guardar
                 </button>
             </div>
+
+            {loading && <Loader />}
         </div>
     );
 };

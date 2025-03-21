@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { editarTarifa, tarifaPorId } from "../service/tarifasService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useForm } from "react-hook-form";
 import { FormTarifaI } from "../interface/formTarifa";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar }: {
     tarifa: string,
@@ -11,6 +12,7 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
     recargar: boolean,
     setRecargar: (recargar: boolean) => void
 }) => {
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (isOpen) {
             tarifaId()
@@ -20,16 +22,17 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
 
     const tarifaId = async () => {
         try {
+            setLoading(true)
             const response = await tarifaPorId(tarifa)
-            console.log(response);
+
 
             if (response.status == HttpStatus.OK) {
-
+                setLoading(false)
                 setValue("nombre", response.data.nombre)
 
             }
         } catch (error) {
-
+            setLoading(false)
             console.log(error);
 
         }
@@ -37,17 +40,17 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
 
     const onSubmit = async (data: FormTarifaI) => {
         try {
-            console.log('hola');
 
-            console.log(data);
-
+            setLoading(true)
             const response = await editarTarifa(tarifa, data.nombre)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Tarifa editada')
                 closeModal()
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
 
@@ -121,6 +124,8 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
                     </div>
                 </div>
             )}
+
+            {loading && <Loader />}
         </div>
     );
 };

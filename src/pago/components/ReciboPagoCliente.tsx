@@ -3,12 +3,13 @@ import { listarPagosCliente } from "../service/pagoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { dataReciboPago } from "../interface/dataReciboPago";
 import { IoIosPrint } from "react-icons/io";
+import { Loader } from "../../core/components/Loader";
 
 const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
     const [dataCliente, setDataCliente] = useState<dataReciboPago>();
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         pagos();
     }, []);
@@ -16,12 +17,15 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
     const pagos = async () => {
         try {
             if (medidor) {
+                setLoading(true)
                 const response = await listarPagosCliente(medidor);
                 if (response.status === HttpStatus.OK) {
+                    setLoading(false)
                     setDataCliente(response);
                 }
             }
         } catch (error) {
+            setLoading(false)
             console.error("Error al listar pagos:", error);
         }
     };
@@ -135,6 +139,8 @@ export const ReciboPagoCliente = ({ medidor }: { medidor: string }) => {
                     <IoIosPrint />
                 </button>
             </div>
+
+            {loading && <Loader />}
         </>
 
     );

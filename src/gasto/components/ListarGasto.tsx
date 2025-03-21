@@ -15,8 +15,10 @@ import { ItemsPagina } from '../../core/components/ItemsPAgina'
 import { CrearGastoModal } from '../modal/CrearGastoModal'
 import { EditarGastoModal } from '../modal/EditarGastoModal'
 import toast from 'react-hot-toast'
+import { Loader } from '../../core/components/Loader'
 
 export const ListarGasto = () => {
+    const [loading, setLoading] = useState(false);
     const { permisosGasto } = useContext(PermisosContext)
     const [isOpen, setIsOpen] = useState(false);
     const closeModal = () => setIsOpen(false);
@@ -36,25 +38,31 @@ export const ListarGasto = () => {
     }, [limite, pagina, buscador, recargar])
     const listar = async () => {
         try {
+            setLoading(true)
             const response = await listarGastos(limite, pagina, buscador)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setGastos(response.data)
                 setPaginas(response.paginas)
             }
 
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
     }
     const eliminar = async (gasto: string) => {
         try {
+            setLoading(true)
             const response = await eliminarGasto(gasto)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -121,6 +129,7 @@ export const ListarGasto = () => {
             </div>
 
             {isOpen && gasto && <EditarGastoModal gasto={gasto} recargar={recargar} setRecargar={setRecargar} closeModal={closeModal} isOpen={isOpen} />}
+            {loading && <Loader />}
         </div>
 
     )

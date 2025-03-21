@@ -12,8 +12,10 @@ import { EditarCategoriaModal } from "../modal/EditarCategoriaModal"
 import { ItemsPagina } from "../../core/components/ItemsPAgina"
 import { Paginador } from "../../core/components/Paginador"
 import toast from "react-hot-toast"
+import { Loader } from "../../core/components/Loader"
 
 export const ListarCategoriaGasto = () => {
+    const [loading, setLoading] = useState(false);
     const [recargar, setRecargar] = useState(false)
     const { permisosGasto } = useContext(PermisosContext)
     const [categoriaGastos, setCategoriaGastos] = useState<CategoriaGastoI[]>([])
@@ -29,12 +31,15 @@ export const ListarCategoriaGasto = () => {
 
     const categoriaGasto = async () => {
         try {
-            const response = await listarCategoriaGasto()
+            setLoading(true)
+            const response = await listarCategoriaGasto(limite, pagina)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setCategoriaGastos(response.data)
                 setPaginas(response.paginas)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -89,6 +94,7 @@ export const ListarCategoriaGasto = () => {
             </table>
             <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
             {isOpen && categoria && <EditarCategoriaModal categoria={categoria} closeModal={closeModal} isOpen={isOpen} recargar={recargar} setRecargar={setRecargar} />}
+            {loading && <Loader />}
         </div>
     )
 }

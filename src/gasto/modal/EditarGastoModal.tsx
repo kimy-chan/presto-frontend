@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormGastoI } from "../interface/formGasto";
-import { crearGasto, editarGasto, gastoOne } from "../service/gastoService";
+import { editarGasto, gastoOne } from "../service/gastoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
-import { listarCategoriaGasto, listarCategoriaGastoPublico } from "../../categoriaGasto/service/categoriaGastoService";
+import { listarCategoriaGastoPublico } from "../../categoriaGasto/service/categoriaGastoService";
 import { CategoriaGastoI } from "../../categoriaGasto/interface/categoriaGasto";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 
 export const EditarGastoModal = ({ recargar, setRecargar, gasto, closeModal, isOpen }:
@@ -13,7 +14,7 @@ export const EditarGastoModal = ({ recargar, setRecargar, gasto, closeModal, isO
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormGastoI>()
     const [categoriaGastos, setCategoriaGastos] = useState<CategoriaGastoI[]>([])
-
+    const [loading, setLoading] = useState(false);
 
 
     const onsubmit = async (data: FormGastoI) => {
@@ -21,13 +22,16 @@ export const EditarGastoModal = ({ recargar, setRecargar, gasto, closeModal, isO
             data.costoUnitario = Number(data.costoUnitario)
             data.cantidad = Number(data.cantidad)
             data.factorValides = Number(data.factorValides)
+            setLoading(true)
             const response = await editarGasto(data, gasto)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Editado')
                 setRecargar(!recargar)
                 closeModal()
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -160,6 +164,7 @@ export const EditarGastoModal = ({ recargar, setRecargar, gasto, closeModal, isO
                     </div>
                 </div>
             )}
+            {loading && <Loader />}
         </div>
 
     );

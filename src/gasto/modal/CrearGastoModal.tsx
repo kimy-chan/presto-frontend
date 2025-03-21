@@ -5,13 +5,14 @@ import { crearGasto } from "../service/gastoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { listarCategoriaGastoPublico } from "../../categoriaGasto/service/categoriaGastoService";
 import { CategoriaGastoI } from "../../categoriaGasto/interface/categoriaGasto";
+import { Loader } from "../../core/components/Loader";
 
 
 export const CrearGastoModal = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormGastoI>()
     const [categoriaGastos, setCategoriaGastos] = useState<CategoriaGastoI[]>([])
-
+    const [loading, setLoading] = useState(false);
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
@@ -20,13 +21,16 @@ export const CrearGastoModal = ({ recargar, setRecargar }: { recargar: boolean, 
             data.costoUnitario = Number(data.costoUnitario)
             data.cantidad = Number(data.cantidad)
             data.factorValides = Number(data.factorValides)
+            setLoading(true)
             const response = await crearGasto(data)
             if (response.status == HttpStatus.CREATED) {
+                setLoading(false)
                 reset()
                 setRecargar(!recargar)
                 closeModal()
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -142,6 +146,7 @@ export const CrearGastoModal = ({ recargar, setRecargar }: { recargar: boolean, 
                     </div>
                 </div>
             )}
+            {loading && <Loader />}
         </div>
 
     );

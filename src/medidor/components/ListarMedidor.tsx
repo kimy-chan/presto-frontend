@@ -7,16 +7,17 @@ import { Paginador } from "../../core/components/Paginador";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { MdDelete } from "react-icons/md";
-import { FaBookReader, FaEdit } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { EditarMedidorModal } from "../modal/EditarMedidorModal";
 import { EstadoMedidorE } from "../enum/estadoMedidor";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import { AlertaEliminar } from "../../core/util/alertaEliminar";
+import { Loader } from "../../core/components/Loader";
 
 export const ListarMedidor = () => {
     const [data, setData] = useState<MedidorCliente[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(false);
     const [buscador, setBuscador] = useState<BuscadorMedidorClientI>({
         apellidoMaterno: null,
         apellidoPaterno: null,
@@ -47,8 +48,10 @@ export const ListarMedidor = () => {
 
     const listar = async () => {
         try {
+            setLoading(true)
             const response = await listarMedidor(buscador, limite, pagina);
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setData(response.data);
                 setPaginas(response.paginas)
             }
@@ -135,6 +138,7 @@ export const ListarMedidor = () => {
             </div>
 
             {isOpen && medidor && <EditarMedidorModal recargar={recargar} setRecargar={setRecargar} closeModal={closeModal} isOpen={isOpen} medidor={medidor} />}
+            {loading && <Loader />}
         </>
     );
 };

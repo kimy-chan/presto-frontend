@@ -1,4 +1,5 @@
 import { instance } from "../../config/instance";
+import { ParamsI } from "../../core/interface/params";
 import { response } from "../../core/interface/response";
 import { ResponseDataI } from "../../core/interface/responseData";
 import { ResponseOneI } from "../../core/interface/responseOne";
@@ -16,11 +17,16 @@ export const crearCategoriaGasto = async (
   }
 };
 
-export const listarCategoriaGasto = async (): Promise<
-  ResponseDataI<CategoriaGastoI>
-> => {
+export const listarCategoriaGasto = async (
+  limite: number,
+  pagina: number
+): Promise<ResponseDataI<CategoriaGastoI>> => {
   try {
-    const response = await instance.get("categoria/gasto");
+    const params: ParamsI = {
+      limite: limite,
+      pagina: pagina,
+    };
+    const response = await instance.get("categoria/gasto", { params });
     return response.data;
   } catch (error) {
     throw error;

@@ -7,11 +7,12 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { v6 } from 'uuid'
 import '../css/recibo.css'
+import { Loader } from "../../core/components/Loader";
 export const Recibo = ({ medidor, lectura }: { medidor: string, lectura: string }) => {
     const [dataRecibo, setDataRecibo] = useState<ReciboDataI>()
     const [lecturas, setLecturas] = useState<LecturasReciboI[]>([])
     const [lecturaSeleccionada, setLecturaSeleccionada] = useState<LecturasReciboI>()
-
+    const [loading, setLoading] = useState(false);
     const generarPdf = async () => {
         const ids = v6()
         const html = document.getElementById('recibo')
@@ -41,9 +42,10 @@ export const Recibo = ({ medidor, lectura }: { medidor: string, lectura: string 
     const recibo = async () => {
         try {
             if (medidor) {
+                setLoading(true)
                 const response = await lecturaRecibo(medidor, lectura)
                 if (response.status == HttpStatus.OK) {
-
+                    setLoading(false)
                     setDataRecibo(response.data.dataCliente)
                     setLecturas(response.data.lecturas)
                     setLecturaSeleccionada(response.data.lectura)
@@ -52,11 +54,12 @@ export const Recibo = ({ medidor, lectura }: { medidor: string, lectura: string 
 
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
     }
-    console.log(dataRecibo);
+
 
     return (
         <>{dataRecibo &&
@@ -139,6 +142,8 @@ export const Recibo = ({ medidor, lectura }: { medidor: string, lectura: string 
                     Imprimir Recibo
                 </button>
             </div>
+
+            {loading && <Loader />}
         </>
     );
 };

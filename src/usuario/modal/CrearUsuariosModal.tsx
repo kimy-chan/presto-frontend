@@ -8,10 +8,12 @@ import { HttpStatus } from '../../core/enums/httpStatus';
 import { AxiosError } from 'axios';
 import { ErrorI } from '../../core/interface/error';
 import toast from 'react-hot-toast';
+import { Loader } from '../../core/components/Loader';
 
 export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<CrearUsuarioI>()
     const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [roles, setRoles] = useState<ListarRolesI[]>([])
     const [ciConflicto, setCiConflicto] = useState<string>('')
     const [usuarioConflicto, setUsuarioConflicto] = useState<string>('')
@@ -36,13 +38,16 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
     }
     const onSubmit = async (data: CrearUsuarioI) => {
         try {
+            setLoading(true)
             const response = await crearUsuario(data)
             if (response.status == HttpStatus.CREATED) {
+                setLoading(false)
                 toast.success('Usuario registrado')
                 setRecargar(!recargar)
                 closeModal()
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
             const e = error as AxiosError
@@ -248,6 +253,7 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
                     </div>
                 </div>
             )}
+            {loading && <Loader />}
         </div>
 
     );

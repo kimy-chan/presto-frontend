@@ -8,8 +8,10 @@ import { HttpStatus } from '../../core/enums/httpStatus'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
 import { PermisosE } from '../../core/enums/permisos'
 import { AlertaEliminar } from '../../core/util/alertaEliminar'
+import { Loader } from '../../core/components/Loader'
 
 export const ListarRol = () => {
+    const [loading, setLoading] = useState(false);
     const navidate = useNavigate()
     const [rol, setRol] = useState<ListarRolesI[]>([])
     const [openPermission, setOpenPermission] = useState<string | null>(null)
@@ -34,16 +36,19 @@ export const ListarRol = () => {
 
     const eliminar = async (id: string) => {
         try {
+            setLoading(true)
             const response = await eliminarRol(id)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
     }
-    console.log(permisosRol);
+
 
     return (
         <div className="overflow-x-auto max-w-full">
@@ -102,6 +107,7 @@ export const ListarRol = () => {
                     </tbody>
                 </table >
             </div >
+            {loading && <Loader />}
         </div >
     )
 }

@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { ListarUsuariosI } from "../../usuario/interface/listarUsuarios";
 import { perfilUsuario } from "../../usuario/service/usuarioService";
 import { HttpStatus } from "../../core/enums/httpStatus";
+import { Loader } from "../../core/components/Loader";
 
 export const HomePage = () => {
+    const [loading, setLoading] = useState(false);
     const [usuario, setUsuario] = useState<ListarUsuariosI>()
     useEffect(() => {
         perfil()
@@ -11,13 +13,14 @@ export const HomePage = () => {
 
     const perfil = async () => {
         try {
+            setLoading(true)
             const response = await perfilUsuario()
-            console.log(response);
-
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setUsuario(response.data)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -42,6 +45,7 @@ export const HomePage = () => {
                     <p><strong>Rol:</strong> {usuario.rolNombre}</p>
                 </div>}
             </div>
+            {loading && <Loader />}
         </div>
     );
 };

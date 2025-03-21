@@ -9,13 +9,14 @@ import { HttpStatus } from '../../core/enums/httpStatus';
 import toast from 'react-hot-toast';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { ErrorI } from '../../core/interface/error';
+import { Loader } from '../../core/components/Loader';
 
 
 export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setRecargar: (recargar: boolean) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [conflicto, setConflicto] = useState<string>()
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormTarifaI>()
-
+    const [loading, setLoading] = useState(false);
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
     const [tarifas, setTarifas] = useState<FormTarifaI[]>([])
@@ -38,8 +39,10 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
             })
         }
         try {
+            setLoading(true)
             const response = await crearTarifa(data)
             if (response.status == HttpStatus.CREATED) {
+                setLoading(false)
                 toast.success('Tarifa registrada')
                 setTarifas([])
                 setDisableNombre(false)
@@ -49,6 +52,7 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
             }
 
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             if (e.response?.status == HttpStatusCode.Conflict) {
                 const Conflict = e.response.data as ErrorI
@@ -296,6 +300,8 @@ export const CrearTarifa = ({ recargar, setRecargar }: { recargar: boolean, setR
 
 
             )}
+
+            {loading && <Loader />}
         </div>
     );
 };

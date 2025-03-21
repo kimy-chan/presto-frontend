@@ -6,10 +6,11 @@ import { BuscadorCliente } from "../components/BuscadorCliente";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { Paginador } from "../../core/components/Paginador";
 import { HttpStatus } from "../../core/enums/httpStatus";
+import { Loader } from "../../core/components/Loader";
 
 export const ClientesModal = ({ setCliente }: { setCliente: (cliete: ClienteI) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
     const [data, setData] = useState<ClienteI[]>([])
@@ -29,16 +30,19 @@ export const ClientesModal = ({ setCliente }: { setCliente: (cliete: ClienteI) =
 
     const listar = async () => {
         try {
+            setLoading(true)
             const response = await listarClientes(limite,
                 pagina, codigo,
                 ci, apellidoMaterno,
                 apellidoPaterno,
                 nombre)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setData(response.data)
                 setPaginas(response.paginas)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -138,6 +142,8 @@ export const ClientesModal = ({ setCliente }: { setCliente: (cliete: ClienteI) =
                     </div>
                 </div>
             )}
+
+            {loading && <Loader />}
         </div>
 
     );

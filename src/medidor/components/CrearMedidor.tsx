@@ -12,8 +12,10 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
+import { Loader } from "../../core/components/Loader";
 
 export const CrearMedidor = () => {
+    const [loading, setLoading] = useState(false);
     const [dataTarifa, setDataTarifa] = useState<TarifaI[]>([])
     const [cliente, setCliente] = useState<ClienteI | null>()
     const [mesanje, setMensaje] = useState<string>()
@@ -45,8 +47,10 @@ export const CrearMedidor = () => {
             data.cliente = cliente._id
 
             try {
+                setLoading(true)
                 const response = await crearMedidor(data)
                 if (response.status == HttpStatus.CREATED) {
+                    setLoading(false)
                     setMensajeCreado("Registrado")
                     setCliente(null)
                     reset()
@@ -54,6 +58,7 @@ export const CrearMedidor = () => {
                 }
 
             } catch (error) {
+                setLoading(false)
                 const e = error as AxiosError
                 if (e.status == HttpStatus.CONFLICT) {
                     const conflicto = e.response?.data as ErrorConflictoI
@@ -170,6 +175,7 @@ export const CrearMedidor = () => {
                 </button>
             </form>
 
+            {loading && <Loader />}
         </div>
     );
 };

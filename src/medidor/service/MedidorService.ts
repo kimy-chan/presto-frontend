@@ -106,9 +106,14 @@ export const eliminarMedidor = async (id: string): Promise<response> => {
   }
 };
 
-export const listarMedidoresConTresLecturasPendientes = async (): Promise<
-  ResponseDataI<MedidorCorteI>
-> => {
+export const listarMedidoresConTresLecturasPendientes = async (
+  limite: number,
+  pagina: number
+): Promise<ResponseDataI<MedidorCorteI>> => {
+  const params: ParamsI = {
+    limite: limite,
+    pagina: pagina,
+  };
   try {
     const response = await instance.get("medidor/tres/lecturas/pendientes");
     return response.data;

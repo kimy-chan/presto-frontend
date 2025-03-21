@@ -1,10 +1,11 @@
 
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { EditarRangoI } from "../interface/editarRango";
 import { editarRango, rangoPorId } from "../service/tarifasService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecargar }: {
     rango: string,
@@ -13,6 +14,7 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
 
     setRecargar: (recargar: boolean) => void
 }) => {
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (isOpen) {
             rangoId()
@@ -23,8 +25,10 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
 
     const rangoId = async () => {
         try {
+            setLoading(true)
             const response = await rangoPorId(rango)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setValue("costo", response.data.costo)
                 setValue("rango2", response.data.rango2)
                 setValue("rango1", response.data.rango1)
@@ -32,6 +36,7 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
 
             }
         } catch (error) {
+            setLoading(false)
 
             console.log(error);
 
@@ -40,14 +45,17 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
 
     const onSubmit = async (data: EditarRangoI) => {
         try {
+            setLoading(true)
             const response = await editarRango(rango, data)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Rango editado')
                 closeModal()
                 setRecargar(!recargar)
             }
 
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
 
@@ -171,6 +179,7 @@ export const EditarRangoModal = ({ rango, closeModal, isOpen, recargar, setRecar
                     </div>
                 </div>
             )}
+            {loading && <Loader />}
         </div>
     );
 };

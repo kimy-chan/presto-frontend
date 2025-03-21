@@ -12,6 +12,7 @@ import { ErrorConflictoI } from "../../core/interface/errorConflicto"
 import { alertaConfirmacionLectura } from "../util/alertaConfrmacionLectura"
 import { ErrorI } from "../../core/interface/error"
 import { EstadoMedidorE } from "../../medidor/enum/estadoMedidor"
+import { Loader } from "../../core/components/Loader"
 
 
 export const RealizarLectura = () => {
@@ -28,7 +29,7 @@ export const RealizarLectura = () => {
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormLecturaI>()
     const numeroMedidor = watch("numeroMedidor")
     const lecturaAnterior = watch("lecturaAnterior")
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         setCliente(null)
         setValue("lecturaActual", 0)
@@ -49,7 +50,9 @@ export const RealizarLectura = () => {
     const buscarMedidorCliente = async () => {
         try {
             if (numeroMedidor) {
+                setLoading(true)
                 const response = await buscarMedidor(numeroMedidor)
+                setLoading(false)
                 setCliente(response)
 
             }
@@ -67,11 +70,12 @@ export const RealizarLectura = () => {
                     data.medidor = cliente._id
                     data.lecturaActual = Number(data.lecturaActual)
                     data.lecturaAnterior = Number(data.lecturaAnterior)
+                    setLoading(true)
                     const response = await crearLectura(data)
-                    console.log(response);
+
 
                     if (response.status == HttpStatus.CREATED) {
-                        console.log(response);
+                        setLoading(false)
 
                         navigate(`/lectura/recibo/${response.medidor}/${response.lectura}`)
 
@@ -83,7 +87,8 @@ export const RealizarLectura = () => {
             }
 
         } catch (error) {
-            console.log(error);
+            setLoading(false)
+
 
             const e = error as AxiosError
 
@@ -223,6 +228,7 @@ export const RealizarLectura = () => {
                     </form>
                 </div>
             </div>
+            {loading && <Loader />}
         </div>
 
 

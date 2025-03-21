@@ -9,9 +9,11 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
 import { AxiosError } from "axios";
 import { ErrorI } from "../../core/interface/error";
+import { Loader } from "../../core/components/Loader";
 
 
 export const CrearRol = () => {
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
     const [roleName, setRoleName] = useState("");
     const [error, setError] = useState<string>()
@@ -38,15 +40,17 @@ export const CrearRol = () => {
         }
 
         try {
-            console.log(dataRol);
 
+            setLoading(true)
             const response = await crearRol(dataRol)
             if (response.status == HttpStatus.CREATED) {
+                setLoading(false)
                 toast.success('Rol registrado')
                 navigate('/listar/rol')
             }
 
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             if (e.response?.status == HttpStatus.CONFLICT) {
                 const mensaje = e.response.data as ErrorI
@@ -127,6 +131,7 @@ export const CrearRol = () => {
                     Guardar
                 </button>
             </div>
+            {loading && <Loader />}
         </div>
 
 

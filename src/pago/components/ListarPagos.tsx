@@ -7,8 +7,10 @@ import { ItemsPagina } from "../../core/components/ItemsPAgina";
 import { Paginador } from "../../core/components/Paginador";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
+import { Loader } from "../../core/components/Loader";
 
 export const ListarPagos = () => {
+    const [loading, setLoading] = useState(false);
     const date = new Date()
     const fecha = date.toISOString().split('T')[0]
     const navigate = useNavigate()
@@ -22,7 +24,7 @@ export const ListarPagos = () => {
         fechaFin: fecha,
         fechaInicio: fecha
     });
-    console.log(buscador);
+
 
     const [pagina, setPagina] = useState<number>(1)
     const [limite, setLimite] = useState<number>(20)
@@ -33,14 +35,17 @@ export const ListarPagos = () => {
 
     const listarPagos = async () => {
         try {
+            setLoading(true)
             const response = await listarTodosLosPagos(buscador, limite, pagina)
-            console.log(response);
+
 
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setData(response.data)
                 setPaginas(response.paginas)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -108,7 +113,7 @@ export const ListarPagos = () => {
                     </div>
                 </div>
             </div>
-
+            {loading && <Loader />}
         </>
     );
 }

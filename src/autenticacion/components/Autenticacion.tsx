@@ -6,18 +6,25 @@ import { useContext, useEffect, useState } from "react";
 import { AutenticacionContext } from "../context/AutenticacionContext";
 import { AxiosError } from "axios";
 import { ErrorI } from '../../core/interface/error'
+import { Loader } from "../../core/components/Loader";
+import { useNavigate } from "react-router";
 export const Autenticacion = () => {
+    const navigate = useNavigate()
     const { setToken } = useContext(AutenticacionContext)
+    const [loading, setLoading] = useState(false);
     const { register, handleSubmit, formState: { errors }, watch } = useForm<AutenticacionI>()
     const [error, setError] = useState<string>()
     const onSubmit = async (data: AutenticacionI) => {
         try {
+            setLoading(true)
             const response = await autenticacion(data)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setToken(response.token)
-                window.location.href = '/'
+                navigate('/')
             }
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             const er = e.response?.data as ErrorI
             console.log(er);
@@ -69,6 +76,8 @@ export const Autenticacion = () => {
                     </button>
                 </form>
             </div>
+            {loading && <Loader />}
         </div >
+
     );
 };

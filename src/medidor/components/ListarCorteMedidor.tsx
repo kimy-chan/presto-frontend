@@ -6,8 +6,10 @@ import { ItemsPagina } from "../../core/components/ItemsPAgina"
 import { PermisosContext } from "../../autenticacion/context/PermisosContext"
 import { MedidorCorteI } from "../interface/MedidoresCorte"
 import { HttpStatus } from "../../core/enums/httpStatus"
-import { HttpStatusCode } from "axios"
+
 import { alertaConfirmacion } from "../../core/util/alertaConfirmacion"
+import { Loader } from "../../core/components/Loader"
+import { PermisosE } from "../../core/enums/permisos"
 
 export const ListarCorteMedidor = () => {
     const { permisosMedidor } = useContext(PermisosContext)
@@ -16,34 +18,44 @@ export const ListarCorteMedidor = () => {
     const [limite, setLimite] = useState<number>(20)
     const [paginas, setPaginas] = useState<number>(1)
     const [recargar, setRecargar] = useState<boolean>(false)
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => { listarMedidor() }, [recargar])
+
+    useEffect(() => { listarMedidor() }, [recargar, limite, pagina])
 
     const listarMedidor = async () => {
         try {
-            const response = await listarMedidoresConTresLecturasPendientes()
+            setLoading(true)
+            const response = await listarMedidoresConTresLecturasPendientes(limite, pagina)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setData(response.data)
                 setPaginas(response.paginas)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
         }
     }
 
     const corte = async (id: string) => {
         try {
+
             const alerta = await alertaConfirmacion()
-            console.log(alerta);
+
 
             if (alerta) {
+                setLoading(true)
                 const response = await realizarCorte(id)
                 if (response.status == HttpStatus.OK) {
+                    setLoading(false)
                     setRecargar(!recargar)
                 }
             }
         } catch (error) {
+            console.log(error);
 
+            setLoading(false)
         }
     }
 
@@ -74,9 +86,9 @@ export const ListarCorteMedidor = () => {
                                             <td className="py-1 px-2">{item.direccion}</td>
                                             <td className="py-1 px-2">{item.lecturas.length}</td>
                                             <td className="py-1 px-2">
-                                                <button onClick={() => corte(item._id)} className="p-1 sm:p-2 bg-red-500 rounded-lg text-white text-xs sm:text-sm">
+                                                {permisosMedidor.some((i) => i.includes(PermisosE.EDITAR_MEDIDOR)) && <button onClick={() => corte(item._id)} className="p-1 sm:p-2 bg-red-500 rounded-lg text-white text-xs sm:text-sm">
                                                     Realizar corte
-                                                </button>
+                                                </button>}
                                             </td>
                                         </tr>
                                     ))}
@@ -88,6 +100,7 @@ export const ListarCorteMedidor = () => {
                 </div>
             </div>
 
+            {loading && <Loader />}
         </>
     )
 }

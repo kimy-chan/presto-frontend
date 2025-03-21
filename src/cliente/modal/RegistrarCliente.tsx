@@ -6,6 +6,7 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { ClienteI } from "../interface/cliente";
 import { AxiosError } from "axios";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
+import { Loader } from "../../core/components/Loader";
 
 export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: ClienteI) => void }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,13 +15,15 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
     const closeModal = () => setIsOpen(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormClienteI>()
     const [mensaje, setMensaje] = useState<string>()
-
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data: FormClienteI) => {
         try {
+            setLoading(true)
             const response = await crearCliente(data)
 
             if (response.status == HttpStatus.CREATED) {
+                setLoading(false)
                 reset()
                 setCliente(response.cliente)
                 setIsOpen(false)
@@ -29,6 +32,7 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
 
 
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             if (e.status == HttpStatus.CONFLICT) {
                 const conflicto = e.response?.data as ErrorConflictoI
@@ -173,6 +177,8 @@ export const RegistarClienteModal = ({ setCliente }: { setCliente: (cliete: Clie
                     </div>
                 </div>
             )}
+
+            {loading && <Loader />}
         </div>
     );
 };

@@ -15,8 +15,10 @@ import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import { AlertaEliminar } from "../../core/util/alertaEliminar";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 export const ListarLectura = () => {
+    const [loading, setLoading] = useState(false);
     const date = new Date()
     const fecha = date.toISOString().split('T')[0]
     const navigate = useNavigate()
@@ -45,12 +47,15 @@ export const ListarLectura = () => {
 
     const lecturas = async () => {
         try {
+            setLoading(true)
             const response = await listarLecturas(limite, pagina, buscador)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setData(response.data)
                 setPaginas(response.paginas)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -65,12 +70,17 @@ export const ListarLectura = () => {
 
     const eliminar = async (lectura: string) => {
         try {
+            setLoading(true)
             const response = await eliminarLectura(lectura)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
+            console.log(error);
+
 
         }
     }
@@ -148,6 +158,7 @@ export const ListarLectura = () => {
                 </div>
             </div>
             {isOpen && lectura && <EditarLecturaModal closeModal={closeModal} isOpen={isOpen} lectura={lectura} recargar={recargar} setRecargar={setRecargar} />}
+            {loading && <Loader />}
         </>
     );
 }

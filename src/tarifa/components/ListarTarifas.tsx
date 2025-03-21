@@ -13,6 +13,7 @@ import { CrearTarifa } from '../modal/CrearTarifa'
 import { HttpStatus } from '../../core/enums/httpStatus'
 import { AlertaEliminar } from '../../core/util/alertaEliminar'
 import toast from 'react-hot-toast'
+import { Loader } from '../../core/components/Loader'
 
 
 export const ListarTarifas = () => {
@@ -21,14 +22,9 @@ export const ListarTarifas = () => {
     const [tarifa, setTarifa] = useState<string>()
     const { permisosTarifa } = useContext(PermisosContext)
     const [recargar, setRecargar] = useState<boolean>(false)
-    console.log(permisosTarifa.some((i) => i.includes(PermisosE.CREAR_TARIFA)));
-
-
+    const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-
-
     const closeModal = () => setIsOpen(false);
-
     useEffect(() => {
         listar()
     }, [recargar])
@@ -36,7 +32,9 @@ export const ListarTarifas = () => {
     const listar = async () => {
 
         try {
+            setLoading(true)
             const response = await listarTarifas()
+            setLoading(false)
             setTarifas(response)
         } catch (error) {
 
@@ -56,14 +54,17 @@ export const ListarTarifas = () => {
     }
     const eliminar = async (tarifa: string) => {
         try {
+            setLoading(true)
             const response = await eliminarTarifa(tarifa)
-            console.log(response);
+
 
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Eliminado')
                 setRecargar(!recargar)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -115,7 +116,7 @@ export const ListarTarifas = () => {
                 setRecargar={setRecargar}
 
             />}
-
+            {loading && <Loader />}
         </div>
     )
 }

@@ -7,6 +7,7 @@ import { HttpStatus } from "../../core/enums/httpStatus";
 import { AxiosError } from "axios";
 import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 import toast from "react-hot-toast";
+import { Loader } from "../../core/components/Loader";
 
 export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setRecargar }: {
     cliente: string,
@@ -15,7 +16,7 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setR
     recargar: boolean,
     setRecargar: (recargar: boolean) => void
 }) => {
-
+    const [loading, setLoading] = useState(false);
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormClienteI>()
     const [mensaje, setMensaje] = useState<string>()
 
@@ -27,8 +28,10 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setR
 
     const clienteOne = async () => {
         try {
+            setLoading(true)
             const response = await clienteId(cliente)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 setValue("ci", response.data.ci)
                 setValue("nombre", response.data.nombre)
                 setValue("apellidoPaterno", response.data.apellidoPaterno)
@@ -37,6 +40,7 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setR
             }
 
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -45,14 +49,17 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setR
 
     const onSubmit = async (data: FormClienteI) => {
         try {
+            setLoading(true)
             const response = await editarCliente(cliente, data)
             if (response.status == HttpStatus.OK) {
+                setLoading(false)
                 toast.success('Editado')
                 setRecargar(!recargar)
                 closeModal()
             }
 
         } catch (error) {
+            setLoading(false)
             const e = error as AxiosError
             if (e.status == HttpStatus.CONFLICT) {
                 const conflicto = e.response?.data as ErrorConflictoI
@@ -192,6 +199,7 @@ export const EditarClienteModal = ({ cliente, closeModal, isOpen, recargar, setR
                     </div>
                 </div>
             )}
+            {loading && <Loader />}
         </div>
     );
 };
