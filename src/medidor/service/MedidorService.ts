@@ -115,7 +115,9 @@ export const listarMedidoresConTresLecturasPendientes = async (
     pagina: pagina,
   };
   try {
-    const response = await instance.get("medidor/tres/lecturas/pendientes");
+    const response = await instance.get("medidor/tres/lecturas/pendientes", {
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;

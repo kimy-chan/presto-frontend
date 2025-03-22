@@ -13,6 +13,7 @@ import { ErrorConflictoI } from "../../core/interface/errorConflicto";
 import { PermisosContext } from "../../autenticacion/context/PermisosContext";
 import { PermisosE } from "../../core/enums/permisos";
 import { Loader } from "../../core/components/Loader";
+import toast from "react-hot-toast";
 
 export const CrearMedidor = () => {
     const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ export const CrearMedidor = () => {
     const [cliente, setCliente] = useState<ClienteI | null>()
     const [mesanje, setMensaje] = useState<string>()
     const [mesanjeConflicto, setMensajeConflicto] = useState<string>()
-    const [mensajeCreado, setMensajeCreado] = useState<string>()
+
     const { permisosCliente } = useContext(PermisosContext)
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormMedidorI>()
     const numeroMedidr = watch("numeroMedidor")
@@ -51,7 +52,7 @@ export const CrearMedidor = () => {
                 const response = await crearMedidor(data)
                 if (response.status == HttpStatus.CREATED) {
                     setLoading(false)
-                    setMensajeCreado("Registrado")
+                    toast.success('Registrado')
                     setCliente(null)
                     reset()
 
@@ -165,7 +166,6 @@ export const CrearMedidor = () => {
                     {errors.tarifa && <p className='text-xs text-red-500'>{errors.tarifa.message}</p>}
                 </div>
 
-                {mensajeCreado && <p className="col-span-2 text-center text-2xl text-green-700">{mensajeCreado}</p>}
 
                 <button
                     type="submit"

@@ -220,8 +220,8 @@ export const Menu = ({ children }: { children: ReactNode }) => {
       </div>
 
       {/* Contenido principal */}
-      <div className="flex-1 p-6">
-        <div>{children}</div>
+      <div className="flex-1 p-2">
+        {children}
       </div>
     </div >
   );

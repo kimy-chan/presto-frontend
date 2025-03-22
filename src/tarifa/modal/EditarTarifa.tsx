@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { FormTarifaI } from "../interface/formTarifa";
 import toast from "react-hot-toast";
 import { Loader } from "../../core/components/Loader";
+import { AxiosError } from "axios";
+import { ErrorI } from "../../core/interface/error";
 
 export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar }: {
     tarifa: string,
@@ -13,6 +15,7 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
     setRecargar: (recargar: boolean) => void
 }) => {
     const [loading, setLoading] = useState(false);
+    const [conflicto, setConflicto] = useState<string>();
     useEffect(() => {
         if (isOpen) {
             tarifaId()
@@ -51,7 +54,14 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
             }
         } catch (error) {
             setLoading(false)
-            console.log(error);
+            setLoading(false)
+            const e = error as AxiosError
+            const er = e.response?.data as ErrorI
+
+            if (e.response?.status == HttpStatus.CONFLICT) {
+                setConflicto(er.message)
+
+            }
 
 
         }
@@ -108,6 +118,7 @@ export const EditarTarifa = ({ tarifa, closeModal, isOpen, recargar, setRecargar
                                         className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
                                     />
                                     {errors.nombre && <p className='text-xs text-red-500'>{errors.nombre.message}</p>}
+                                    {conflicto && <p className='text-xs text-red-500'>{conflicto}</p>}
                                 </div>
                                 <div className="mt-6 flex justify-end">
                                     <button

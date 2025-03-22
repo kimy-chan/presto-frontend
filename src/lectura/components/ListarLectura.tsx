@@ -85,80 +85,82 @@ export const ListarLectura = () => {
         }
     }
     return (
-        <>
 
+
+
+
+        <div className="flex flex-col overflow-x-auto sm:overflow-x-auto">
 
             <BuscadorLectura onSubmit={setBuscador} />
             <ItemsPagina limite={setLimite} />
+            <div className="sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full text-start text-xs sm:text-sm font-light text-surface">
+                            <thead className="border-b border-neutral-200 font-medium dark:border-white/10">
+                                <tr className="bg-gray-700 text-white text-left">
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Gestion</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">N° Medidor</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Mes</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Lect. Ant</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Lect. Act </th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Cons (m³)</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Monto</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Estado</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Fecha</th>
+                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((item, i) => (
+                                    <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.gestion}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 ">{item.numeroMedidor}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">{item.mes}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">{item.lecturaAnterior}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">{item.lecturaActual}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 ">{item.consumoTotal}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.costoApagar}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.estado}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.fecha}</td>
+                                        <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">
+                                            <button
+                                                onClick={() => navigate(`/lectura/recibo/${item.medidor}/${item._id}`)}
+                                                className="bg-green-600 p-1 rounded-lg text-white text-xs sm:text-sm">
+                                                Recibo
+                                            </button>
 
-            <div className="flex flex-col overflow-x-auto">
-                <div className="sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full text-start text-xs sm:text-sm font-light text-surface">
-                                <thead className="border-b border-neutral-200 font-medium dark:border-white/10">
-                                    <tr className="bg-gray-700 text-white text-left">
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Gestion</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">N° Medidor</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Mes</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Lect. Ant</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Lect. Act </th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Cons (m³)</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Monto</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Estado</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">Fecha</th>
-                                        <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Acción</th>
+                                            {item.estado !== EstadoPagoE.PAGADO &&
+                                                permisosLectura.some((i) => i.includes(PermisosE.ELIMINAR_LECTURA)) && (
+                                                    <button
+                                                        onClick={() => AlertaEliminar(() => eliminar(item._id))}
+                                                        className="text-red-500 text-lg sm:text-2xl px-2 py-1 rounded">
+                                                        <MdDelete />
+                                                    </button>
+                                                )}
+
+                                            {item.estado !== EstadoPagoE.PAGADO &&
+                                                permisosLectura.some((i) => i.includes(PermisosE.EDITAR_LECTURA)) && (
+                                                    <button
+                                                        onClick={() => editarLectura(item._id)}
+                                                        className="text-blue-500 text-lg sm:text-2xl px-2 py-1 rounded">
+                                                        <FaEdit />
+                                                    </button>
+                                                )}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {data.map((item, i) => (
-                                        <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.gestion}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 ">{item.numeroMedidor}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">{item.mes}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">{item.lecturaAnterior}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">{item.lecturaActual}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 ">{item.consumoTotal}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.costoApagar}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.estado}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">{item.fecha}</td>
-                                            <td className="whitespace-nowrap px-3 py-2 sm:px-6 sm:py-4">
-                                                <button
-                                                    onClick={() => navigate(`/lectura/recibo/${item.medidor}/${item._id}`)}
-                                                    className="bg-green-600 p-1 rounded-lg text-white text-xs sm:text-sm">
-                                                    Recibo
-                                                </button>
-
-                                                {item.estado !== EstadoPagoE.PAGADO &&
-                                                    permisosLectura.some((i) => i.includes(PermisosE.ELIMINAR_LECTURA)) && (
-                                                        <button
-                                                            onClick={() => AlertaEliminar(() => eliminar(item._id))}
-                                                            className="text-red-500 text-lg sm:text-2xl px-2 py-1 rounded">
-                                                            <MdDelete />
-                                                        </button>
-                                                    )}
-
-                                                {item.estado !== EstadoPagoE.PAGADO &&
-                                                    permisosLectura.some((i) => i.includes(PermisosE.EDITAR_LECTURA)) && (
-                                                        <button
-                                                            onClick={() => editarLectura(item._id)}
-                                                            className="text-blue-500 text-lg sm:text-2xl px-2 py-1 rounded">
-                                                            <FaEdit />
-                                                        </button>
-                                                    )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
-                        </div>
-
+                                ))}
+                            </tbody>
+                        </table>
+                        <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
                     </div>
+
                 </div>
             </div>
             {isOpen && lectura && <EditarLecturaModal closeModal={closeModal} isOpen={isOpen} lectura={lectura} recargar={recargar} setRecargar={setRecargar} />}
             {loading && <Loader />}
-        </>
+        </div>
+
+
     );
 }

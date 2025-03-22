@@ -84,41 +84,35 @@ export const EditarLecturaModal = ({ closeModal, isOpen, lectura, recargar, setR
     }
     return (
         <div className="p-4">
-
             {isOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
-
                     <div
                         className="fixed inset-0 bg-black opacity-50"
                         onClick={closeModal}
                     ></div>
 
-
-                    <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-full max-w-md">
+                    <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 z-10 w-full max-w-xs sm:max-w-md">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">Editar lectura</h2>
+                            <h2 className="text-sm sm:text-xl font-semibold">Editar lectura</h2>
                             <button
                                 onClick={closeModal}
-                                className="text-gray-600 hover:text-gray-800 text-2xl"
+                                className="text-gray-600 hover:text-gray-800 text-lg sm:text-2xl"
                             >
                                 &times;
                             </button>
                         </div>
                         <div className="mt-4">
                             <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6">
-
-
-
-
-                                    <div className="mb-6 col-span-2">
-                                        <label htmlFor="mes" className="block text-gray-700 font-medium mb-2">Mes</label>
+                                <div className="grid grid-cols-1 gap-4 sm:gap-6">
+                                    <div>
+                                        <label htmlFor="mes" className="block text-gray-700 text-sm sm:text-base font-medium mb-1">
+                                            Mes
+                                        </label>
                                         <select
                                             {...register("mes", { required: 'Seleccione un mes' })}
-
                                             name="mes"
                                             id="mes"
-                                            className="block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="block w-full px-3 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
                                             {meses.map((item, index) => (
                                                 <option key={index} value={item} className="text-gray-700">{item}</option>
@@ -127,69 +121,66 @@ export const EditarLecturaModal = ({ closeModal, isOpen, lectura, recargar, setR
                                         {errors.mes && <p className='text-xs text-red-500'>{errors.mes.message}</p>}
                                     </div>
 
-                                    <div className="mb-6 col-span-2">
-                                        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label htmlFor="lecturaAnterior" className="block text-gray-700 font-medium"> Lectura Anterior m³</label>
-                                                <input
-                                                    disabled
-                                                    {...register("lecturaAnterior", {
-                                                        valueAsNumber: true,
-                                                        validate: (value: number) => {
-                                                            if (!value || value <= 0) {
-                                                                return "Ingrese la lectura anterior"
-                                                            }
-
-                                                            return true
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                        <div>
+                                            <label htmlFor="lecturaAnterior" className="block text-gray-700 text-sm sm:text-base font-medium"> Lectura Anterior m³</label>
+                                            <input
+                                                disabled
+                                                {...register("lecturaAnterior", {
+                                                    valueAsNumber: true,
+                                                    validate: (value: number) => {
+                                                        if (!value || value <= 0) {
+                                                            return "Ingrese la lectura anterior"
                                                         }
-                                                    })}
-                                                    type="number"
-                                                    id="lecturaAnterior"
-                                                    placeholder="Ingrese la lectura anterior"
-                                                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                                />
-                                                {errors.lecturaAnterior && <p className='text-xs text-red-500'>{errors.lecturaAnterior.message}</p>}
-                                            </div>
-                                            <div>
-                                                <label htmlFor="lecturaActual" className="block text-gray-700 font-medium">Lectura Actual m³</label>
-                                                <input
-                                                    {...register("lecturaActual", {
-                                                        valueAsNumber: true,
-                                                        validate: (value: number) => {
-                                                            if (!value || value <= 0) {
-                                                                return "Ingrese la lectura actual"
-                                                            }
-                                                            if (value < lecturaAnterior) {
-                                                                return "Ingrese las lecturas correctas"
-                                                            }
-                                                            return true
-                                                        }
-                                                    })}
-                                                    type="number"
-                                                    id="lecturaActual"
-                                                    placeholder="Ingrese la lectura actual"
-                                                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                                />
-                                                {errors.lecturaActual && <p className='text-xs text-red-500'>{errors.lecturaActual.message}</p>}
-                                            </div>
+                                                        return true
+                                                    }
+                                                })}
+                                                type="number"
+                                                id="lecturaAnterior"
+                                                placeholder="Ingrese la lectura anterior"
+                                                className="w-full px-3 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                            />
+                                            {errors.lecturaAnterior && <p className='text-xs text-red-500'>{errors.lecturaAnterior.message}</p>}
                                         </div>
-                                        {conflicto && <p className='text-xs text-red-500'>{conflicto}</p>}
-                                        {error && <p className='text-xs text-red-500'>{error}</p>}
+                                        <div>
+                                            <label htmlFor="lecturaActual" className="block text-gray-700 text-sm sm:text-base font-medium">Lectura Actual m³</label>
+                                            <input
+                                                {...register("lecturaActual", {
+                                                    valueAsNumber: true,
+                                                    validate: (value: number) => {
+                                                        if (!value || value <= 0) {
+                                                            return "Ingrese la lectura actual"
+                                                        }
+                                                        if (value < lecturaAnterior) {
+                                                            return "Ingrese las lecturas correctas"
+                                                        }
+                                                        return true
+                                                    }
+                                                })}
+                                                type="number"
+                                                id="lecturaActual"
+                                                placeholder="Ingrese la lectura actual"
+                                                className="w-full px-3 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                            />
+                                            {errors.lecturaActual && <p className='text-xs text-red-500'>{errors.lecturaActual.message}</p>}
+                                        </div>
                                     </div>
-
+                                    {conflicto && <p className='text-xs text-red-500'>{conflicto}</p>}
+                                    {error && <p className='text-xs text-red-500'>{error}</p>}
                                 </div>
-                                <div className="text-center mt-6">
-                                    <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition">
+
+                                <div className="text-center mt-4">
+                                    <button type="submit" className="w-full bg-green-600 text-white py-2 sm:py-3 text-sm sm:text-base rounded-md hover:bg-green-700 transition">
                                         Guardar
                                     </button>
                                 </div>
                             </form>
                         </div>
-
                     </div>
                 </div>
             )}
         </div>
+
     );
 };
 

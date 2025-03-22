@@ -77,7 +77,7 @@ export const ListarClientes = () => {
     }
   }
   return (
-    <div className="overflow-x-auto max-w-full">
+    <div className="overflow-x-auto max-w-full p-2 sm:p-4">
       <BuscadorCliente
         setApellidoMaterno={setApellidoMaterno}
         setApellidoPaterno={setApellidoPaterno}
@@ -88,47 +88,58 @@ export const ListarClientes = () => {
       <div className="relative overflow-x-auto">
         <ItemsPagina limite={setLimite} />
 
-        <table
-          className="min-w-full text-start text-sm font-light text-surface  ">
-          <thead
-            className="bg-gray-700 text-white">
+        <table className="min-w-full text-xs sm:text-sm font-light text-surface">
+          <thead className="bg-gray-700 text-white">
             <tr>
-              <th className="py-2 px-4 hidden sm:table-cell">Cod</th>
-              <th className="py-2 px-4">Ci</th>
-              <th className="py-2 px-4">Nombre</th>
-              <th className="py-2 px-4">Apellido Paterno</th>
-              <th className="py-2 px-4">Apellido Materno</th>
-
-              <th className="py-2 px-4">Accion</th>
+              <th className="hidden sm:table-cell py-1 px-2 sm:py-2 sm:px-4">Cod</th>
+              <th className="py-1 px-2 sm:py-2 sm:px-4">Ci</th>
+              <th className="py-1 px-2 sm:py-2 sm:px-4">Nombre</th>
+              <th className="hidden md:table-cell py-1 px-2 sm:py-2 sm:px-4">Apellido Paterno</th>
+              <th className="hidden md:table-cell py-1 px-2 sm:py-2 sm:px-4">Apellido Materno</th>
+              <th className="py-1 px-2 sm:py-2 sm:px-4">Acción</th>
             </tr>
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr className="bg-white border-b  border-gray-200 text-center" key={item._id}>
-                <td className="py-2 px-4 hidden sm:table-cell">{item.codigo}</td>
-                <td className="py-2 px-4">{item.ci}</td>
-                <td className="py-2 px-4">{item.nombre}</td>
-                <td className="py-2 px-4">{item.apellidoPaterno}</td>
-                <td className="py-2 px-4">{item.apellidoMaterno}</td>
-                <td className="py-2 px-4">
-                  {permisosCliente.some((i) => i.includes(PermisosE.ELIMINAR_CLIENTE)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
-                    <MdDelete />
-                  </button>}
-                  {permisosCliente.some((i) => i.includes(PermisosE.EDITAR_CLIENTE)) && <button onClick={() => editarCliente(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
-                    <FaEdit />
-                  </button>}
+              <tr className="bg-white border-b border-gray-200 text-center" key={item._id}>
+                <td className="hidden sm:table-cell py-1 px-2 sm:py-2 sm:px-4">{item.codigo}</td>
+                <td className="py-1 px-2 sm:py-2 sm:px-4">{item.ci}</td>
+                <td className="py-1 px-2 sm:py-2 sm:px-4">{item.nombre}</td>
+                <td className="hidden md:table-cell py-1 px-2 sm:py-2 sm:px-4">{item.apellidoPaterno}</td>
+                <td className="hidden md:table-cell py-1 px-2 sm:py-2 sm:px-4">{item.apellidoMaterno}</td>
+                <td className="py-1 px-2 sm:py-2 sm:px-4">
+                  {permisosCliente.some((i) => i.includes(PermisosE.ELIMINAR_CLIENTE)) && (
+                    <button onClick={() => AlertaEliminar(() => eliminar(item._id))}
+                      className="text-lg sm:text-2xl text-red-500 px-2 sm:px-3 py-1 rounded">
+                      <MdDelete />
+                    </button>
+                  )}
+                  {permisosCliente.some((i) => i.includes(PermisosE.EDITAR_CLIENTE)) && (
+                    <button onClick={() => editarCliente(item._id)}
+                      className="text-lg sm:text-2xl text-blue-500 px-2 sm:px-3 py-1 rounded">
+                      <FaEdit />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
-
           </tbody>
         </table>
 
         <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
       </div>
-      {isOpen && cliente && <EditarClienteModal cliente={cliente} closeModal={closeModal} isOpen={isOpen} recargar={recargar} setRecargar={setRecargar} />}
+      {isOpen && cliente && (
+        <EditarClienteModal
+          cliente={cliente}
+          closeModal={closeModal}
+          isOpen={isOpen}
+          recargar={recargar}
+          setRecargar={setRecargar}
+        />
+      )}
       {loading && <Loader />}
     </div>
+
 
   );
 };

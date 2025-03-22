@@ -88,55 +88,51 @@ export const ListarUsuarios = () => {
                 <div className="sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                         <div className="overflow-x-auto">
-                            <table
-                                className="min-w-full text-start text-sm font-light text-surface">
-                                <thead
-                                    className="bg-gray-700 text-white text-left text-xs sm:text-sm">
+                            <table className="min-w-full text-start text-xs sm:text-sm font-light text-surface">
+                                <thead className="bg-gray-700 text-white text-left text-xs sm:text-sm">
                                     <tr>
-                                        <th scope="col" className="px-6 py-4 hidden md:table-cell">CI</th>
-                                        <th scope="col" className="px-6 py-4">Nombre</th>
-                                        <th scope="col" className="px-6 py-4">Apellidos</th>
-                                        <th scope="col" className="px-6 py-4">Usuario</th>
-                                        <th scope="col" className="px-6 py-4 hidden md:table-cell">Celular</th>
-                                        <th scope="col" className="px-6 py-4">Direccion</th>
-                                        <th scope="col" className="px-6 py-4">Rol</th>
-                                        <th scope="col" className="px-6 py-4">Accion</th>
-
-
+                                        <th scope="col" className="px-3 py-2 hidden md:table-cell">CI</th>
+                                        <th scope="col" className="px-3 py-2">Nombre</th>
+                                        <th scope="col" className="px-3 py-2">Apellidos</th>
+                                        <th scope="col" className="px-3 py-2">Usuario</th>
+                                        <th scope="col" className="px-3 py-2 hidden md:table-cell">Celular</th>
+                                        <th scope="col" className="px-3 py-2 hidden sm:table-cell">Dirección</th>
+                                        <th scope="col" className="px-3 py-2">Rol</th>
+                                        <th scope="col" className="px-3 py-2">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {
-                                        usuarios.map((item, i) => (
-                                            <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
-                                                <td className="whitespace-nowrap px-6 py-4 hidden md:table-cell">{item.ci}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.nombre}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.apellidoPaterno} {item.apellidoMaterno}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.usuario}</td>
-                                                <td className="whitespace-nowrap px-6 py-4 hidden md:table-cell">{item.celular}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.direccion}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{item.rolNombre}</td>
-
-                                                <td className="whitespace-nowrap px-6 py-4">
-                                                    {permisosUsuario.some((i) => i.includes(PermisosE.ELIMINAR_USUARIO)) && <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className=" text-red-500 text-2xl px-3 py-1 rounded">
+                                    {usuarios.map((item, i) => (
+                                        <tr className="border-b border-neutral-200 dark:border-white/10" key={i}>
+                                            <td className="whitespace-nowrap px-3 py-2 hidden md:table-cell">{item.ci}</td>
+                                            <td className="whitespace-nowrap px-3 py-2">{item.nombre}</td>
+                                            <td className="whitespace-nowrap px-3 py-2">{item.apellidoPaterno} {item.apellidoMaterno}</td>
+                                            <td className="whitespace-nowrap px-3 py-2">{item.usuario}</td>
+                                            <td className="whitespace-nowrap px-3 py-2 hidden md:table-cell">{item.celular}</td>
+                                            <td className="whitespace-nowrap px-3 py-2 hidden sm:table-cell">{item.direccion}</td>
+                                            <td className="whitespace-nowrap px-3 py-2">{item.rolNombre}</td>
+                                            <td className="whitespace-nowrap px-3 py-2 flex gap-1">
+                                                {permisosUsuario.some((i) => i.includes(PermisosE.ELIMINAR_USUARIO)) && (
+                                                    <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className="text-red-500 text-lg sm:text-2xl px-2 sm:px-3 py-1 rounded">
                                                         <MdDelete />
-                                                    </button>}
-                                                    {permisosUsuario.some((i) => i.includes(PermisosE.EDITAR_USUARIO)) && <button onClick={() => editarUsuario(item._id)} className=" text-blue-500 text-2xl px-3 py-1 rounded">
+                                                    </button>
+                                                )}
+                                                {permisosUsuario.some((i) => i.includes(PermisosE.EDITAR_USUARIO)) && (
+                                                    <button onClick={() => editarUsuario(item._id)} className="text-blue-500 text-lg sm:text-2xl px-2 sm:px-3 py-1 rounded">
                                                         <FaEdit />
-                                                    </button>}
-                                                </td>
-                                            </tr>
-                                        ))
-                                    }
-
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
-
                             <Paginador paginaActual={pagina} paginaSeleccionada={setPagina} paginas={paginas} />
                         </div>
-                    </div >
-                </div >
-            </div >
+                    </div>
+                </div>
+            </div>
+
             {isOpen && usuario && <EditarUsuarioModal closeModal={closeModal} isOpen={isOpen} usuario={usuario} setRecargar={setRecargar} recargar={recargar} />}
             {loading && <Loader />}
         </>

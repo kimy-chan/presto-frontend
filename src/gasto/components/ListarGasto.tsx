@@ -74,7 +74,7 @@ export const ListarGasto = () => {
     }
 
     return (
-        <div className="flex flex-col overflow-x-auto">
+        <div className="flex flex-col overflow-x-auto sm:overflow-x-auto">
             {permisosGasto.some((i) => i.includes(PermisosE.CREAR_GASTO)) && <CrearGastoModal recargar={recargar} setRecargar={setRecargar} />}
             <BuscadorGasto onSubmit={setBuscador} />
 
@@ -82,39 +82,39 @@ export const ListarGasto = () => {
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="overflow-x-auto">
                         <ItemsPagina limite={setLimite} />
-                        <table className="min-w-full border border-gray-300 rounded-lg shadow-lg text-sm sm:text-base">
+                        <table className="min-w-full border border-gray-300 rounded-lg shadow-lg text-xs sm:text-sm">
                             <thead>
-                                <tr className="bg-gray-700 text-white text-left text-xs sm:text-sm">
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Categoria gasto</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Descripcion</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Unidad de Manejo</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Cantidad</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Costo Unitario</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Factor Validez P/Año</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Costo por Año</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">fecha</th>
-                                    <th scope="col" className="px-3 py-2 sm:px-6 sm:py-4">Acción</th>
+                                <tr className="bg-gray-700 text-white text-left text-[10px] sm:text-sm">
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4">Categoria gasto</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4 hidden sm:table-cell">Descripcion</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4 hidden sm:table-cell">Unidad de Manejo</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4">Cantidad</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4">Costo Unitario</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4">Factor Validez P/Año</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4">Costo por Año</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4 hidden sm:table-cell">Fecha</th>
+                                    <th className="px-2 py-1 sm:px-6 sm:py-4">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {gastos.map((item, i) => (
                                     <tr key={i} className="odd:bg-gray-100">
-                                        <td className="py-2 px-3 sm:px-4">{item.categoria}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.descripcion}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.unidadManejo}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.cantidad}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.costoUnitario.toLocaleString(separadorMiles)}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.factorValides}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.costoAqo.toLocaleString(separadorMiles)}</td>
-                                        <td className="py-2 px-3 sm:px-4">{item.fecha}</td>
-                                        <td className="py-2 px-3 sm:px-4">
+                                        <td className="py-1 px-2 sm:px-4 ">{item.categoria}</td>
+                                        <td className="py-1 px-2 sm:px-4 hidden sm:table-cell">{item.descripcion}</td>
+                                        <td className="py-1 px-2 sm:px-4 hidden sm:table-cell">{item.unidadManejo}</td>
+                                        <td className="py-1 px-2 sm:px-4">{item.cantidad}</td>
+                                        <td className="py-1 px-2 sm:px-4">{item.costoUnitario.toLocaleString(separadorMiles)}</td>
+                                        <td className="py-1 px-2 sm:px-4">{item.factorValides}</td>
+                                        <td className="py-1 px-2 sm:px-4">{item.costoAqo.toLocaleString(separadorMiles)}</td>
+                                        <td className="py-1 px-2 sm:px-4 hidden sm:table-cell">{item.fecha}</td>
+                                        <td className="py-1 px-2 sm:px-4 flex space-x-2">
                                             {permisosGasto.some((i) => i.includes(PermisosE.ELIMINAR_GASTO)) && (
-                                                <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className="text-red-500 text-xl sm:text-2xl px-3 py-1 rounded">
+                                                <button onClick={() => AlertaEliminar(() => eliminar(item._id))} className="text-red-500 text-lg sm:text-xl px-2 py-1 rounded">
                                                     <MdDelete />
                                                 </button>
                                             )}
                                             {permisosGasto.some((i) => i.includes(PermisosE.EDITAR_GASTO)) && (
-                                                <button onClick={() => editar(item._id)} className="text-blue-500 text-xl sm:text-2xl px-3 py-1 rounded">
+                                                <button onClick={() => editar(item._id)} className="text-blue-500 text-lg sm:text-xl px-2 py-1 rounded">
                                                     <FaEdit />
                                                 </button>
                                             )}
@@ -131,6 +131,7 @@ export const ListarGasto = () => {
             {isOpen && gasto && <EditarGastoModal gasto={gasto} recargar={recargar} setRecargar={setRecargar} closeModal={closeModal} isOpen={isOpen} />}
             {loading && <Loader />}
         </div>
+
 
     )
 }
