@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BuscadorPagos } from "./BuscadorPagos";
-import { listarTodosLosPagos } from "../service/pagoService";
+import { descargarLosPagosExcel, listarTodosLosPagos } from "../service/pagoService";
 import { ListarPagosI } from "../interface/listarPagos";
 import { BuscadorPagosI } from "../interface/buscadorPagos";
 import { ItemsPagina } from "../../core/components/ItemsPAgina";
@@ -8,6 +8,9 @@ import { Paginador } from "../../core/components/Paginador";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
 import { Loader } from "../../core/components/Loader";
+import { v4 } from 'uuid'
+
+import { ButtonDescargarExcel } from "../../core/components/ButtonDescargarExcel";
 
 export const ListarPagos = () => {
     const [loading, setLoading] = useState(false);
@@ -37,8 +40,6 @@ export const ListarPagos = () => {
         try {
             setLoading(true)
             const response = await listarTodosLosPagos(buscador, limite, pagina)
-
-
             if (response.status == HttpStatus.OK) {
                 setLoading(false)
                 setData(response.data)
@@ -50,11 +51,34 @@ export const ListarPagos = () => {
 
         }
     }
+    const descargarPagosExcel = async () => {
+
+        try {
+            setLoading(true)
+            const response = await descargarLosPagosExcel(buscador)
+            setLoading(false)
+            const blob = response;
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${v4()}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            setLoading(false)
+            console.log(error);
+
+        }
+
+    }
+
     return (
         < >
             <BuscadorPagos onSubmit={setBuscador} />
             <ItemsPagina limite={setLimite} />
+            <ButtonDescargarExcel onClick={descargarPagosExcel} />
             <div className="flex flex-col overflow-x-auto">
+
                 <div className="sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                         <div className="overflow-x-auto">
@@ -117,3 +141,5 @@ export const ListarPagos = () => {
         </>
     );
 }
+
+

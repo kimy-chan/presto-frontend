@@ -7,24 +7,27 @@ import { DataMedidorClienteI } from "../../medidor/interface/dataMedidorCliente"
 import { lecturaMedidor } from "../../lectura/service/lecturaService"
 import { LecturaMedidorI } from "../../lectura/interface/lecturaMedidor"
 import { ClienteMedidorLecturaI } from "../interface/clienteMedidorLectura"
+import { Loader } from "../../core/components/Loader"
 
 
-export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedidorLecturaI) => void }) => {
+export const BuscadorClientePago = ({ setData, recargar }: { setData: (data: ClienteMedidorLecturaI | null) => void, recargar: boolean }) => {
     const [cliente, setCliente] = useState<ClienteI>()
     const [medidores, setMedidores] = useState<DataMedidorClienteI[]>([])
     const [lecturas, setLecturas] = useState<LecturaMedidorI[]>([])
     const [medidor, setMedidor] = useState<string>()
     const [lectura, setLectura] = useState<string>()
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         medidoresCliente()
     }, [cliente])
 
     useEffect(() => {
         lecturasClienteMedidor()
-    }, [medidor])
+        setLectura("")
+    }, [medidor, recargar])
 
     useEffect(() => {
-        if (cliente) {
+        if (cliente && lectura && lecturas.length > 0 && medidores.length > 0) {
             const medidorSeleccionado = medidores.filter((item) => item._id === medidor)[0]
             const lecturaSeleccionada = lecturas.filter((item) => item._id === lectura)[0]
 
@@ -63,10 +66,13 @@ export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedido
     const medidoresCliente = async () => {
         try {
             if (cliente) {
+                setLoading(true)
                 const response = await medidorCliente(cliente._id)
+                setLoading(false)
                 setMedidores(response)
             }
         } catch (error) {
+            setLoading(false)
 
         }
     }
@@ -74,10 +80,13 @@ export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedido
     const lecturasClienteMedidor = async () => {
         try {
             if (medidor) {
+                setLoading(true)
                 const response = await lecturaMedidor(medidor)
+                setLoading(false)
                 setLecturas(response)
             }
         } catch (error) {
+            setLoading(false)
             console.log(error);
 
         }
@@ -91,9 +100,11 @@ export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedido
                         Buscar cliente
                     </label>
                     <ClientesModal setCliente={setCliente} />
+                    {cliente && <>
+                        <p><strong>CI:</strong> {cliente.ci}</p>
+                        <p><strong>Nombre:</strong> {cliente.nombre} {cliente.apellidoPaterno} {cliente.apellidoMaterno}</p></>}
                 </div>
 
-                {/* Número de Medidor */}
                 <div>
                     <label htmlFor="numeroMedidor" className="block text-sm font-medium text-gray-700">
                         Número de Medidor
@@ -111,15 +122,7 @@ export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedido
                                 </option>
                             ))}
                         </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                            <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </div>
+
                     </div>
                 </div>
 
@@ -130,6 +133,7 @@ export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedido
                     </label>
                     <div className="relative mt-1">
                         <select
+                            value={lectura}
                             onChange={(e) => setLectura(e.target.value)}
                             id="mesPago"
                             className="block w-full appearance-none rounded-md border border-gray-300 bg-gray-50 py-2 px-3 pr-10 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200 transition-colors"
@@ -141,18 +145,11 @@ export const BuscadorClientePago = ({ setData }: { setData: (data: ClienteMedido
                                 </option>
                             ))}
                         </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                            <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </div>
+
                     </div>
                 </div>
             </div>
+            {loading && <Loader />}
         </div>
 
     )

@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { BuscadorPagosI } from "../interface/buscadorPagos";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const BuscadorPagos = ({ onSubmit }: { onSubmit: (data: BuscadorPagosI) => void }) => {
-    const { handleSubmit, register, setValue, watch } = useForm<BuscadorPagosI>();
+    const { handleSubmit, register, setValue } = useForm<BuscadorPagosI>();
     useEffect(() => {
         const date = new Date()
         const fecha = date.toISOString().split('T')[0]

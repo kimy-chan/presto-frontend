@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormTarifaI } from '../interface/formTarifa';
 import { v4 as uuidv4 } from 'uuid';

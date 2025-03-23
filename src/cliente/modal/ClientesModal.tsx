@@ -66,7 +66,7 @@ export const ClientesModal = ({ setCliente }: { setCliente: (cliete: ClienteI) =
 
                     <div className="bg-white rounded-lg shadow-lg p-6 z-10 w-350 max-w-full max-h-full">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">Lista de clientes</h2>
+                            <h2 className="text-xl font-semibold">Lista de clientes </h2>
                             <button
                                 onClick={closeModal}
                                 className="text-gray-600 hover:text-gray-800 text-2xl"

@@ -9,23 +9,35 @@ import { realizarPagos } from "../service/pagoService";
 import { HttpStatus } from "../../core/enums/httpStatus";
 import { useNavigate } from "react-router";
 import { Loader } from "../../core/components/Loader";
+import { alertaDePago, alertaSeguirPagando } from "../util/alertaDePago";
 
 export const RealizarPago = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<ClienteMedidorLecturaI>();
-    const { register, handleSubmit, formState: { errors } } = useForm<RealizaPago>()
+    const [recargar, setRecargar] = useState<boolean>(false)
+    const [data, setData] = useState<ClienteMedidorLecturaI | null>();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<RealizaPago>()
 
 
     const onSubmit = async (dataRegistrada: RealizaPago) => {
         try {
             if (data) {
-                dataRegistrada.lectura = data.idLectura
-                setLoading(true)
-                const response = await realizarPagos(dataRegistrada)
-                if (response.status == HttpStatus.CREATED) {
-                    setLoading(false)
-                    navigate(`/pago/imprimir/cliente/${response.medidor}`)
+                const alerta = await alertaDePago()
+                if (alerta) {
+                    dataRegistrada.lectura = data.idLectura
+                    setLoading(true)
+                    const response = await realizarPagos(dataRegistrada)
+                    if (response.status == HttpStatus.CREATED) {
+                        setLoading(false)
+                        const alertaContinuarPagos = await alertaSeguirPagando()
+                        if (!alertaContinuarPagos) {
+                            navigate(`/pago/imprimir/cliente/${response.medidor}`)
+                        }
+                        setRecargar(!recargar)
+                        setData(null)
+                        reset()
+
+                    }
                 }
             }
         } catch (error) {
@@ -41,11 +53,11 @@ export const RealizarPago = () => {
             <p className="text-sm text-gray-600 mb-6 text-center">
                 Complete el formulario para realizar el pago de su servicio. Asegúrese de ingresar los datos correctamente.
             </p>
-            <BuscadorClientePago setData={setData} />
+            <BuscadorClientePago setData={setData} recargar={recargar} />
 
             {data && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-4 rounded-lg shadow-md border border-gray-300">
-                    {/* Datos del Cliente */}
+
                     <div>
                         <h3 className="text-lg font-semibold text-gray-700 mb-2">Datos del Cliente</h3>
                         <p><strong>Código cliente:</strong> {data.codigo}</p>
@@ -53,14 +65,13 @@ export const RealizarPago = () => {
                         <p><strong>Nombre:</strong> {data.nombre} {data.apellidoPaterno} {data.apellidoMaterno}</p>
                     </div>
 
-                    {/* Datos del Medidor */}
                     <div>
                         <h3 className="text-lg font-semibold text-gray-700 mb-2">Datos del Medidor</h3>
                         <p><strong>Código de medidor:</strong> {data.numeroMedidor}</p>
                         <p><strong>Categoría:</strong> {data.tarifa}</p>
                     </div>
 
-                    {/* Datos de la Lectura */}
+
                     <div>
                         <h3 className="text-lg font-semibold text-gray-700 mb-2">Datos de la Lectura</h3>
                         <p><strong>Estado medidor:</strong> {data.estado}</p>
@@ -103,7 +114,8 @@ export const RealizarPago = () => {
                         }
 
                         )} type="text" id="costoPagado" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                        {errors.costoPagado && <p>{errors.costoPagado.message}</p>}
+                        {errors.costoPagado && <p className="text-red-600 text-sm" >{errors.costoPagado.message}</p>}
+                        {!data && <p className="text-sm">Seleccione un cliente</p>}
                     </div>
 
                     {/* Campo Observaciones */}

@@ -216,11 +216,12 @@ export const CrearUsuariosModal = ({ recargar, setRecargar }: { recargar: boolea
                                         Celular
                                     </label>
                                     <input
-                                        {...register("celular")}
+                                        {...register("celular", { required: 'El numero de celualar es requerido' })}
                                         id="celular"
                                         type="text"
                                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
+                                    {errors.celular && <p className='text-red-500 text-xs'>{errors.celular.message}</p>}
                                 </div>
 
                                 <div>

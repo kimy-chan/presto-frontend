@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router"
+import { BrowserRouter as Router, Routes, Route } from "react-router"
 import { tarifaRouter } from "../../tarifa/router/tarifaRouter"
 import { RouterI } from "../interface/router"
 import { clienteRouter } from "../../cliente/routes/clienteRouter";

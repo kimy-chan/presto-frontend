@@ -64,3 +64,37 @@ export const listarTodosLosPagos = async (
     throw error;
   }
 };
+
+export const descargarLosPagosExcel = async (
+  buscador: BuscadorPagosI
+): Promise<MediaSource> => {
+  const params: BuscadorPagosI = {};
+  buscador.ci ? (params.ci = buscador.ci) : params;
+  buscador.nombre ? (params.nombre = buscador.nombre) : params;
+  buscador.apellidoPaterno
+    ? (params.apellidoPaterno = buscador.apellidoPaterno)
+    : params;
+  buscador.apellidoMaterno
+    ? (params.apellidoMaterno = buscador.apellidoMaterno)
+    : params;
+
+  buscador.numeroMedidor
+    ? (params.numeroMedidor = buscador.numeroMedidor)
+    : params;
+
+  buscador.fechaInicio ? (params.fechaInicio = buscador.fechaInicio) : params;
+  buscador.fechaFin ? (params.fechaFin = buscador.fechaFin) : params;
+  console.log(params);
+
+  try {
+    const response = await instance.get("pago/descargar/excel", {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+
+    throw error;
+  }
+};

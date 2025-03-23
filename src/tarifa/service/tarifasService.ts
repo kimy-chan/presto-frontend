@@ -1,4 +1,3 @@
-import axios from "axios";
 import { instance } from "../../config/instance";
 import { response } from "../../core/interface/response";
 import { DataI } from "../interface/data";
