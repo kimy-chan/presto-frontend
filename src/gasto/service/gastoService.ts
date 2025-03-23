@@ -73,3 +73,25 @@ export const editarGasto = async (
     throw error;
   }
 };
+
+export const descargarGastoExcel = async (
+  buscador: BuscadorGastoI
+): Promise<MediaSource> => {
+  try {
+    const params: BuscadorGastoI = {};
+    buscador.categoriaGasto
+      ? (params.categoriaGasto = buscador.categoriaGasto)
+      : params;
+
+    buscador.fechaInicio ? (params.fechaInicio = buscador.fechaInicio) : params;
+    buscador.fechaFin ? (params.fechaFin = buscador.fechaFin) : params;
+
+    const response = await instance.get("gasto/descargar/Excel", {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -132,3 +132,18 @@ export const realizarCorte = async (id: string): Promise<response> => {
     throw error;
   }
 };
+
+export const descargarExcelMedidoresConTresLecturasPendientes =
+  async (): Promise<MediaSource> => {
+    try {
+      const response = await instance.get(
+        "medidor/descragar/excel/tres/lecturas/pendientes",
+        {
+          responseType: "blob",
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };

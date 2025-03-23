@@ -16,7 +16,7 @@ export const availablePermissions: ModulePermissions = {
   PAGO: [
     { id: "LISTAR_PAGO", label: "listar Pagos" },
     { id: "CREAR_PAGO", label: "Crear Pagos" },
-    { id: "ANULAR_PAGO", label: "Anular Pago" },
+    // { id: "ANULAR_PAGO", label: "Anular Pago" },
   ],
   TARIFA: [
     { id: "LISTAR_TARIFA", label: "Ver Tarifas" },

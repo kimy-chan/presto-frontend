@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { eliminarGasto, listarGastos } from '../service/gastoService'
+import { descargarGastoExcel, eliminarGasto, listarGastos } from '../service/gastoService'
 import { GastoI } from '../interface/gasto'
 import { separadorMiles } from '../../core/constants/separadorMiles'
 import { PermisosContext } from '../../autenticacion/context/PermisosContext'
@@ -16,7 +16,8 @@ import { CrearGastoModal } from '../modal/CrearGastoModal'
 import { EditarGastoModal } from '../modal/EditarGastoModal'
 import toast from 'react-hot-toast'
 import { Loader } from '../../core/components/Loader'
-
+import { ButtonDescargarExcel } from '../../core/components/ButtonDescargarExcel'
+import { v4 } from "uuid"
 export const ListarGasto = () => {
     const [loading, setLoading] = useState(false);
     const { permisosGasto } = useContext(PermisosContext)
@@ -73,11 +74,31 @@ export const ListarGasto = () => {
         setIsOpen(true)
     }
 
+    const descargarGastosExcel = async () => {
+        try {
+            setLoading(true)
+            const response = await descargarGastoExcel(buscador)
+            setLoading(true)
+            const blob = response;
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${v4()}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            setLoading(true)
+            console.log(error);
+
+
+        }
+    }
+
     return (
         <div className="flex flex-col overflow-x-auto sm:overflow-x-auto">
             {permisosGasto.some((i) => i.includes(PermisosE.CREAR_GASTO)) && <CrearGastoModal recargar={recargar} setRecargar={setRecargar} />}
             <BuscadorGasto onSubmit={setBuscador} />
-
+            <ButtonDescargarExcel onClick={descargarGastosExcel} />
             <div className="sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                     <div className="overflow-x-auto">
